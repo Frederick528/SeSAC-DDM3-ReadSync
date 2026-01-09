@@ -1,0 +1,284 @@
+/* App.css */
+
+/* 기본 배경 및 폰트 설정 */
+:root {
+    --main-bg: #f4ecd8;
+    --accent-color: #d4a373;
+    --border-dark: #4a3728;
+    --btn-gold: #ffcc00;
+    --panel-bg: #fffdf5; /* 패널 배경색 */
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--main-bg);
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.container {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* --- 헤더 스타일 --- */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 40px;
+    background: var(--main-bg);
+    border-bottom: 3px solid var(--border-dark);
+}
+
+.logo {
+    font-weight: 900;
+    font-size: 1.5rem;
+    line-height: 1;
+    color: var(--border-dark);
+    text-align: center;
+    border: 3px solid var(--border-dark);
+    padding: 5px;
+}
+
+.center-nav {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.nav-menu a {
+    margin: 0 20px;
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+}
+
+.nav-menu a.active {
+    background: var(--accent-color);
+    padding: 5px 20px;
+    border-radius: 10px;
+}
+
+.search-bar {
+    display: flex;
+    border: 2px solid var(--border-dark);
+    background: white;
+    padding: 2px;
+    width: 500px;
+}
+
+.search-bar input {
+    flex: 1;
+    border: none;
+    padding: 8px;
+    outline: none;
+}
+
+.search-btn {
+    background: var(--accent-color);
+    border: none;
+    padding: 0 15px;
+    cursor: pointer;
+    color: white;
+    font-weight: bold;
+}
+
+.auth-links a {
+    text-decoration: none;
+    color: var(--border-dark);
+    font-weight: bold;
+}
+
+
+/* --- 메인 히어로 영역 --- */
+.hero-section {
+    flex: 1;
+    position: relative;
+    /* 실제 프로젝트에서는 배경 이미지 파일 경로를 올바르게 지정해주세요 */
+    background-image: url('https://via.placeholder.com/1920x1080.png?text=Pixel+Book+Mountain+Background');
+    background-size: cover;
+    background-position: center;
+    overflow: hidden; /* 캐릭터 이미지가 영역 밖으로 나가는 것 방지 */
+}
+
+/* 중앙 캐릭터 이미지 */
+.hero-character {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* 중앙 정렬 */
+    width: auto; /* 원본 비율 유지 */
+    height: 60%; /* 높이를 기준으로 크기 조절 (필요에 따라 조절) */
+    z-index: 1; /* 배경 위에 표시 */
+}
+
+/* 우측 사이드바 */
+.floating-sidebar {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    background: rgba(255, 253, 245, 0.8);
+    padding: 15px 10px;
+    border: 3px solid var(--border-dark);
+    border-radius: 15px;
+    z-index: 2; /* 캐릭터 위에 표시 */
+}
+
+.floating-sidebar button {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+/* 최근 도서 카드 */
+.recent-books-card {
+    position: absolute;
+    right: 40px;
+    bottom: 40px; /* 하단 메뉴 바 위로 위치 조정 */
+    background: var(--panel-bg);
+    border: 3px solid var(--border-dark);
+    padding: 15px;
+    width: 250px;
+    z-index: 2; /* 캐릭터 위에 표시 */
+}
+
+.recent-books-card h3 {
+    margin: 0 0 10px 0;
+    font-size: 0.9rem;
+    color: var(--border-dark);
+}
+
+.book-thumbnails {
+    display: flex;
+    gap: 10px;
+}
+
+.book-placeholder {
+    width: 80px;
+    height: 110px;
+    background: #ddd;
+    border: 2px solid var(--border-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+}
+
+
+/* --- 하단 메뉴 바 --- */
+.bottom-menu-bar {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px;
+    background: var(--main-bg); /* 헤더와 같은 배경색 사용 */
+    border-top: 3px solid var(--border-dark);
+}
+
+/* 하단 메뉴 버튼 스타일 */
+.menu-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 15px 25px;
+    gap: 8px;
+    background: var(--panel-bg);
+    border: 3px solid var(--border-dark);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 3px 3px 0px rgba(0,0,0,0.15);
+    font-family: inherit; /* 폰트 상속 */
+}
+
+.menu-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 5px 5px 0px rgba(0,0,0,0.2);
+    background: #fff;
+}
+
+.menu-btn:active {
+    transform: translateY(2px);
+    box-shadow: 1px 1px 0px rgba(0,0,0,0.1);
+}
+
+.menu-btn .icon {
+    font-size: 1.8rem;
+}
+
+.menu-btn span:last-child {
+    font-weight: bold;
+    font-size: 1rem;
+    color: var(--border-dark);
+}
+
+.recent-books-card {
+    position: absolute;
+    right: 50px;
+    bottom: 180px;
+    background: #fffdf5;
+    border: 4px solid #4a3728;
+    padding: 10px;
+    width: 280px;
+    z-index: 100;
+    user-select: none;
+    box-shadow: 8px 8px 0px rgba(0,0,0,0.2);
+}
+
+.drag-handle {
+    background: #4a3728;
+    color: #fff;
+    font-size: 10px;
+    text-align: center;
+    padding: 4px;
+    margin: -10px -10px 10px -10px; /* 카드의 패딩 무시하고 상단에 꽉 채움 */
+    cursor: grab;
+}
+
+.book-thumbnails {
+    display: flex;
+    justify-content: space-around;
+    gap: 10px;
+}
+
+.book-btn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #f4ecd8;
+    border: 2px solid #4a3728;
+    padding: 10px 5px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.book-btn:hover {
+    background: #fff;
+}
+
+.book-icon {
+    font-size: 30px;
+    margin-bottom: 5px;
+}
+
+.book-btn .label {
+    font-size: 10px;
+    font-weight: bold;
+    color: #4a3728;
+}
+
+/* 드래그 중에는 버튼 클릭이 무시되도록 설정 */
+.draggable:active .book-btn {
+    pointer-events: none;
+}
