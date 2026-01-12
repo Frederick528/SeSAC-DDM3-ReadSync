@@ -668,3 +668,5 @@ HELP.md
 !**/src/main/**/build/
 !**/src/test/**/build/
 application-*.yml
+
+docker-compose.yml
