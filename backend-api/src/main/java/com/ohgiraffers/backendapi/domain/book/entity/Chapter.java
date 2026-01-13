@@ -16,7 +16,7 @@ public class Chapter extends BaseTimeEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long chapterId;
     @ManyToOne(fetch = FetchType.LAZY)
-    @Column(name = "book_id", nullable = false)
+    @JoinColumn(name = "book_id", nullable = false)
     private Book bookId;
     @Column(name = "chapter_name", length = 255)
     private String chapterName;

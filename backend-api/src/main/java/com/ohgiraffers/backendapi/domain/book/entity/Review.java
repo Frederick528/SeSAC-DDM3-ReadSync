@@ -1,5 +1,6 @@
 package com.ohgiraffers.backendapi.domain.book.entity;
 
+import com.ohgiraffers.backendapi.domain.user.entity.User;
 import com.ohgiraffers.backendapi.global.common.BaseTimeEntity;
 import com.ohgiraffers.backendapi.global.common.enums.VisibilityStatus;
 import jakarta.persistence.*;
@@ -18,10 +19,10 @@ public class Review extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long reviewId;
     @ManyToOne(fetch = FetchType.LAZY)
-    @Column(name = "user_id")
+    @JoinColumn(name = "user_id")
     private User userId;
     @ManyToOne(fetch = FetchType.LAZY)
-    @Column(name = "book_id")
+    @JoinColumn(name = "book_id")
     private Book bookId;
     @Column(name = "rating")
     private Integer rating;

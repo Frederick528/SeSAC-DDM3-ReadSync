@@ -1,5 +1,6 @@
 package com.ohgiraffers.backendapi.domain.book.entity;
 
+import com.ohgiraffers.backendapi.domain.user.entity.User;
 import com.ohgiraffers.backendapi.global.common.BaseTimeEntity;
 import com.ohgiraffers.backendapi.global.common.enums.ChatType;
 import jakarta.persistence.*;
@@ -17,13 +18,12 @@ public class BookAiChat extends BaseTimeEntity {
     @Column(name = "chat_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long chatId;
-    @Column(name = "conversation_group_id")
-    private Long conversationGroupId;
     @ManyToOne(fetch = FetchType.LAZY)
-    @Column(name = "user_id")
+    @JoinColumn(name = "ai_room_id")
+    private BookAiChatRoom aiRoomId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     private User userId;
-    @Column(name = "chapter_id", nullable = false)
-    private Chapter chapterId;
     @Enumerated(EnumType.STRING)
     @Column(name = "chat_type", nullable = false, length = 20)
     private ChatType chatType;
@@ -35,10 +35,9 @@ public class BookAiChat extends BaseTimeEntity {
     private Integer rating = 0;
 
     @Builder
-    public BookAiChat(Long conversationGroupId, User userId, Chapter chapterId, ChatType chatType, String userMessage, String aiMessage) {
-        this.conversationGroupId = conversationGroupId;
+    public BookAiChat(BookAiChatRoom aiRoomId, User userId, ChatType chatType, String userMessage, String aiMessage) {
+        this.aiRoomId = aiRoomId;
         this.userId = userId;
-        this.chapterId = chapterId;
         this.chatType = chatType = (chatType != null) ? chatType : ChatType.CONTENT_QA;
         this.userMessage = userMessage;
         this.aiMessage = aiMessage;
