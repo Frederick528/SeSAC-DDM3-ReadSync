@@ -2,7 +2,7 @@ package com.ohgiraffers.backendapi.domain.book.entity;
 
 import com.ohgiraffers.backendapi.domain.user.entity.User;
 import com.ohgiraffers.backendapi.global.common.BaseTimeEntity;
-import com.ohgiraffers.backendapi.global.common.enums.ChatType;
+import com.ohgiraffers.backendapi.domain.book.enums.ChatType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;

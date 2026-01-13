@@ -1,5 +1,6 @@
-package com.ohgiraffers.backendapi.domain.book.entity;
+package com.ohgiraffers.backendapi.domain.comment.entity;
 
+import com.ohgiraffers.backendapi.domain.book.entity.Chapter;
 import com.ohgiraffers.backendapi.domain.user.entity.User;
 import com.ohgiraffers.backendapi.global.common.BaseTimeEntity;
 import com.ohgiraffers.backendapi.global.common.enums.VisibilityStatus;

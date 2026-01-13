@@ -1,8 +1,10 @@
-package com.ohgiraffers.backendapi.domain.book.entity;
+package com.ohgiraffers.backendapi.domain.like.entity;
 
+import com.ohgiraffers.backendapi.domain.book.entity.Review;
+import com.ohgiraffers.backendapi.domain.comment.entity.Comment;
 import com.ohgiraffers.backendapi.domain.user.entity.User;
 import com.ohgiraffers.backendapi.global.common.BaseTimeEntity;
-import com.ohgiraffers.backendapi.global.common.enums.LikeType;
+import com.ohgiraffers.backendapi.domain.like.enums.LikeType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;

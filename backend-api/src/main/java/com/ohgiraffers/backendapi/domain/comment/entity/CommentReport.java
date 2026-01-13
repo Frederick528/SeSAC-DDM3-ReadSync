@@ -1,9 +1,10 @@
-package com.ohgiraffers.backendapi.domain.book.entity;
+package com.ohgiraffers.backendapi.domain.comment.entity;
 
+import com.ohgiraffers.backendapi.domain.book.entity.Review;
 import com.ohgiraffers.backendapi.domain.user.entity.User;
 import com.ohgiraffers.backendapi.global.common.BaseTimeEntity;
-import com.ohgiraffers.backendapi.global.common.enums.CommentReportReasonType;
-import com.ohgiraffers.backendapi.global.common.enums.CommentReportTargetType;
+import com.ohgiraffers.backendapi.domain.comment.enums.CommentReportReasonType;
+import com.ohgiraffers.backendapi.domain.comment.enums.CommentReportTargetType;
 import com.ohgiraffers.backendapi.global.common.enums.ReportProcessStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
