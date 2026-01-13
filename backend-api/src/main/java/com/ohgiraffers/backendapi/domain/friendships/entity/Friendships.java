@@ -10,6 +10,7 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.apache.catalina.User;
 
+@Entity
 @Getter
 @Setter
 @NoArgsConstructor
