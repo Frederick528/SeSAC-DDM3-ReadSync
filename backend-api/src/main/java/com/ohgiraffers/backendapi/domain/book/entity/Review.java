@@ -19,14 +19,14 @@ public class Review extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long reviewId;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User userId;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "book_id")
+    @JoinColumn(name = "book_id", nullable = false)
     private Book bookId;
-    @Column(name = "rating")
+    @Column(name = "rating", nullable = false)
     private Integer rating;
-    @Column(name = "review_content", columnDefinition = "TEXT")
+    @Column(name = "review_content", columnDefinition = "TEXT", nullable = false)
     private String reviewContent;
     @Column(name = "is_changed", nullable = false)
     private Boolean isChanged = false;
@@ -35,13 +35,13 @@ public class Review extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "visibility_status", nullable = false, length = 20)
     private VisibilityStatus visibilityStatus;
-    @Column(name = "spoiler_report_count")
+    @Column(name = "spoiler_report_count", nullable = false)
     private Integer spoilerReportCount = 0;
-    @Column(name = "violation_report_count")
+    @Column(name = "violation_report_count", nullable = false)
     private Integer violationReportCount = 0;
-    @Column(name = "like_count")
+    @Column(name = "like_count", nullable = false)
     private Integer likeCount = 0;
-    @Column(name = "dislike_count")
+    @Column(name = "dislike_count", nullable = false)
     private Integer dislikeCount = 0;
 
     @Builder

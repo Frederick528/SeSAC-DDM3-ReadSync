@@ -45,8 +45,8 @@ public class Comment extends BaseTimeEntity {
     @Column(name = "dislike_count", nullable = false)
     private Integer dislikeCount = 0;
 
-    // 댓글 생성
-    @Builder
+    // 1. 일반 댓글용 빌더
+    @Builder(builderMethodName = "createComment")
     public Comment(User user_id, Chapter chapterId, String commentContent, Boolean isSpoiler) {
         this.user_id = user_id;
         this.chapterId = chapterId;
@@ -55,8 +55,8 @@ public class Comment extends BaseTimeEntity {
         this.visibilityStatus = VisibilityStatus.ACTIVE;
     }
 
-    // 대댓글 생성
-    @Builder
+    // 2. 대댓글(답글)용 빌더
+    @Builder(builderMethodName = "createReply")
     public Comment(User user_id, Comment parent_id, Chapter chapterId, String commentContent, Boolean isSpoiler) {
         this.user_id = user_id;
         this.parent_id = parent_id;
