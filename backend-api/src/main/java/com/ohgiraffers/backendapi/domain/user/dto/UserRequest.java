@@ -18,7 +18,6 @@ public class UserRequest {
         private String provider;
         private String providerId;
 
-        // User Entity 변환 메서드
         public User toUserEntity() {
             return User.builder()
                     .email(this.email)
@@ -27,17 +26,16 @@ public class UserRequest {
                     .providerId(this.providerId)
                     .role(UserRole.USER)
                     .status(UserStatus.ACTIVE)
-                    .levelId(1L)
                     .build();
         }
 
-        // UserInformation Entity 변환 메서드 (초기값 설정)
         public UserInformation toUserInformationEntity(User user) {
             return UserInformation.builder()
                     .user(user)
-                    .nickname(this.name) // 초기 닉네임은 이름과 동일하게
-                    .currentExp(0)
-                    .totalExp(0)
+                    .userName(this.name) // 초기 user_name은 가입 시 이름으로
+                    .experience(0)
+                    .levelId(1L)
+                    .preferredGenre("General") // 초기값
                     .build();
         }
     }
@@ -45,8 +43,8 @@ public class UserRequest {
     @Getter
     @NoArgsConstructor
     public static class Update {
-        private String nickname;
-        private String profileImg;
-        private String favoriteGenre;
+        private String userName; // nickname -> userName
+        private String profileImage;
+        private String preferredGenre;
     }
 }

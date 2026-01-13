@@ -15,29 +15,26 @@ public class UserResponse {
         private Long userId;
         private String email;
         private String name;
-        private String nickname;
-        private String profileImg;
+        private String userName; // nickname -> userName
+        private String profileImage;
         private String role;
         private String status;
         private Long levelId;
-        private Integer currentExp;
-        private Integer totalExp;
-        private String favoriteGenre;
+        private Integer experience;
+        private String preferredGenre;
 
-        // Entity -> DTO 변환 메서드
         public static Detail from(User user, UserInformation userInfo) {
             return Detail.builder()
                     .userId(user.getId())
                     .email(user.getEmail())
                     .name(user.getName())
-                    .nickname(userInfo != null ? userInfo.getNickname() : user.getName())
-                    .profileImg(userInfo != null ? userInfo.getProfileImg() : null)
+                    .userName(userInfo != null ? userInfo.getUserName() : user.getName())
+                    .profileImage(userInfo != null ? userInfo.getProfileImage() : null)
                     .role(user.getRole().getKey())
                     .status(user.getStatus().name())
-                    .levelId(user.getLevelId())
-                    .currentExp(userInfo != null ? userInfo.getCurrentExp() : 0)
-                    .totalExp(userInfo != null ? userInfo.getTotalExp() : 0)
-                    .favoriteGenre(userInfo != null ? userInfo.getFavoriteGenre() : null)
+                    .levelId(userInfo != null ? userInfo.getLevelId() : 1L)
+                    .experience(userInfo != null ? userInfo.getExperience() : 0)
+                    .preferredGenre(userInfo != null ? userInfo.getPreferredGenre() : null)
                     .build();
         }
     }

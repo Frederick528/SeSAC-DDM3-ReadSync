@@ -21,35 +21,40 @@ public class UserInformation {
     @Column(name = "user_information_id")
     private Long id;
 
-    // User와 1:1 관계 (주인은 UserInformation으로 설정하여 FK 관리)
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false, unique = true)
     private User user;
 
-    @Column(nullable = false, length = 50)
-    private String nickname;
+    @Column(name = "user_name", nullable = false, length = 30)
+    private String userName;
 
-    @Column(name = "profile_img")
-    private String profileImg;
+    @Column(name = "profile_image")
+    private String profileImage;
 
-    @Column(name = "current_exp", nullable = false)
+    @Column(nullable = false)
     @Builder.Default
-    private Integer currentExp = 0;
+    private Integer experience = 0; // 단일 변수로 수정
 
-    @Column(name = "total_exp", nullable = false)
+    // SQL 명세에 따라 level_id는 여기에 위치함
+    @Column(name = "level_id", nullable = false)
     @Builder.Default
-    private Integer totalExp = 0;
+    private Long levelId = 1L;
 
-    @Column(name = "favorite_genre", length = 50)
-    private String favoriteGenre;
+    @Column(name = "preferred_genre", nullable = false) // NOT NULL 확인 필요 (일단 기본값이나 필수 입력 처리)
+    @Builder.Default
+    private String preferredGenre = "General"; // 가입 시 기본값 설정
 
     @LastModifiedDate
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    // 비즈니스 로직: 경험치 업데이트
+    // 비즈니스 로직: 경험치 추가
     public void addExperience(int exp) {
-        this.currentExp += exp;
-        this.totalExp += exp;
+        this.experience += exp;
+    }
+
+    // 비즈니스 로직: 레벨 업
+    public void levelUp(Long nextLevelId) {
+        this.levelId = nextLevelId;
     }
 }
