@@ -1,4 +1,4 @@
-package com.ohgiraffers.backendapi.global.common.type;
+package com.ohgiraffers.backendapi.global.common.enums;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

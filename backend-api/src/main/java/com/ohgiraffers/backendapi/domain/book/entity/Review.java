@@ -1,15 +1,16 @@
 package com.ohgiraffers.backendapi.domain.book.entity;
 
 import com.ohgiraffers.backendapi.global.common.BaseTimeEntity;
-import com.ohgiraffers.backendapi.global.common.type.VisibilityStatus;
+import com.ohgiraffers.backendapi.global.common.enums.VisibilityStatus;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "reviews")
 public class Review extends BaseTimeEntity {
     @Id
@@ -56,7 +57,7 @@ public class Review extends BaseTimeEntity {
     public void updateContent(String reviewContent, Integer rating, Boolean isSpoiler){
         this.reviewContent = reviewContent;
         this.rating = rating;
-        this.isSpoiler = isSpoiler;
+        if (isSpoiler != null) {this.isSpoiler = isSpoiler;}
         this.isChanged = true;  // 내용이 수정되었다는것을 체크
     }
 }
