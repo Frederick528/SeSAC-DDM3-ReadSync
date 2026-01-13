@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import org.apache.catalina.User;
+import com.ohgiraffers.backendapi.domain.user.entity.User;
 
 @Entity
 @Getter
@@ -38,7 +38,8 @@ public class Friendships extends BaseTimeEntity {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private FriendshipsStatus status;
+    @Builder.Default
+    private FriendshipsStatus status = FriendshipsStatus.PENDING;
 
 
     // 상태 변경 편의 메서드
