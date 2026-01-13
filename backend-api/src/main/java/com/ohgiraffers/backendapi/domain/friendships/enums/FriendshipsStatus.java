@@ -1,4 +1,4 @@
-package com.ohgiraffers.backendapi.global.common;
+package com.ohgiraffers.backendapi.domain.friendships.enums;
 
 public enum FriendshipsStatus {
     PENDING,            // 대기중

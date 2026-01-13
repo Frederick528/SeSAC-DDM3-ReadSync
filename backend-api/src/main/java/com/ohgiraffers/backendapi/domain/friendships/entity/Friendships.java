@@ -1,15 +1,13 @@
 package com.ohgiraffers.backendapi.domain.friendships.entity;
 
 import com.ohgiraffers.backendapi.global.common.BaseTimeEntity;
-import com.ohgiraffers.backendapi.global.common.FriendshipsStatus;
+import com.ohgiraffers.backendapi.domain.friendships.enums.FriendshipsStatus;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.catalina.User;
-
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
