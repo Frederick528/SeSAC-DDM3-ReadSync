@@ -7,11 +7,13 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 import org.apache.catalina.User;
 
 @Getter
 @Setter
 @NoArgsConstructor
+@SuperBuilder
 @Table(
         name = "friendships",
         uniqueConstraints = {
@@ -37,10 +39,40 @@ public class Friendships extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private FriendshipsStatus status;
 
-    @Builder
-    public Friendships(User requester, User addressee, FriendshipsStatus status) {
-        this.requester = requester;
-        this.addressee = addressee;
-        this.status = status;
+
+    // 상태 변경 편의 메서드
+    /**
+     * 친구 요청 수락
+     */
+    public void accept() {
+        this.status = FriendshipsStatus.ACCEPTED;
+    }
+
+    /**
+     * 친구 요청 거절
+     */
+    public void reject() {
+        this.status = FriendshipsStatus.REJECTED;
+    }
+
+    /**
+     *  상대방 차단
+     */
+    public void block() {
+        this.status = FriendshipsStatus.BLOCKED;
+    }
+
+    /**
+     * 친구 삭제
+     */
+    public void unfriend() {
+        this.delete();
+    }
+
+    /**
+     * 차단 해제
+     */
+    public void unblockFriendships() {
+        this.delete();
     }
 }
