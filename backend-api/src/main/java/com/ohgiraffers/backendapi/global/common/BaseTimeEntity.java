@@ -14,10 +14,10 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.LocalDateTime;
 
 @Getter
+@MappedSuperclass
 @SuperBuilder
-@MappedSuperclass // ❶
-@EntityListeners(AuditingEntityListener.class) // ❷
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public abstract class BaseTimeEntity {
 
     @CreatedDate

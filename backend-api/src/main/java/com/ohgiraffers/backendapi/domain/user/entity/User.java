@@ -20,6 +20,9 @@ public class User extends BaseTimeEntity {
     @Column(name = "user_id")
     private Long id;
 
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private UserInformation userInformation;
+
     @Column(name = "user_email", length = 100)
     private String email;
 
