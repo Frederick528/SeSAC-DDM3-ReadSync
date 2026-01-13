@@ -13,14 +13,33 @@ import java.time.LocalDateTime;
 
 @Getter
 @SuperBuilder
-@MappedSuperclass // ❶
-@EntityListeners(AuditingEntityListener.class) // ❷
+@MappedSuperclass
+@EntityListeners(AuditingEntityListener.class)
 public abstract class BaseTimeEntity {
 
-    @CreatedDate // ❸
-    @Column(updatable = false) // 생성 시간은 수정되지 않도록 설정
+    @CreatedDate
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    @LastModifiedDate // ❹
+    @LastModifiedDate
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    // Soft Delete: 삭제 시각을 기록하여 탈퇴 및 삭제 여부 판단
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;
+
+    /**
+     * Entity 삭제 시 호출하는 메서드 (Soft Delete)
+     */
+    public void delete() {
+        this.deletedAt = LocalDateTime.now();
+    }
+
+    /**
+     * 삭제 여부 확인
+     */
+    public boolean isDeleted() {
+        return this.deletedAt != null;
+    }
 }
