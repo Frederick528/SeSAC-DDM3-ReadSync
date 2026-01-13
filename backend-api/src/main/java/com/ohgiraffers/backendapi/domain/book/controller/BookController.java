@@ -1,4 +1,4 @@
 package com.ohgiraffers.backendapi.domain.book.controller;
 
-public class NameController {
+public class BookController {
 }
