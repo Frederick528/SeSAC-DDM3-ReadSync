@@ -1,55 +1,50 @@
 package com.ohgiraffers.backendapi.domain.community_posts.entity;
 
+import com.ohgiraffers.backendapi.domain.user.entity.User;
+import com.ohgiraffers.backendapi.global.common.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "community_posts")
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-public class CommunityPost {
+public class CommunityPost extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "post_id")
     private Long postId;
 
-    @Column(nullable = false, length = 200)
+    @Column(length = 200, nullable = false)
     private String title;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+    @Column(nullable = false)
+    private int views = 0;
 
     @Column(nullable = false)
-    private int views;
-
-    @Column(nullable = false)
-    private int report;
-
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
+    private int report = 0;
 
     @Column(name = "like_count", nullable = false)
-    private int likeCount;
+    private int likeCount = 0;
 
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
+    /* ===== 비즈니스 메서드 ===== */
+
+    public void increaseViews() {
+        this.views++;
     }
 
     public void update(String title, String content) {
         this.title = title;
         this.content = content;
-        this.updatedAt = LocalDateTime.now();
     }
 }

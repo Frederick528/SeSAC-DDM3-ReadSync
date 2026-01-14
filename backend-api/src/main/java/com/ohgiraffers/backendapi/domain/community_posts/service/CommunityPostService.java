@@ -3,6 +3,8 @@ package com.ohgiraffers.backendapi.domain.community_posts.service;
 import com.ohgiraffers.backendapi.domain.community_posts.dto.CommunityPostRequest;
 import com.ohgiraffers.backendapi.domain.community_posts.entity.CommunityPost;
 import com.ohgiraffers.backendapi.domain.community_posts.repository.CommunityPostRepository;
+import com.ohgiraffers.backendapi.domain.user.entity.User;
+import com.ohgiraffers.backendapi.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,13 +15,18 @@ import java.util.List;
 public class CommunityPostService {
 
     private final CommunityPostRepository repository;
+    private final UserRepository userRepository;
 
     public CommunityPost create(CommunityPostRequest.Create request, Long userId) {
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("유저 없음"));
+
         return repository.save(
                 CommunityPost.builder()
                         .title(request.getTitle())
                         .content(request.getContent())
-                        .userId(userId)
+                        .user(user)          // ✅ 핵심 수정
                         .views(0)
                         .likeCount(0)
                         .report(0)
@@ -42,7 +49,12 @@ public class CommunityPostService {
         return repository.save(post);
     }
 
+    /**
+     * Soft Delete 적용
+     */
     public void delete(Long postId) {
-        repository.deleteById(postId);
+        CommunityPost post = find(postId);
+        post.delete();          // BaseTimeEntity delete()
+        repository.save(post);
     }
 }

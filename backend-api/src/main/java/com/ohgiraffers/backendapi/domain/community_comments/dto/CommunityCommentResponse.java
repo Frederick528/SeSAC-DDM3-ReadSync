@@ -22,9 +22,13 @@ public class CommunityCommentResponse {
         return CommunityCommentResponse.builder()
                 .commentId(comment.getCommentId())
                 .content(comment.getContent())
-                .userId(comment.getUserId())
-                .parentId(comment.getParentId())
-                .postId(comment.getPostId())
+                .userId(comment.getUser().getId())   // ✅ 여기 핵심
+                .postId(comment.getPost().getPostId())
+                .parentId(
+                        comment.getParent() != null
+                                ? comment.getParent().getCommentId()
+                                : null
+                )
                 .createdAt(comment.getCreatedAt())
                 .updatedAt(comment.getUpdatedAt())
                 .build();

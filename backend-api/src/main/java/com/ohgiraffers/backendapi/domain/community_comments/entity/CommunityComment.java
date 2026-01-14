@@ -1,48 +1,51 @@
 package com.ohgiraffers.backendapi.domain.community_comments.entity;
 
+import com.ohgiraffers.backendapi.domain.community_posts.entity.CommunityPost;
+import com.ohgiraffers.backendapi.domain.user.entity.User;
+import com.ohgiraffers.backendapi.global.common.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "community_comments")
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-public class CommunityComment {
+public class CommunityComment extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "comment_id")
     private Long commentId;
 
-    @Column(nullable = false, length = 100)
+    @Column(length = 100, nullable = false)
     private String content;
 
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
+    /* ===== 게시글 ===== */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id", nullable = false)
+    private CommunityPost post;
 
-    @Column(name = "parent_id")
-    private Long parentId;
+    /* ===== 부모 댓글 (대댓글) ===== */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id")
+    private CommunityComment parent;
 
-    @Column(name = "post_id", nullable = false)
-    private Long postId;
+    /* ===== 자식 댓글 ===== */
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CommunityComment> children = new ArrayList<>();
 
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
-
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
-    }
+    /* ===== 비즈니스 메서드 ===== */
 
     public void update(String content) {
         this.content = content;
-        this.updatedAt = LocalDateTime.now();
     }
 }

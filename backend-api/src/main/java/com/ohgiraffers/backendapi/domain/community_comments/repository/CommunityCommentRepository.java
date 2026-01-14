@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface CommunityCommentRepository extends JpaRepository<CommunityComment, Long> {
 
-    List<CommunityComment> findByPostId(Long postId);
+    List<CommunityComment> findByPost_PostId(Long postId);
 }

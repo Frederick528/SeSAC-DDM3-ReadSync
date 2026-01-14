@@ -28,7 +28,7 @@ public class CommunityPostResponse {
                 .views(post.getViews())
                 .likeCount(post.getLikeCount())
                 .report(post.getReport())
-                .userId(post.getUserId())
+                .userId(post.getUser().getId())
                 .createdAt(post.getCreatedAt())
                 .updatedAt(post.getUpdatedAt())
                 .build();
