@@ -1,4 +1,4 @@
-package com.ohgiraffers.backendapi.domain.book.enums;
+package com.ohgiraffers.backendapi.domain.aichat.enums;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
