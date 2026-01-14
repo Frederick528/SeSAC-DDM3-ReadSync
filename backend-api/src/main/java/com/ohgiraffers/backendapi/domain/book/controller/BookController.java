@@ -31,6 +31,15 @@ public class BookController {
         return ResponseEntity.ok(bookService.getAllBooks());
     }
 
+    @PutMapping("/{bookId}")
+    public ResponseEntity<String> updateBook(
+            @PathVariable Long bookId,
+            @RequestBody BookRequestDTO request) {
+
+        bookService.updateBook(bookId, request);
+        return ResponseEntity.ok("도서 정보가 성공적으로 수정되었습니다.");
+    }
+
     @DeleteMapping("/{bookId}")
     public ResponseEntity<Void> deleteBook(@PathVariable Long bookId) {
         bookService.deleteBook(bookId);

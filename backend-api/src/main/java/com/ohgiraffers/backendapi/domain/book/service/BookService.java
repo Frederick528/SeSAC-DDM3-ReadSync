@@ -59,7 +59,35 @@ public class BookService {
                 .collect(Collectors.toList());
     }
 
-    // 4. 도서 삭제 (Soft Delete)
+    // 4. 도서 수정
+    @Transactional
+    public void updateBook(Long bookId, BookRequestDTO request) {
+        // 1. 기존 도서 조회 (삭제되지 않은 도서만)
+        Book book = bookRepository.findById(bookId)
+                .filter(b -> b.getDeletedAt() == null)
+                .orElseThrow(() -> new IllegalArgumentException("수정할 도서가 존재하지 않습니다."));
+
+        // 2. 카테고리 정보가 변경되었다면 새로 조회
+        Category category = categoryRepository.findById(request.getCategoryId())
+                .orElseThrow(() -> new IllegalArgumentException("변경하려는 카테고리가 존재하지 않습니다."));
+
+        // 3. 엔티티 업데이트 (Dirty Checking 활용)
+        book.update(
+                category,
+                request.getTitle(),
+                request.getAuthor(),
+                request.getIsAdultOnly(),
+                request.getSummary(),
+                request.getPublisher(),
+                request.getPublishedDate(),
+                request.getCoverUrl(),
+                request.getViewPermission(),
+                request.getPrice(),
+                request.getLanguage()
+        );
+    }
+
+    // 5. 도서 삭제 (Soft Delete)
     @Transactional
     public void deleteBook(Long bookId) {
         Book book = bookRepository.findById(bookId)

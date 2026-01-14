@@ -58,4 +58,20 @@ public class Book extends BaseTimeEntity {
 
     @Column(nullable = false)
     private String language;
+
+    public void update(Category category, String title, String author, Boolean isAdultOnly,
+                       String summary, String publisher, LocalDate publishedDate,
+                       String coverUrl, ViewPermission viewPermission, BigDecimal price, String language) {
+        this.category = category;
+        this.title = title;
+        this.author = author;
+        this.isAdultOnly = isAdultOnly;
+        this.summary = summary;
+        this.publisher = publisher;
+        this.publishedDate = publishedDate;
+        this.coverUrl = coverUrl;
+        this.viewPermission = viewPermission;
+        this.price = price;
+        this.language = language;
+    }
 }
