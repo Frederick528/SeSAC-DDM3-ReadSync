@@ -1,8 +1,8 @@
-package com.ohgiraffers.backendapi.domain.book.entity;
+package com.ohgiraffers.backendapi.domain.aichat.entity;
 
 import com.ohgiraffers.backendapi.domain.user.entity.User;
 import com.ohgiraffers.backendapi.global.common.BaseTimeEntity;
-import com.ohgiraffers.backendapi.domain.book.enums.ChatType;
+import com.ohgiraffers.backendapi.domain.aichat.enums.ChatType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
