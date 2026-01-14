@@ -12,5 +12,5 @@ import java.time.LocalDate;
 @Builder
 public class CategoryRequestDTO {
     private String categoryName;
-    private Integer getExpByCategory;
+    private Integer expByCategory;
 }
