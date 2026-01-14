@@ -1,9 +1,6 @@
 package com.ohgiraffers.backendapi.domain.community_comments.service;
 
-<<<<<<< Updated upstream
-=======
 import com.ohgiraffers.backendapi.domain.community_comments.dto.CommunityCommentRequest;
->>>>>>> Stashed changes
 import com.ohgiraffers.backendapi.domain.community_comments.entity.CommunityComment;
 import com.ohgiraffers.backendapi.domain.community_comments.repository.CommunityCommentRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,16 +12,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CommunityCommentService {
 
-<<<<<<< Updated upstream
-    private final CommunityCommentRepository communityCommentRepository;
-
-    public CommunityComment create(CommunityComment comment) {
-        return communityCommentRepository.save(comment);
-    }
-
-    public List<CommunityComment> findByPostId(Long postId) {
-        return communityCommentRepository.findByPostId(postId);
-=======
     private final CommunityCommentRepository repository;
 
     public CommunityComment create(
@@ -56,6 +43,5 @@ public class CommunityCommentService {
 
     public void delete(Long commentId) {
         repository.deleteById(commentId);
->>>>>>> Stashed changes
     }
 }
