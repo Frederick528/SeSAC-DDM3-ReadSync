@@ -15,3 +15,5 @@ public class FriendListResponseDTO {
     private String friendProfileImage;
     private String status;      // 실시간 접속 상태, "OFFLINE"으로 하드코딩(추후 Redis 로직으로 교체)
 }
+
+
