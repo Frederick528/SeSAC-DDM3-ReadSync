@@ -12,14 +12,14 @@ import java.util.Optional;
 public interface LikeRepository extends JpaRepository<Like, Long> {
 
     // [댓글 좋아요 토글]이미 좋아요를 눌렀는지 확인하여 (생성/취소) 분기 처리
-    Optional<Like> findByCommentId_CommentIdAndUserId_UserId(Long commentId, Long userId);
+    Optional<Like> findByComment_CommentIdAndUser_UserId(Long commentId, Long userId);
 
     // [리뷰 좋아요 토글]이미 좋아요를 눌렀는지 확인하여 (생성/취소) 분기 처리
-    Optional<Like> findByReviewId_ReviewIdAndUserId_UserId(Long reviewId, Long user_Id);
+    Optional<Like> findByReview_ReviewIdAndUser_UserId(Long reviewId, Long userId);
 
     // [댓글 좋아요 수 집계]특정 댓글의 총 좋아요 수를 실시간으로 계산
-    List<Like> countByCommentId_CommentIdAndLikeType(Long commentId, LikeType likeType);
+    Long countByComment_CommentIdAndLikeType(Long commentId, LikeType likeType);
 
     // [리뷰 좋아요 수 집계]특정 댓글의 총 좋아요 수를 실시간으로 계산
-    List<Like> countByReviewId_ReviewIdAndLikeType(Long reviewId, LikeType likeType);
+    Long countByReview_ReviewIdAndLikeType(Long reviewId, LikeType likeType);
 }
