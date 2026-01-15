@@ -22,13 +22,13 @@ public class Like extends BaseTimeEntity {
     private Long likeId;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "comment_id")
-    private Comment commentId;
+    private Comment comment;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "review_id")
-    private Review reviewId;
+    private Review review;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private User userId;
+    private User user;
     @Enumerated(EnumType.STRING)
     @Column(name = "reaction_type", nullable = false, length = 10)
     private LikeType likeType;
