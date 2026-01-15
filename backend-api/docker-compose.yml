@@ -3,7 +3,7 @@ version: '3.8'
 services:
   db:
     # 일반 postgres가 아니라 '벡터 기능'이 포함된 특수 이미지입니다.
-    image: ankane/pgvector:latest
+    image: pgvector/pgvector:pg15
     container_name: my_vector_db
     restart: always
     ports:

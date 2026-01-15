@@ -19,7 +19,7 @@ public class Chapter extends BaseTimeEntity{
     private Long chapterId;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id", nullable = false)
-    private Book bookId;
+    private Book book;
     @Column(name = "chapter_name", length = 255)
     private String chapterName;
     @Column(name = "sequence", nullable = false)
@@ -37,8 +37,8 @@ public class Chapter extends BaseTimeEntity{
     private List<Double> vector;
 
     @Builder
-    public Chapter(Book bookId, String chapterName, Integer sequence, String bookContentPath) {
-        this.bookId = bookId;
+    public Chapter(Book book, String chapterName, Integer sequence, String bookContentPath) {
+        this.book = book;
         this.chapterName = chapterName;
         this.sequence = sequence != null ? sequence : 1;
         this.bookContentPath = bookContentPath;
