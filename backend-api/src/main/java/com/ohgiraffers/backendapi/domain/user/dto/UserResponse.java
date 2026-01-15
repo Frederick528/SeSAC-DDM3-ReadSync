@@ -55,4 +55,27 @@ public class UserResponse {
                     .build();
         }
     }
+
+    @Getter
+    @Builder
+    public static class Profile {
+        private Long userId;
+        private String email;
+        private String name;
+        private String profileImage;
+        private int experience;
+        private String preferredGenre;
+
+        // 엔티티 -> DTO 변환 메서드
+        public static Profile from(User user) {
+            return Profile.builder()
+                    .userId(user.getId())
+                    .email(user.getLoginId()) // 소셜이면 email, 일반이면 loginId
+                    .name(user.getUserInformation().getUserName())
+                    .profileImage(user.getUserInformation().getProfileImage())
+                    .experience(user.getUserInformation().getExperience())
+                    .preferredGenre(user.getUserInformation().getPreferredGenre())
+                    .build();
+        }
+    }
 }
