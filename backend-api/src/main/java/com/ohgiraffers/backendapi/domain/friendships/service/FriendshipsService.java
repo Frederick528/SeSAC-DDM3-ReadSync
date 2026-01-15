@@ -45,7 +45,7 @@ public class FriendshipsService {
         Friendships friendships = Friendships.builder()
                 .requester(requester)
                 .addressee(addressee)
-                .status(FriendshipsStatus.ACCEPTED)
+                .status(FriendshipsStatus.PENDING)
                 .build();
 
         friendshipsRepository.save(friendships);
@@ -76,7 +76,10 @@ public class FriendshipsService {
     public void acceptFriend(Long friendshipsId, Long myUserId) {
         Friendships friendships = getFriendshipOrThrow(friendshipsId);
 
-        validateFriendshipOwner(friendships, myUserId);
+        // 수신자(addressee) 본인만 수락 가능
+        if (!friendships.getAddressee().getId().equals(myUserId)) {
+            throw new CustomException(ErrorCode.NO_AUTHORITY_TO_UPDATE);
+        }
 
         friendships.accept();
     }
@@ -86,10 +89,32 @@ public class FriendshipsService {
     public void rejectFriend(Long friendshipsId, Long myUserId) {
         Friendships friendships = getFriendshipOrThrow(friendshipsId);
 
-        validateFriendshipOwner(friendships, myUserId);
+        // 수신자(addressee) 본인만 거절 가능
+        if (!friendships.getAddressee().getId().equals(myUserId)) {
+            throw new CustomException(ErrorCode.NO_AUTHORITY_TO_UPDATE);
+        }
 
         friendships.reject();
     }
+
+    // 친구 요청 취소
+    @Transactional
+    public void cancelFriendRequest(Long friendshipsId, Long myUserId) {
+        Friendships friendships = getFriendshipOrThrow(friendshipsId);
+
+        // 요청자(requester) 본인만 취소 가능
+        if (!friendships.getRequester().getId().equals(myUserId)) {
+            throw new CustomException(ErrorCode.NO_AUTHORITY_TO_UPDATE);
+        }
+
+        // 아직 PENDING 상태일 때만 취소 가능
+        if (friendships.getStatus() != FriendshipsStatus.PENDING) {
+            throw new CustomException(ErrorCode.INVALID_REQUEST_STATUS);
+        }
+
+        friendships.cancel();
+    }
+
 
     // 친구 삭제
     @Transactional

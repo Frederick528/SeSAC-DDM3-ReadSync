@@ -77,4 +77,11 @@ public class Friendships extends BaseTimeEntity {
     public void unblockFriendships() {
         this.delete();
     }
+
+    /**
+     * 친구 요청 취소
+     */
+    public void cancel() {
+        this.delete();
+    }
 }

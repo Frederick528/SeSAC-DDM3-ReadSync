@@ -13,7 +13,8 @@ public enum ErrorCode {
     ADDRESSEE_NOT_FOUND(HttpStatus.NOT_FOUND, "F002", "대상자를 찾을 수 없습니다."),
     ALREADY_FRIENDS(HttpStatus.BAD_REQUEST, "F003", "이미 친구 관계입니다."),
     FRIEND_REQUEST_NOT_FOUND(HttpStatus.NOT_FOUND, "F004", "존재하지 않는 친구 요청입니다."),
-    NO_AUTHORITY_TO_UPDATE(HttpStatus.FORBIDDEN, "F005", "해당 작업에 대한 권한이 없습니다.");
+    NO_AUTHORITY_TO_UPDATE(HttpStatus.FORBIDDEN, "F005", "해당 작업에 대한 권한이 없습니다."),
+    INVALID_REQUEST_STATUS(HttpStatus.BAD_REQUEST, "F006", "유효하지 않은 요청 상태입니다.");
 
     private final HttpStatus status;
     private final String code;
