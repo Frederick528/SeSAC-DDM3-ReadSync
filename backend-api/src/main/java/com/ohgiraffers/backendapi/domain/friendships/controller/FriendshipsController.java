@@ -80,6 +80,7 @@ public class FriendshipsController {
     private Long getMyUserId() {
         return 1L;
     }
+
     // 실제 Helper Method
     // TODO: 실제 UserDetails 파일 이름 확인하기
 //    private Long getUserId(UserDetails principal) {
