@@ -9,4 +9,6 @@ public interface InquiryRepository extends JpaRepository<Inquiry, Long> {
 
     // 내 문의 목록 조회 (최신순)
     List<Inquiry> findByUser_IdOrderByCreatedAtDesc(Long userId);
+    
+    // 커밋용
 }
