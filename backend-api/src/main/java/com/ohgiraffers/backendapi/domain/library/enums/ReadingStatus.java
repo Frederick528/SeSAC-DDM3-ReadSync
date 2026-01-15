@@ -1,4 +1,4 @@
-package com.ohgiraffers.backendapi.domain.userbook.enums;
+package com.ohgiraffers.backendapi.domain.library.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

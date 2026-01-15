@@ -1,26 +1,28 @@
-package com.ohgiraffers.backendapi.domain.userbook.entity;
+package com.ohgiraffers.backendapi.domain.library.entity;
 
 import com.ohgiraffers.backendapi.domain.book.entity.Book;
+import com.ohgiraffers.backendapi.domain.library.enums.OwnershipType;
+import com.ohgiraffers.backendapi.domain.library.enums.ReadingStatus;
 import com.ohgiraffers.backendapi.domain.user.entity.User;
-import com.ohgiraffers.backendapi.domain.userbook.enums.OwnershipType;
-import com.ohgiraffers.backendapi.domain.userbook.enums.ReadingStatus;
 import com.ohgiraffers.backendapi.global.common.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "user_books")
+@Table(name = "libraries")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder
-public class UserBook extends BaseTimeEntity {
+public class Library extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userBookId;
+    private Long libraryId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -33,6 +35,10 @@ public class UserBook extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false)
     private OwnershipType ownershipType;
+
+    @Builder.Default
+    @Column(nullable = false, precision = 5, scale = 2)
+    private BigDecimal totalProgress = BigDecimal.ZERO;
 
     @Builder.Default
     @Enumerated(EnumType.STRING)
