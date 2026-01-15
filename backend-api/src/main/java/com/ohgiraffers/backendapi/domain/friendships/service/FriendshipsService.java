@@ -5,6 +5,7 @@ import com.ohgiraffers.backendapi.domain.friendships.entity.Friendships;
 import com.ohgiraffers.backendapi.domain.friendships.enums.FriendshipsStatus;
 import com.ohgiraffers.backendapi.domain.friendships.repository.FriendshipsRepository;
 import com.ohgiraffers.backendapi.domain.user.entity.User;
+import com.ohgiraffers.backendapi.domain.user.entity.UserInformation;
 import com.ohgiraffers.backendapi.domain.user.repository.UserRepository;
 import com.ohgiraffers.backendapi.global.error.CustomException;
 import com.ohgiraffers.backendapi.global.error.ErrorCode;
@@ -60,11 +61,17 @@ public class FriendshipsService {
                 .map(f -> {
                     User friend = f.getRequester().getId().equals(myUserId) ? f.getAddressee() : f.getRequester();
 
+                    UserInformation info = friend.getUserInformation();
+
+                    String nickname = (info != null && info.getNickname() != null) ? info.getNickname() : friend.getName();
+                    String profileImg = (info != null) ? info.getProfileImg() : null;
+
                     return new FriendListResponseDTO(
                             f.getFriendshipId(),
                             friend.getId(),
                             friend.getName(),
-                            friend.getUserInformation().getProfileImg(),
+                            nickname,
+                            profileImg,
                             "OFFLINE"   // 실시간 접속 상태
                     );
                 })
