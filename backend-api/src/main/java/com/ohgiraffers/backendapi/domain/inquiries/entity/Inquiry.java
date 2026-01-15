@@ -2,7 +2,7 @@ package com.ohgiraffers.backendapi.domain.inquiries.entity;
 
 import com.ohgiraffers.backendapi.domain.inquiries.enums.InquiryStatus;
 import com.ohgiraffers.backendapi.domain.user.entity.User;
-import com.ohgiraffers.backendapi.global.common.BaseTimeEntity;
+import com.ohgiraffers.backendapi.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -12,18 +12,20 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-public class Inquiry extends BaseTimeEntity {
+public class Inquiry extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "inquiry_id")
     private Long inquiryId;
 
     @Column(length = 200)
     private String title;
 
+    @Column(columnDefinition = "TEXT")
+    private String content;
+
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
+    @Column(nullable = false)
     @Builder.Default
     private InquiryStatus status = InquiryStatus.WAIT;
 
@@ -31,17 +33,7 @@ public class Inquiry extends BaseTimeEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(columnDefinition = "TEXT")
-    private String content;
-
-    /* ===== 비즈니스 메서드 ===== */
-
-    public void update(String title, String content) {
-        this.title = title;
-        this.content = content;
-    }
-
-    public void changeStatus(InquiryStatus status) {
-        this.status = status;
+    public void markAnswered() {
+        this.status = InquiryStatus.ANSWERED;
     }
 }

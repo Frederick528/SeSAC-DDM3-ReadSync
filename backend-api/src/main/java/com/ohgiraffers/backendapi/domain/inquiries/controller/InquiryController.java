@@ -17,19 +17,21 @@ public class InquiryController {
     private final InquiryService service;
 
     @PostMapping
-    public ResponseEntity<InquiryResponse> create(
+    public ResponseEntity<InquiryResponse.Detail> create(
             @RequestBody InquiryRequest.Create request
     ) {
         return ResponseEntity.ok(
-                InquiryResponse.from(service.create(request, 1L))
+                InquiryResponse.Detail.from(
+                        service.create(request.getTitle(), request.getContent(), 1L)
+                )
         );
     }
 
-    @GetMapping("/my")
-    public ResponseEntity<List<InquiryResponse>> myInquiries() {
+    @GetMapping("/me")
+    public ResponseEntity<List<InquiryResponse.Detail>> myInquiries() {
         return ResponseEntity.ok(
                 service.findMyInquiries(1L).stream()
-                        .map(InquiryResponse::from)
+                        .map(InquiryResponse.Detail::from)
                         .toList()
         );
     }

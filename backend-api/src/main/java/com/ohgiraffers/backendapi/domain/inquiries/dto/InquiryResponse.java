@@ -6,23 +6,25 @@ import lombok.Getter;
 
 import java.time.LocalDateTime;
 
-@Getter
-@Builder
 public class InquiryResponse {
 
-    private Long inquiryId;
-    private String title;
-    private String content;
-    private String status;
-    private LocalDateTime createdAt;
+    @Getter
+    @Builder
+    public static class Detail {
+        private Long inquiryId;
+        private String title;
+        private String content;
+        private String status;
+        private LocalDateTime createdAt;
 
-    public static InquiryResponse from(Inquiry inquiry) {
-        return InquiryResponse.builder()
-                .inquiryId(inquiry.getInquiryId())
-                .title(inquiry.getTitle())
-                .content(inquiry.getContent())
-                .status(inquiry.getStatus().name())
-                .createdAt(inquiry.getCreatedAt())
-                .build();
+        public static Detail from(Inquiry inquiry) {
+            return Detail.builder()
+                    .inquiryId(inquiry.getInquiryId())
+                    .title(inquiry.getTitle())
+                    .content(inquiry.getContent())
+                    .status(inquiry.getStatus().name())
+                    .createdAt(inquiry.getCreatedAt())
+                    .build();
+        }
     }
 }

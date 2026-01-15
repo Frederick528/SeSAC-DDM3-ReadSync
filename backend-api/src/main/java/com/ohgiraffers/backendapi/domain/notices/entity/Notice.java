@@ -1,7 +1,7 @@
 package com.ohgiraffers.backendapi.domain.notices.entity;
 
 import com.ohgiraffers.backendapi.domain.user.entity.User;
-import com.ohgiraffers.backendapi.global.common.BaseTimeEntity;
+import com.ohgiraffers.backendapi.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -11,11 +11,10 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-public class Notice extends BaseTimeEntity {
+public class Notice extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "notice_id")
     private Long noticeId;
 
     @Column(length = 100, nullable = false)
@@ -31,8 +30,6 @@ public class Notice extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
-
-    /* ===== 비즈니스 로직 ===== */
 
     public void increaseViews() {
         this.views++;

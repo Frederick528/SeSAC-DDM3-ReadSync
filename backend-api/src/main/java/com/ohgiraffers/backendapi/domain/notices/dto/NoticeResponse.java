@@ -17,7 +17,6 @@ public class NoticeResponse {
         private int views;
         private Long userId;
         private LocalDateTime createdAt;
-        private LocalDateTime updatedAt;
 
         public static Detail from(Notice notice) {
             return Detail.builder()
@@ -27,7 +26,6 @@ public class NoticeResponse {
                     .views(notice.getViews())
                     .userId(notice.getUser().getId())
                     .createdAt(notice.getCreatedAt())
-                    .updatedAt(notice.getUpdatedAt())
                     .build();
         }
     }

@@ -1,7 +1,7 @@
 package com.ohgiraffers.backendapi.domain.community_posts.entity;
 
 import com.ohgiraffers.backendapi.domain.user.entity.User;
-import com.ohgiraffers.backendapi.global.common.BaseTimeEntity;
+import com.ohgiraffers.backendapi.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -11,11 +11,10 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-public class CommunityPost extends BaseTimeEntity {
+public class CommunityPost extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "post_id")
     private Long postId;
 
     @Column(length = 200, nullable = false)
@@ -25,26 +24,29 @@ public class CommunityPost extends BaseTimeEntity {
     private String content;
 
     @Column(nullable = false)
+    @Builder.Default
     private int views = 0;
 
     @Column(nullable = false)
-    private int report = 0;
-
-    @Column(name = "like_count", nullable = false)
+    @Builder.Default
     private int likeCount = 0;
+
+    @Column(nullable = false)
+    @Builder.Default
+    private int report = 0;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    /* ===== 비즈니스 메서드 ===== */
-
-    public void increaseViews() {
-        this.views++;
-    }
+    /* ===== 비즈니스 로직 ===== */
 
     public void update(String title, String content) {
         this.title = title;
         this.content = content;
+    }
+
+    public void increaseViews() {
+        this.views++;
     }
 }
