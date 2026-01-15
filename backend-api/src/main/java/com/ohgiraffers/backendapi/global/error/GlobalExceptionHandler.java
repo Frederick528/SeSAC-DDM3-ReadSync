@@ -9,13 +9,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Slf4j
 public class GlobalExceptionHandler {
 
-//    // 우리가 직접 정의한 BusinessException이 발생했을 때
-//    @ExceptionHandler(BusinessException.class)
-//    protected ResponseEntity<ErrorResponse> handleBusinessException(BusinessException e) {
-//        log.error("BusinessException: {}", e.getErrorCode().getMessage());
-//        return ErrorResponse.toResponseEntity(e.getErrorCode());
-//    }
-
 // [수정] BusinessException -> CustomException으로 변경 (만들어두신 파일이 CustomException으로 되어있기 때문)
     @ExceptionHandler(CustomException.class)
     protected ResponseEntity<ErrorResponse> handleCustomException(CustomException e) {
