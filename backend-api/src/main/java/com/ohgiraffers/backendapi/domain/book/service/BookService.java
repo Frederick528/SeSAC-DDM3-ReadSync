@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -27,19 +26,7 @@ public class BookService {
         Category category = categoryRepository.findById(request.getCategoryId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 카테고리입니다."));
 
-        Book book = Book.builder()
-                .category(category)
-                .title(request.getTitle())
-                .author(request.getAuthor())
-                .isAdultOnly(request.getIsAdultOnly())
-                .summary(request.getSummary())
-                .publisher(request.getPublisher())
-                .publishedDate(request.getPublishedDate())
-                .coverUrl(request.getCoverUrl())
-                .viewPermission(request.getViewPermission())
-                .price(request.getPrice())
-                .language(request.getLanguage())
-                .build();
+        Book book = request.toEntity(category);
 
         return bookRepository.save(book).getBookId();
     }
@@ -56,7 +43,7 @@ public class BookService {
     public List<BookResponseDTO> getAllBooks() {
         return bookRepository.findAllByDeletedAtIsNull().stream()
                 .map(BookResponseDTO::from)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     // 4. 도서 수정
@@ -72,19 +59,7 @@ public class BookService {
                 .orElseThrow(() -> new IllegalArgumentException("변경하려는 카테고리가 존재하지 않습니다."));
 
         // 3. 엔티티 업데이트 (Dirty Checking 활용)
-        book.update(
-                category,
-                request.getTitle(),
-                request.getAuthor(),
-                request.getIsAdultOnly(),
-                request.getSummary(),
-                request.getPublisher(),
-                request.getPublishedDate(),
-                request.getCoverUrl(),
-                request.getViewPermission(),
-                request.getPrice(),
-                request.getLanguage()
-        );
+        book.update(category, request);
     }
 
     // 5. 도서 삭제 (Soft Delete)

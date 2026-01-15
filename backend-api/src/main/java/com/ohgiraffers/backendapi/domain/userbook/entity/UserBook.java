@@ -1,8 +1,9 @@
-package com.ohgiraffers.backendapi.domain.mylibrary.entity;
+package com.ohgiraffers.backendapi.domain.userbook.entity;
 
 import com.ohgiraffers.backendapi.domain.book.entity.Book;
-import com.ohgiraffers.backendapi.domain.mylibrary.enums.OwnershipType;
-import com.ohgiraffers.backendapi.domain.mylibrary.enums.ReadingStatus;
+import com.ohgiraffers.backendapi.domain.user.entity.User;
+import com.ohgiraffers.backendapi.domain.userbook.enums.OwnershipType;
+import com.ohgiraffers.backendapi.domain.userbook.enums.ReadingStatus;
 import com.ohgiraffers.backendapi.global.common.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -15,14 +16,15 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder
-public class MyLibrary extends BaseTimeEntity {
+public class UserBook extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long libraryId;
+    private Long userBookId;
 
-    @Column(nullable = false)
-    private Long userId; // 실제 구현 시에는 User 엔티티와 @ManyToOne 관계를 맺는 것을 권장합니다.
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id", nullable = false)
