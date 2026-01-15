@@ -1,0 +1,39 @@
+package com.ohgiraffers.backendapi.global.config;
+
+import io.swagger.v3.oas.models.Components;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class SwaggerConfig {
+
+    @Bean
+    public OpenAPI openAPI() {
+        // 1. 보안 스키마 정의 (JWT Bearer Token 방식)
+        String jwt = "JWT";
+        SecurityRequirement securityRequirement = new SecurityRequirement().addList(jwt);
+        Components components = new Components().addSecuritySchemes(jwt, new SecurityScheme()
+                .name(jwt)
+                .type(SecurityScheme.Type.HTTP)
+                .scheme("bearer")
+                .bearerFormat("JWT")
+        );
+
+        // 2. OpenAPI 객체 생성 및 등록
+        return new OpenAPI()
+                .components(components)
+                .info(apiInfo())
+                .addSecurityItem(securityRequirement);
+    }
+
+    private Info apiInfo() {
+        return new Info()
+                .title("ReadSync API 명세서") // API 제목
+                .description("ReadSync 백엔드 API 문서입니다.") // 설명
+                .version("1.0.0");
+    }
+}

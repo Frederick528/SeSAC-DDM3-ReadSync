@@ -43,6 +43,14 @@ public class User extends BaseTimeEntity {
     @Builder.Default
     private UserStatus status = UserStatus.ACTIVE;
 
+    // 관리자/일반 로그인용 아이디
+    @Column(name = "login_id", length = 30, unique = true)
+    private String loginId;
+
+    // 관리자/일반 로그인용 비밀번호
+    @Column(name = "password")
+    private String password;
+
 
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private UserInformation userInformation;

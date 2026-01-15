@@ -35,8 +35,14 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
-    // Swagger/OpenAPI 3.0 // 서재승 추가
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
+    // Swagger/OpenAPI 3.1 // 서재승 추가
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.1'
+    // 유효성 검사 라이브러리
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    // JWT 라이브러리 추가
+    implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.3'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.3'
 }
 
 tasks.named('test') {

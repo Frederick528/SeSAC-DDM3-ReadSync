@@ -11,11 +11,28 @@ public class UserResponse {
     @Getter
     @Builder
     @AllArgsConstructor
+    public static class Login {
+        private String accessToken;
+        private String refreshToken;
+        private Detail userDetail;
+
+        public static Login of(String accessToken, String refreshToken, User user, UserInformation userInfo) {
+            return Login.builder()
+                    .accessToken(accessToken)
+                    .refreshToken(refreshToken)
+                    .userDetail(Detail.from(user, userInfo))
+                    .build();
+        }
+    }
+
+    @Getter
+    @Builder
+    @AllArgsConstructor
     public static class Detail {
         private Long userId;
         private String email;
         private String name;
-        private String userName; // nickname -> userName
+        private String userName;
         private String profileImage;
         private String role;
         private String status;
