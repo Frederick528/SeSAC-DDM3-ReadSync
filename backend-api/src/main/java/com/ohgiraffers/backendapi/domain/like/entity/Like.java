@@ -22,30 +22,30 @@ public class Like extends BaseTimeEntity {
     private Long likeId;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "comment_id")
-    private Comment comment;
+    private Comment commentId;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "review_id")
-    private Review review;
+    private Review reviewId;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private User userId;
     @Enumerated(EnumType.STRING)
     @Column(name = "reaction_type", nullable = false, length = 10)
     private LikeType likeType;
 
-    // 1. 댓글 좋아요 빌더(Service의 Helper Method의 saveCommentLike에서 사용함)
+    // 1. 댓글 좋아요 빌더
     @Builder(builderMethodName = "createCommentLike")
-    public Like(Comment comment, User user, LikeType likeType) {
-        this.comment = comment;
-        this.user = user;
+    public Like(Comment commentId, User userId, LikeType likeType) {
+        this.commentId = commentId;
+        this.userId = userId;
         this.likeType = likeType;
     }
 
-    // 2. 리뷰 좋아요 빌더(위와 동일)
+    // 2. 리뷰 좋아요 빌더
     @Builder(builderMethodName = "createReviewLike")
-    public Like(Review review, User user, LikeType likeType) {
-        this.review = review;
-        this.user = user;
+    public Like(Review reviewId, User userId, LikeType likeType) {
+        this.reviewId = reviewId;
+        this.userId = userId;
         this.likeType = likeType;
     }
 }
