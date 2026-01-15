@@ -33,7 +33,7 @@ public class Chapter extends BaseTimeEntity{
     // ※주의※ : Java의 List<Double>과 PostgreSQL의 VECTOR 타입은 자동으로 매핑되지 않는 경우가 많습니다.
     // 해결책: 만약 실행 시 에러가 난다면, hibernate-vector 라이브러리를 의존성에 추가하고 아래 어노테이션을 붙여야 합니다.
     @JdbcTypeCode(SqlTypes.VECTOR) // 이 부분이 필요할 수 있음
-    @Column(name = "chapter_vector", columnDefinition = "VECTOR(1024)")
+    @Column(name = "vector", columnDefinition = "VECTOR(1536)")
     private List<Double> vector;
 
     @Builder
