@@ -23,16 +23,12 @@ public class User extends BaseTimeEntity {
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private UserInformation userInformation;
 
-    @Column(name = "user_email", length = 100)
-    private String email;
-
-    @Column(name = "user_name", nullable = false, length = 100)
-    private String name;
-
+    // 소셜제공자
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private SocialProvider provider;
 
+    // 소셜아이디
     @Column(name = "provider_id", nullable = false)
     private String providerId;
 
@@ -46,11 +42,11 @@ public class User extends BaseTimeEntity {
     @Builder.Default
     private UserStatus status = UserStatus.ACTIVE;
 
-    // 관리자/일반 로그인용 아이디
+    // 관리자 로그인용 아이디
     @Column(name = "login_id", length = 30, unique = true)
     private String loginId;
 
-    // 관리자/일반 로그인용 비밀번호
+    // 관리자 로그인용 비밀번호
     @Column(name = "password")
     private String password;
 

@@ -30,8 +30,6 @@ public class UserResponse {
     @AllArgsConstructor
     public static class Detail {
         private Long userId;
-        private String email;
-        private String name;
         private String userName;
         private String profileImage;
         private String role;
@@ -43,9 +41,7 @@ public class UserResponse {
         public static Detail from(User user, UserInformation userInfo) {
             return Detail.builder()
                     .userId(user.getId())
-                    .email(user.getEmail())
-                    .name(user.getName())
-                    .userName(userInfo != null ? userInfo.getUserName() : user.getName())
+                    .userName(userInfo.getNickname())
                     .profileImage(userInfo != null ? userInfo.getProfileImage() : null)
                     .role(user.getRole().getKey())
                     .status(user.getStatus().name())
@@ -65,13 +61,14 @@ public class UserResponse {
         private String profileImage;
         private int experience;
         private String preferredGenre;
+        private String providerId;
 
         // 엔티티 -> DTO 변환 메서드
         public static Profile from(User user) {
             return Profile.builder()
                     .userId(user.getId())
-                    .email(user.getEmail()) // 소셜 email, 일반 loginId
-                    .name(user.getUserInformation().getUserName())
+                    .providerId(user.getProviderId())
+                    .name(user.getUserInformation().getNickname())
                     .profileImage(user.getUserInformation().getProfileImage())
                     .experience(user.getUserInformation().getExperience())
                     .preferredGenre(user.getUserInformation().getPreferredGenre())

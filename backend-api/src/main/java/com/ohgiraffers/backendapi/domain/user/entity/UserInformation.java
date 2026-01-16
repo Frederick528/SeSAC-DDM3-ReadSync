@@ -28,7 +28,7 @@ public class UserInformation extends BaseTimeEntity {
     private User user;
 
     @Column(name = "user_name", nullable = false, length = 30)
-    private String userName;
+    private String nickname;
 
     @Column(name = "profile_image")
     private String profileImage;

@@ -63,13 +63,13 @@ public class FriendshipsService {
 
                     UserInformation info = friend.getUserInformation();
 
-                    String nickname = (info != null && info.getUserName() != null) ? info.getUserName() : friend.getName();
+                    String nickname = (info != null && info.getNickname() != null) ? info.getNickname() : info.getNickname();
                     String profileImg = (info != null) ? info.getProfileImage() : null;
 
                     return new FriendListResponseDTO(
                             f.getFriendshipId(),
                             friend.getId(),
-                            friend.getName(),
+                            info.getNickname(),
                             nickname,
                             profileImg,
                             "OFFLINE"   // 실시간 접속 상태

@@ -16,22 +16,15 @@ public class UserRequest {
     @NoArgsConstructor
     public static class Join {
 
-        @NotBlank(message = "이메일은 필수항목입니다.")
-        private String email;
-
-        @NotBlank(message = "이름은 필수항목입니다.")
-        private String name;
-
         @NotBlank(message = "소셜 제공자는 필수항목입니다.")
         private String provider; // "google", "naver" "kakao"
 
         @NotBlank(message = "소셜 ID는 필수항목입니다.")
         private String providerId;
 
+
         public User toUserEntity() {
             return User.builder()
-                    .email(this.email)
-                    .name(this.name)
                     .provider(SocialProvider.valueOf(this.provider.toUpperCase()))
                     .providerId(this.providerId)
                     .role(UserRole.USER)
@@ -42,7 +35,6 @@ public class UserRequest {
         public UserInformation toUserInformationEntity(User user) {
             return UserInformation.builder()
                     .user(user)
-                    .userName(this.name)
                     .experience(0)
                     .levelId(1L)
                     .preferredGenre("General")
