@@ -10,6 +10,8 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 public class UserRequest {
 
     @Getter
@@ -33,8 +35,10 @@ public class UserRequest {
         }
 
         public UserInformation toUserInformationEntity(User user) {
+            String randomNickname = "User_" + UUID.randomUUID().toString().substring(0, 8);
             return UserInformation.builder()
                     .user(user)
+                    .nickname(randomNickname)
                     .experience(0)
                     .levelId(1L)
                     .preferredGenre("General")

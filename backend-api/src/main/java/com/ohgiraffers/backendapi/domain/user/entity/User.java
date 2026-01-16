@@ -55,4 +55,6 @@ public class User extends BaseTimeEntity {
         super.delete();
         this.status = UserStatus.WITHDRAWN;
     }
+
+
 }

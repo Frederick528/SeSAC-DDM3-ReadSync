@@ -13,7 +13,7 @@ public class SwaggerConfig {
 
     @Bean
     public OpenAPI openAPI() {
-        // 1. 보안 스키마 정의 (JWT Bearer Token 방식)
+
         String jwt = "JWT";
         SecurityRequirement securityRequirement = new SecurityRequirement().addList(jwt);
         Components components = new Components().addSecuritySchemes(jwt, new SecurityScheme()
@@ -23,7 +23,7 @@ public class SwaggerConfig {
                 .bearerFormat("JWT")
         );
 
-        // 2. OpenAPI 객체 생성 및 등록
+
         return new OpenAPI()
                 .components(components)
                 .info(apiInfo())

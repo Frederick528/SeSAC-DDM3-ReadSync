@@ -39,8 +39,8 @@ public enum ErrorCode {
     INVALID_REQUEST_STATUS(HttpStatus.BAD_REQUEST, "F006", "유효하지 않은 요청 상태입니다.");
 
     private final HttpStatus status;
-    private final String message;
     private final String code;
+    private final String message;
 }
 
 /*
