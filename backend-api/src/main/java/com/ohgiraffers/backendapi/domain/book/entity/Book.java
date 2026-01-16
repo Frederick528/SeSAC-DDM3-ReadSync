@@ -62,9 +62,6 @@ public class Book extends BaseTimeEntity {
     @Column(nullable = false)
     private String language;
 
-    @Column(name = "book_vector", columnDefinition = "HALFVEC(1024)")
-    @JdbcTypeCode(SqlTypes.OTHER)
-    private float[] bookVector;
 
     public void update(Category category, BookRequestDTO request) {
         this.category = category;
