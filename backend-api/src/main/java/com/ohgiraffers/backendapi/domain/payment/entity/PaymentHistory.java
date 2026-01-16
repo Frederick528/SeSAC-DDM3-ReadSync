@@ -35,7 +35,7 @@ public class PaymentHistory extends BaseTimeEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, length = 20)
-    private PaymentStatus status;
+    private PaymentStatus paymentStatus;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "trans_type", nullable = false, length = 10)

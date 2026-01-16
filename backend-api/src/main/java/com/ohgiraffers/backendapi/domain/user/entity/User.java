@@ -46,16 +46,18 @@ public class User extends BaseTimeEntity {
     @Builder.Default
     private UserStatus status = UserStatus.ACTIVE;
 
-    @Column(name = "level_id", nullable = false)
-    @Builder.Default
-    private Long levelId = 1L;
+    // 관리자/일반 로그인용 아이디
+    @Column(name = "login_id", length = 30, unique = true)
+    private String loginId;
 
-    // 비즈니스 로직: 레벨 업데이트
-    public void updateLevel(Long newLevelId) {
-        this.levelId = newLevelId;
-    }
+    // 관리자/일반 로그인용 비밀번호
+    @Column(name = "password")
+    private String password;
 
-    // 비즈니스 로직: 회원 탈퇴 (Soft Delete 재정의가 필요하다면 여기에 추가 로직 작성)
+
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private UserInformation userInformation;
+
     @Override
     public void delete() {
         super.delete();

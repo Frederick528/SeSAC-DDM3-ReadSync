@@ -72,9 +72,16 @@ public class Friendships extends BaseTimeEntity {
     }
 
     /**
-     * 차단 해제
+     * 차단 해제: 로직상 차단을 풀면 '남남'이 되야 하므로 delete() 호출
      */
     public void unblockFriendships() {
+        this.delete();
+    }
+
+    /**
+     * 친구 요청 취소
+     */
+    public void cancel() {
         this.delete();
     }
 }

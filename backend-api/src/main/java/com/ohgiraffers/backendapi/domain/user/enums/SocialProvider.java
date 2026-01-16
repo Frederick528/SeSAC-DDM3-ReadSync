@@ -8,7 +8,8 @@ import lombok.Getter;
 public enum SocialProvider {
     GOOGLE("구글"),
     KAKAO("카카오"),
-    NAVER("네이버");
+    NAVER("네이버"),
+    LOCAL("자체 로그인");
 
     private final String description;
 }

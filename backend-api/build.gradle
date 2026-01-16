@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '4.0.1'
+    id 'org.springframework.boot' version '3.4.1'
     id 'io.spring.dependency-management' version '1.1.7'
 }
 
@@ -22,21 +22,43 @@ configurations {
 
 repositories {
     mavenCentral()
+    maven { url 'https://repo.spring.io/milestone' }
+    maven { url 'https://repo.spring.io/snapshot' }
 }
 
 dependencies {
+    // Spring Boot Starters
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    // Lombok
     compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    // DevTools & Database
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'org.postgresql:postgresql'
-    annotationProcessor 'org.projectlombok:lombok'
-    testImplementation 'org.springframework.boot:spring-boot-starter-data-jpa-test'
-    testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
+
+    // Test (표준 스타터로 통합 권장)
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
-    // Swagger/OpenAPI 3.0 // 서재승 추가
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.9'
+    // Swagger/OpenAPI 3.1 // 서재승 추가
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0'
+
+    // 유효성 검사 라이브러리
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    // JWT 라이브러리 추가
+    implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.3'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.3'
+
+    // 시큐리티 라이브러리
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    // AOP 기능 라이브러리
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
 }
 
 tasks.named('test') {
