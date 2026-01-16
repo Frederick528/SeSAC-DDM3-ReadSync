@@ -35,7 +35,7 @@ public class SecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
-                .authorizeHttpRequests(auth -> auth
+               /* .authorizeHttpRequests(auth -> auth
                         .requestMatchers( // 인증불필요
                                 "/api/v1/auth/**",
                                 "/swagger-ui/**",
@@ -44,9 +44,13 @@ public class SecurityConfig {
                         ).permitAll()
                         // 나머지는 인증 필요
                         .anyRequest().authenticated()
+                )*/
+
+                // 임시 모드 허용
+                .authorizeHttpRequests(auth -> auth
+                        .anyRequest().permitAll()
                 )
 
-                // 5. JWT 필터 끼워넣기
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

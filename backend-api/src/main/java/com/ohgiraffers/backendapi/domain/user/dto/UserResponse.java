@@ -70,7 +70,7 @@ public class UserResponse {
         public static Profile from(User user) {
             return Profile.builder()
                     .userId(user.getId())
-                    .email(user.getLoginId()) // 소셜이면 email, 일반이면 loginId
+                    .email(user.getEmail()) // 소셜 email, 일반 loginId
                     .name(user.getUserInformation().getUserName())
                     .profileImage(user.getUserInformation().getProfileImage())
                     .experience(user.getUserInformation().getExperience())
