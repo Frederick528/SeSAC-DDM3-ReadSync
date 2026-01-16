@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -21,10 +20,7 @@ public class CategoryService {
     // 1. 카테고리 등록
     @Transactional
     public Long createCategory(CategoryRequestDTO request) {
-        Category category = Category.builder()
-                .categoryName(request.getCategoryName())
-                .expByCategory(request.getExpByCategory())
-                .build();
+        Category category = request.toEntity();
 
         return categoryRepository.save(category).getCategoryId();
     }
@@ -41,7 +37,7 @@ public class CategoryService {
     public List<CategoryResponseDTO> getAllCategories() {
         return categoryRepository.findAllByDeletedAtIsNull().stream()
                 .map(CategoryResponseDTO::from)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     // 4. 카테고리 수정 (수정 시 더티 체킹 활용을 위해 @Transactional 필수)
@@ -53,7 +49,7 @@ public class CategoryService {
                 .orElseThrow(() -> new IllegalArgumentException("수정할 카테고리가 존재하지 않거나 이미 삭제되었습니다."));
 
         // 2. 엔티티의 비즈니스 메서드 호출 (변경 감지 활용)
-        category.update(request.getCategoryName(), request.getExpByCategory());
+        category.update(request);
     }
 
     // 5. 카테고리 삭제 (Soft Delete)
