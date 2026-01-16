@@ -54,9 +54,6 @@ public class User extends BaseTimeEntity {
     @Column(name = "password")
     private String password;
 
-
-
-
     @Override
     public void delete() {
         super.delete();

@@ -63,8 +63,8 @@ public class FriendshipsService {
 
                     UserInformation info = friend.getUserInformation();
 
-                    String nickname = (info != null && info.getNickname() != null) ? info.getNickname() : friend.getName();
-                    String profileImg = (info != null) ? info.getProfileImg() : null;
+                    String nickname = (info != null && info.getUserName() != null) ? info.getUserName() : friend.getName();
+                    String profileImg = (info != null) ? info.getProfileImage() : null;
 
                     return new FriendListResponseDTO(
                             f.getFriendshipId(),
