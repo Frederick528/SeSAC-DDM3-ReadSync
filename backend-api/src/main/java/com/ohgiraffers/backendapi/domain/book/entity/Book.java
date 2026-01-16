@@ -1,15 +1,12 @@
 package com.ohgiraffers.backendapi.domain.book.entity;
 
 
-import com.ohgiraffers.backendapi.domain.book.dto.BookRequestDTO;
 import com.ohgiraffers.backendapi.domain.book.enums.ViewPermission;
 import com.ohgiraffers.backendapi.domain.category.entity.Category;
 import com.ohgiraffers.backendapi.global.common.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -62,18 +59,19 @@ public class Book extends BaseTimeEntity {
     @Column(nullable = false)
     private String language;
 
-
-    public void update(Category category, BookRequestDTO request) {
+    public void update(Category category, String title, String author, Boolean isAdultOnly,
+                       String summary, String publisher, LocalDate publishedDate,
+                       String coverUrl, ViewPermission viewPermission, BigDecimal price, String language) {
         this.category = category;
-        this.title = request.getTitle();
-        this.author = request.getAuthor();
-        this.isAdultOnly = request.getIsAdultOnly();
-        this.summary = request.getSummary();
-        this.publisher = request.getPublisher();
-        this.publishedDate = request.getPublishedDate();
-        this.coverUrl = request.getCoverUrl();
-        this.viewPermission = request.getViewPermission();
-        this.price = request.getPrice();
-        this.language = request.getLanguage();
+        this.title = title;
+        this.author = author;
+        this.isAdultOnly = isAdultOnly;
+        this.summary = summary;
+        this.publisher = publisher;
+        this.publishedDate = publishedDate;
+        this.coverUrl = coverUrl;
+        this.viewPermission = viewPermission;
+        this.price = price;
+        this.language = language;
     }
 }

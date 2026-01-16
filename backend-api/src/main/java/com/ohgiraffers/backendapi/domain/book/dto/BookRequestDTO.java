@@ -1,8 +1,6 @@
 package com.ohgiraffers.backendapi.domain.book.dto;
 
-import com.ohgiraffers.backendapi.domain.book.entity.Book;
 import com.ohgiraffers.backendapi.domain.book.enums.ViewPermission;
-import com.ohgiraffers.backendapi.domain.category.entity.Category;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -25,21 +23,4 @@ public class BookRequestDTO {
     private ViewPermission viewPermission;
     private BigDecimal price;
     private String language;
-
-    public Book toEntity(Category category) {
-        return Book.builder()
-                .category(category)
-                .title(this.title)
-                .author(this.author)
-                .isAdultOnly(this.isAdultOnly)
-                .summary(this.summary)
-                .publisher(this.publisher)
-                .publishedDate(this.publishedDate)
-                .coverUrl(this.coverUrl)
-                .viewPermission(this.viewPermission)
-                .price(this.price)
-                .language(this.language)
-                .build();
-    }
-
 }

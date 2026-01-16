@@ -1,7 +1,6 @@
 package com.ohgiraffers.backendapi.domain.category.dto;
 
 import com.ohgiraffers.backendapi.domain.book.enums.ViewPermission;
-import com.ohgiraffers.backendapi.domain.category.entity.Category;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -14,11 +13,4 @@ import java.time.LocalDate;
 public class CategoryRequestDTO {
     private String categoryName;
     private Integer expByCategory;
-
-    public Category toEntity() {
-        return Category.builder()
-                .categoryName(this.categoryName)
-                .expByCategory(this.expByCategory)
-                .build();
-    }
 }
