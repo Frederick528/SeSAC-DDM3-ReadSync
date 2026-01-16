@@ -22,6 +22,7 @@ public class Comment extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+    // 부모 댓글
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
     private Comment parentComment;
@@ -29,7 +30,7 @@ public class Comment extends BaseTimeEntity {
     @JoinColumn(name = "chapter_id", nullable = false)
     private Chapter chapter;
     @Column(name = "comment_content", nullable = false)
-    private String commentContent;
+    private String content;
     @Column(name = "is_changed", nullable = false)
     private Boolean isChanged = false;
     @Column(name = "is_spoiler", nullable = false)
@@ -46,24 +47,23 @@ public class Comment extends BaseTimeEntity {
     @Column(name = "dislike_count", nullable = false)
     private Integer dislikeCount = 0;
 
-    // 1. 일반 댓글용 빌더
-    @Builder(builderMethodName = "createComment")
-    public Comment(User user, Chapter chapter, String commentContent, Boolean isSpoiler) {
+    // Service에서 parentComment에 null을 넣으면 일반 댓글, 객체를 넣으면 대댓글
+    @Builder
+    public Comment(User user, Chapter chapter, String content, Comment parentComment, Boolean isSpoiler) {
         this.user = user;
         this.chapter = chapter;
-        this.commentContent = commentContent;
+        this.content = content;
+        this.parentComment = parentComment;
         this.isSpoiler = isSpoiler;
         this.visibilityStatus = VisibilityStatus.ACTIVE;
+        this.isChanged = false;
     }
-
-    // 2. 대댓글(답글)용 빌더
-    @Builder(builderMethodName = "createReply")
-    public Comment(User user, Comment parentComment, Chapter chapter, String commentContent, Boolean isSpoiler) {
-        this.user = user;
-        this.parentComment = parentComment;
-        this.chapter = chapter;
-        this.commentContent = commentContent;
-        this.isSpoiler = isSpoiler;
-        this.visibilityStatus = VisibilityStatus.ACTIVE;  
+    // 댓글 수정 로직
+    public void updateContent(String newContent) {
+        // 내용이 실제로 바뀌었을 때만 변경 처리
+        if(newContent != null && !this.content.equals(newContent)) {
+            this.content = newContent;
+            this.isChanged = true;
+        }
     }
 }
