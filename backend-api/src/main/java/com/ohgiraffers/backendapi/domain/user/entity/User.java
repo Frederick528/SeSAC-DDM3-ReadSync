@@ -55,8 +55,7 @@ public class User extends BaseTimeEntity {
     private String password;
 
 
-    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private UserInformation userInformation;
+
 
     @Override
     public void delete() {
