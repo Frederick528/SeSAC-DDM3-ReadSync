@@ -19,7 +19,7 @@ public class Chapter extends BaseTimeEntity{
     private Long chapterId;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id", nullable = false)
-    private Book bookId;
+    private Book book;
     @Column(name = "chapter_name", length = 255)
     private String chapterName;
     @Column(name = "sequence", nullable = false)
@@ -33,12 +33,12 @@ public class Chapter extends BaseTimeEntity{
     // ※주의※ : Java의 List<Double>과 PostgreSQL의 VECTOR 타입은 자동으로 매핑되지 않는 경우가 많습니다.
     // 해결책: 만약 실행 시 에러가 난다면, hibernate-vector 라이브러리를 의존성에 추가하고 아래 어노테이션을 붙여야 합니다.
     @JdbcTypeCode(SqlTypes.VECTOR) // 이 부분이 필요할 수 있음
-    @Column(name = "vector", columnDefinition = "VECTOR(1536)")
-    private List<Double> vector;
+    @Column(name = "chapter_vector", columnDefinition = "VECTOR(1024)")
+    private List<Float> vector;
 
     @Builder
-    public Chapter(Book bookId, String chapterName, Integer sequence, String bookContentPath) {
-        this.bookId = bookId;
+    public Chapter(Book book, String chapterName, Integer sequence, String bookContentPath) {
+        this.book = book;
         this.chapterName = chapterName;
         this.sequence = sequence != null ? sequence : 1;
         this.bookContentPath = bookContentPath;

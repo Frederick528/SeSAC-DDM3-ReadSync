@@ -83,7 +83,7 @@ class FriendshipsServiceTest {
     void cancelFriendRequest_Fail_NotOwner() {
         // given
         Long myId = 1L;
-        Long otherId = 2L; 
+        Long otherId = 2L;
 
         // 상황: 2번(otherId)이 요청한 건을 1번(myId)이 취소하려 함
         User requester = User.builder().id(otherId).build();
