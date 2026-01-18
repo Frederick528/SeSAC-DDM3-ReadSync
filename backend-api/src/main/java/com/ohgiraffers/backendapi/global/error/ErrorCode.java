@@ -27,9 +27,10 @@ public enum ErrorCode {
     // 댓글
     COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "C001", "해당 댓글을 찾을 수 없습니다."),
     CANNOT_REPLY_TO_DELETED(HttpStatus.NOT_FOUND, "C002", "삭제된 댓글에는 대댓글을 달 수 없습니다."),
+    CANNOT_REPLY_TO_SUSPENDED(HttpStatus.NOT_ACCEPTABLE, "C003", "신고로 비노출 된 댓글에는 대댓글을 달 수 없습니다."),
 
     // 챕터
-    CHAPTER_NOT_FOUND(HttpStatus.NOT_FOUND, "H001", "해당 챕터를 찾을 수 없습니다."),
+    CHAPTER_NOT_FOUND(HttpStatus.NOT_FOUND, "CH001", "해당 챕터를 찾을 수 없습니다."),
 
     // 리뷰
     REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND, "R001", "해당 리뷰를 찾을 수 없습니다."),
