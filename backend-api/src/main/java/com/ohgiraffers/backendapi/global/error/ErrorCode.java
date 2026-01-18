@@ -29,11 +29,16 @@ public enum ErrorCode {
     CANNOT_REPLY_TO_DELETED(HttpStatus.NOT_FOUND, "C002", "삭제된 댓글에는 대댓글을 달 수 없습니다."),
     CANNOT_REPLY_TO_SUSPENDED(HttpStatus.NOT_ACCEPTABLE, "C003", "신고로 비노출 된 댓글에는 대댓글을 달 수 없습니다."),
 
+    // 책
+    BOOK_NOT_FOUND(HttpStatus.NOT_FOUND, "B001", "해당 책을 찾을 수 없습니다."),
+
     // 챕터
     CHAPTER_NOT_FOUND(HttpStatus.NOT_FOUND, "CH001", "해당 챕터를 찾을 수 없습니다."),
 
     // 리뷰
     REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND, "R001", "해당 리뷰를 찾을 수 없습니다."),
+    REVIEW_SUSPENDED(HttpStatus.FORBIDDEN, "R002", "신고 누적으로 인해 제한된 리뷰입니다."),
+    REVIEW_NOT_OWNER(HttpStatus.FORBIDDEN, "R003", "리뷰 작성자가 아닙니다."),
 
     // 친구
     CANNOT_REQUEST_TO_SELF(HttpStatus.BAD_REQUEST, "F001", "자기 자신에게는 친구 요청을 보낼 수 없습니다."),
