@@ -3,17 +3,14 @@ package com.ohgiraffers.backendapi.domain.friendships.entity;
 import com.ohgiraffers.backendapi.global.common.BaseTimeEntity;
 import com.ohgiraffers.backendapi.domain.friendships.enums.FriendshipsStatus;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import com.ohgiraffers.backendapi.domain.user.entity.User;
 
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder
 @Table(
         name = "friendships",
