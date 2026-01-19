@@ -49,7 +49,7 @@ public class UserRequest {
     @Getter
     @NoArgsConstructor
     @Schema(description = "유저 정보 수정 요청")
-    public static class UserUpdate {
+    public static class Update {
 
         @Schema(description = "변경할 닉네임", example = "책읽는선비")
         private String nickname;
@@ -57,6 +57,22 @@ public class UserRequest {
         private String profileImage;
         @Schema(description = "선호 장르", example = "소설")
         private String preferredGenre;
+    }
+
+    @Getter
+    @NoArgsConstructor
+    public static class AdminSignup {
+        @Schema(description = "로그인 아이디", example = "admin")
+        @NotBlank(message = "아이디는 필수입니다.")
+        private String loginId;
+
+        @Schema(description = "비밀번호", example = "1234")
+        @NotBlank(message = "비밀번호는 필수입니다.")
+        private String password;
+
+        @Schema(description = "관리자 닉네임", example = "총관리자")
+        @NotBlank(message = "닉네임은 필수입니다.")
+        private String nickname;
     }
 
     // 어드민 전용 로그인 ^^
@@ -70,5 +86,6 @@ public class UserRequest {
         @Schema(description = "비밀번호", example = "1234")
         @NotBlank(message = "비밀번호는 필수입니다.")
         private String password;
+
     }
 }

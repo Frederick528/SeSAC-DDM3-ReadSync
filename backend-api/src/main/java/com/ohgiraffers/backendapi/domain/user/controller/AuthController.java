@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Auth", description = "인증/로그인 관련 API")
 @RestController
-@RequestMapping("/api/v1/auth")
+@RequestMapping("/v1/auth")
 @RequiredArgsConstructor
 public class AuthController {
 
@@ -22,22 +22,40 @@ public class AuthController {
 
     @Operation(summary = "소셜 로그인/회원가입", description = "소셜(구글/카카오/네이버)에서 받은 정보로 로그인하거나 회원가입합니다.")
     @PostMapping("/social-login")
-    public ResponseEntity<UserResponse.Login> socialLogin(@RequestBody @Valid UserRequest.Join request) {
+    public ResponseEntity<UserResponse.UserLoginResponse> socialLogin(@RequestBody @Valid UserRequest.Join request) {
 
-        UserResponse.Login response = authService.socialLogin(request);
+        UserResponse.UserLoginResponse response = authService.socialLogin(request);
 
         return ResponseEntity.ok(response);
     }
 
-    @Operation(summary = "일반/관리자 로그인", description = "아이디와 비밀번호로 로그인합니다.")
+    // [1] 관리자 가입: AdminSignup DTO 사용
+    @PostMapping("/admin/signup")
+    @Operation(summary = "관리자 가입 & 자동 로그인")
+    public ResponseEntity<UserResponse.UserLoginResponse> createAdmin(@RequestBody UserRequest.AdminSignup request) {
+        // 서비스에 DTO의 값들을 풀어서 전달
+        UserResponse.UserLoginResponse response = authService.createAdmin(
+                request.getLoginId(),
+                request.getPassword(),
+                request.getNickname()
+        );
+        return ResponseEntity.ok(response);
+    }
+
+    //  관리자 로그인
     @PostMapping("/login")
-    public ResponseEntity<UserResponse.Login> login(@RequestBody @Valid UserRequest.Login request) {
-
-        UserResponse.Login response = authService.login(request);
-
+    @Operation(summary = "일반/관리자 로그인")
+    public ResponseEntity<UserResponse.UserLoginResponse> login(@RequestBody UserRequest.Login request) {
+        UserResponse.UserLoginResponse response = authService.login(request);
         return ResponseEntity.ok(response);
     }
 
-
+    @GetMapping("/oauth-success")
+    @Operation(summary = "소셜 로그인 결과 확인 (테스트용)", description = "실제로는 프론트엔드로 리다이렉트 됩니다.")
+    public String oauthSuccess(@RequestParam String accessToken, @RequestParam String refreshToken) {
+        return "<h1>로그인 성공! 🥳</h1>" +
+                "<p><b>Access Token:</b> " + accessToken + "</p>" +
+                "<p><b>Refresh Token:</b> " + refreshToken + "</p>";
+    }
 
 }

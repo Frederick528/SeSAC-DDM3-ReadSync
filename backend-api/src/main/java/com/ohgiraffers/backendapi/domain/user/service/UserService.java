@@ -30,9 +30,9 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public UserResponse.Detail getMyInformation(Long userId) {
+    public UserResponse.UserDetail getMyInformation(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-        return UserResponse.Detail.from(user, user.getUserInformation());
+        return UserResponse.UserDetail.from(user, user.getUserInformation());
     }
 }

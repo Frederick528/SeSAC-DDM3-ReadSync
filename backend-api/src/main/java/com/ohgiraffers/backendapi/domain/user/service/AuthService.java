@@ -13,10 +13,12 @@ import com.ohgiraffers.backendapi.domain.user.repository.UserRepository;
 import com.ohgiraffers.backendapi.global.auth.jwt.JwtTokenProvider;
 import com.ohgiraffers.backendapi.global.error.CustomException;
 import com.ohgiraffers.backendapi.global.error.ErrorCode;
-
+import org.springframework.security.crypto.password.PasswordEncoder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.ohgiraffers.backendapi.domain.user.enums.UserRole;
+import com.ohgiraffers.backendapi.domain.user.enums.SocialProvider;
 
 @Service
 @RequiredArgsConstructor
@@ -26,9 +28,10 @@ public class AuthService {
     private final UserInformationRepository userInformationRepository;
     private final RefreshTokenRepository refreshTokenRepository;
     private final JwtTokenProvider jwtTokenProvider;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public UserResponse.Login socialLogin(UserRequest.Join request) {
+    public UserResponse.UserLoginResponse socialLogin(UserRequest.Join request) {
         //  회원 여부 확인
         User user = userRepository.findByProviderAndProviderId(
                 SocialProvider.valueOf(request.getProvider().toUpperCase()),
@@ -56,7 +59,7 @@ public class AuthService {
                         )
                 );
 
-        return UserResponse.Login.of(accessToken, refreshToken, user, user.getUserInformation());
+        return UserResponse.UserLoginResponse.of(accessToken, refreshToken, user, user.getUserInformation());
     }
 
     private User register(UserRequest.Join request) {
@@ -70,44 +73,69 @@ public class AuthService {
     }
 
     @Transactional(readOnly = true)
-    public UserResponse.Detail userInformation(Long userId) {
+    public UserResponse.UserDetail userInformation(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         UserInformation userInfo = user.getUserInformation();
 
-        return UserResponse.Detail.from(user, userInfo);
+        return UserResponse.UserDetail.from(user, userInfo);
     }
 
-    @Transactional
-    public UserResponse.Detail updateInformation(Long userId, UserRequest.UserUpdate request) {
-        // 1. 유저 정보 엔티티 조회
-        // (UserInformationRepository에 findByUserId(Long userId) 메서드가 선언되어 있어야 합니다)
-        UserInformation userInfo = userInformationRepository.findByUserId(userId)
-                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-        // 2. 엔티티 데이터 업데이트
-        userInfo.update(
-                request.getNickname(),
-                request.getProfileImage(),
-                request.getPreferredGenre()
+    // 관리자 회원가입(임시)
+    @Transactional
+    public UserResponse.UserLoginResponse createAdmin(String loginId, String plainPassword, String nickname) {
+        // 1. 중복 검사
+        if (userRepository.findByLoginId(loginId).isPresent()) {
+            throw new CustomException(ErrorCode.DUPLICATE_LOGIN_ID); // ErrorCode 확인 필요
+        }
+
+        // 2. 관리자 User 생성 (비번 암호화)
+        User admin = User.builder()
+                .loginId(loginId)
+                .password(passwordEncoder.encode(plainPassword)) // 암호화 필수!
+                .role(UserRole.ADMIN)
+                .status(UserStatus.ACTIVE)
+                .provider(SocialProvider.LOCAL)
+                .providerId("ADMIN_" + loginId)
+                .build();
+        userRepository.save(admin);
+
+        // 3. 관리자 정보 생성
+        UserInformation adminInfo = UserInformation.builder()
+                .user(admin)
+                .nickname(nickname != null ? nickname : "관리자") // 닉네임 없으면 기본값
+                .experience(99999) // 관리자니까 경험치 빵빵하게
+                .levelId(1L)
+                .preferredGenre("ALL")
+                .build();
+        userInformationRepository.save(adminInfo);
+
+        // 4. ★ 토큰 발급 (로그인 로직과 동일) ★
+        String accessToken = jwtTokenProvider.createAccessToken(admin.getId(), admin.getRole());
+        String refreshToken = jwtTokenProvider.createRefreshToken(admin.getId());
+
+        // 5. 리프레시 토큰 저장
+        refreshTokenRepository.save(
+                RefreshToken.builder()
+                        .userId(admin.getId())
+                        .token(refreshToken)
+                        .build()
         );
 
-        // 3. 변경된 엔티티를 DTO로 변환하여 반환
-        return UserResponse.Detail.from(userInfo.getUser(), userInfo);
+        // 6. 결과 반환
+        return UserResponse.UserLoginResponse.of(accessToken, refreshToken, admin, adminInfo);
     }
 
     //  일반(관리자) 로그인
     @Transactional
-    public UserResponse.Login login(UserRequest.Login request) {
+    public UserResponse.UserLoginResponse login(UserRequest.Login request) {
         //  아이디로 찾기
         User user = userRepository.findByLoginId(request.getLoginId())
                 .orElseThrow(() -> new CustomException(ErrorCode.LOGIN_FAILED));
 
-        //  비밀번호 확인 (단순 문자열 비교)
-        //  나중에 Security 설정하면 passwordEncoder.matches()로 바꿔야 함
-        if (!request.getPassword().equals(user
-                .getPassword())) {
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new CustomException(ErrorCode.LOGIN_FAILED);
         }
 
@@ -116,11 +144,10 @@ public class AuthService {
             throw new CustomException(ErrorCode.LOGIN_FAILED);
         }
 
-        //  토큰 발급 (소셜 로그인과 동일)
+        // ... (토큰 발급 및 반환 로직 그대로 유지)
         String accessToken = jwtTokenProvider.createAccessToken(user.getId(), user.getRole());
         String refreshToken = jwtTokenProvider.createRefreshToken(user.getId());
 
-        //  리프레시 토큰 저장
         refreshTokenRepository.findById(user.getId())
                 .ifPresentOrElse(
                         token -> token.updateToken(refreshToken),
@@ -132,6 +159,6 @@ public class AuthService {
                         )
                 );
 
-        return UserResponse.Login.of(accessToken, refreshToken, user, user.getUserInformation());
+        return UserResponse.UserLoginResponse.of(accessToken, refreshToken, user, user.getUserInformation());
     }
 }

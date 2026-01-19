@@ -32,19 +32,5 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
- /*   @LogExecutionTime
-    @Operation(summary = "내 정보 입력/수정", description = "회원가입 직후 또는 마이페이지에서 유저의 상세 정보를 수정합니다.")
-    @PostMapping("/me")
-    public ResponseEntity<UserResponse.Detail> setMyInformation(
-            @CurrentUserId Long userId,
-            @RequestBody UserRequest.UserUpdate request
-    ) {
-        // 서비스에서 업데이트 로직 수행
-        UserResponse.Detail response = authService.updateInformation(userId, request);
-
-        return ResponseEntity.ok(response);
-    }
-*/
-
 
 }
