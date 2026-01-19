@@ -13,12 +13,10 @@ import java.time.LocalDate;
 @Builder
 public class CategoryRequestDTO {
     private String categoryName;
-    private Integer expByCategory;
 
     public Category toEntity() {
         return Category.builder()
                 .categoryName(this.categoryName)
-                .expByCategory(this.expByCategory)
                 .build();
     }
 }
