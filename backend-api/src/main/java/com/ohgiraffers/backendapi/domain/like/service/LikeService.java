@@ -116,6 +116,7 @@ public class LikeService {
 
         // 최신 집계 반환(좋아요 반영/해제 여부, 어떤것이 반영되었는지, 좋아요 합계, 싫어요 합계)
         // ※현재는 댓글 전체를 count 하고 있으나, 나중에는 review나 comment의 entity에 카운트 +1/-1만 하는 기능을 추가하여 반정규화로 할것.
+        // 그러면 성능상 이점이 있다고 함.
         return buildResponse(isPressed, message,
                 likeRepository.countByReview_ReviewIdAndLikeType(reviewId, LikeType.LIKE),
                 likeRepository.countByReview_ReviewIdAndLikeType(reviewId, LikeType.DISLIKE));

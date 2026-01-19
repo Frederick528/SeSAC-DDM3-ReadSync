@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 @Service
  @RequiredArgsConstructor
- @Transactional
+ @Transactional(readOnly = true)
  public class CommentService {
 
      private final CommentRepository commentRepository;
@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 
 
      /* [1] 댓글 작성 (일반 + 대댓글) */
+    @Transactional
      public CommentResponseDTO createComment(Long userId, Long chapterId, CommentRequestDTO requestDTO) {
          User user = userRepository.findById(userId)
                  .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
@@ -66,7 +67,6 @@ import java.util.stream.Collectors;
      }
 
      /* [2] 댓글 목록 조회 */
-     @Transactional(readOnly = true)
      public List<CommentResponseDTO> getCommentsByChapter(Long chapterId) {
          // 해당 챕터의 댓글 전체 조회
          List<Comment> comments = commentRepository.findByChapter_ChapterIdOrderByCreatedAtAsc(chapterId);
@@ -78,6 +78,7 @@ import java.util.stream.Collectors;
      }
 
      /* [3] 댓글 수정 */
+    @Transactional
     public CommentResponseDTO updateComment(Long userId, Long commentId, CommentRequestDTO commentRequestDTO) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new CustomException(ErrorCode.COMMENT_NOT_FOUND));
@@ -101,6 +102,7 @@ import java.util.stream.Collectors;
     }
 
     /* [4] 댓글 삭제 (Soft Delete) */
+    @Transactional
     public void deleteComment(Long userId, Long commentId) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new CustomException(ErrorCode.COMMENT_NOT_FOUND));

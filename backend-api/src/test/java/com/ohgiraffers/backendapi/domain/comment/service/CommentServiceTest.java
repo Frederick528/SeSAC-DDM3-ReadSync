@@ -55,7 +55,7 @@ class CommentServiceTest {
 
         userInfo = UserInformation.builder()
                 .user(user)
-                .userName("테스트닉네임") // 닉네임 설정
+                .nickname("테스트닉네임") // 닉네임 설정
                 .build();
 
         // User와 UserInformation 양방향 연결 흉내 (Service에서 getter 체이닝을 위해)

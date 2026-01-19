@@ -27,7 +27,7 @@ import java.util.UUID;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
 public class ChapterService {
 
     private final ChapterRepository chapterRepository;
@@ -39,6 +39,7 @@ public class ChapterService {
 
     /* [1] 챕터 생성 (파일 업로드 + 메타데이터 추출) */
 
+    @Transactional
     public ChapterResponseDTO createChapter(ChapterRequestDTO requestDTO) {
         // 1. 책 존재 여부 확인
         Book book = bookRepository.findById(requestDTO.getBookId())
@@ -95,7 +96,6 @@ public class ChapterService {
 
     /* [2] 챕터 조회 (파일 내용을 읽어서 반환) */
 
-    @Transactional(readOnly = true)
     public ChapterResponseDTO getChapter(Long chapterId) {
         Chapter chapter = chapterRepository.findById(chapterId)
                 .orElseThrow(() -> new CustomException(ErrorCode.CHAPTER_NOT_FOUND));
@@ -122,7 +122,7 @@ public class ChapterService {
             // 엔티티 업데이트 (경로 변경 + isEmbedded = false 초기화)
             chapter.updateFile(newFilePath);
 
-            // (선택) 여기서 바로 임베딩 재요청 이벤트를 발행할 수도 있습니다.
+            // (선택) 여기서 바로 임베딩 재요청 이벤트를 발행할 수도 있음.
         }
 
         // 2. 메타데이터(이름, 순서) 수정
@@ -145,7 +145,7 @@ public class ChapterService {
         chapterRepository.delete(chapter);
     }
 
-    // --- 내부 헬퍼 메서드 ---
+    /* ------------- 내부 헬퍼 메서드 ------------- */
 
     // 파일 로컬 저장 로직 (추후 AWS S3 Service로 대체될 부분)
     private String saveFileToLocal(MultipartFile file) {
@@ -159,7 +159,6 @@ public class ChapterService {
             if (!directory.exists()) {
                 directory.mkdirs();
             }
-
             // 유니크한 파일명 생성
             String originalFilename = file.getOriginalFilename();
             String storeFileName = UUID.randomUUID() + "_" + originalFilename;
@@ -199,7 +198,6 @@ public class ChapterService {
                 content = "Error: 내용을 불러올 수 없습니다.";
             }
         }
-
         return ChapterResponseDTO.builder()
                 .chapterId(chapter.getChapterId())
                 .bookId(chapter.getBook().getBookId())
@@ -209,6 +207,7 @@ public class ChapterService {
                 .bookContent(content)
                 .build();
     }
+
     // LocalFile 삭제 메서드
     private void deleteLocalFile(String filePath) {
         if (filePath != null && !filePath.isEmpty()) {
