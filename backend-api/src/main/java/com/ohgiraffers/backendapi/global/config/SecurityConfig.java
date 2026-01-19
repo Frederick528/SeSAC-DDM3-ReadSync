@@ -13,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.http.HttpMethod;
 
 @Configuration
 @EnableWebSecurity
@@ -46,9 +47,32 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )*/
 
-                // 임시 모드 허용
+                // 임시 모드 허용 (관리자 모드로 변경)
+                // ROLE_ADMIN 사용자만 답변 작성 가능
+                // 회원은 403 Forbidden
                 .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll()
+                        // ===== Swagger =====
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+
+                        // ===== Notice =====
+                        .requestMatchers(HttpMethod.GET, "/api/notice/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/notice").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/notice/*").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/notice/*").hasRole("ADMIN")
+
+                        // ===== Inquiry =====
+                        .requestMatchers(HttpMethod.POST, "/api/inquiry").authenticated() // 사용자 생성 가능
+                        .requestMatchers(HttpMethod.GET, "/api/inquiry").authenticated()  // 사용자별 목록 조회
+                        .requestMatchers(HttpMethod.GET, "/api/inquiry/*").authenticated() // 특정 문의 조회
+
+                        // ===== Inquiry Answer =====
+                        .requestMatchers(HttpMethod.POST, "/api/inquiry/*/answer").hasRole("ADMIN") // 답변 생성
+                        .requestMatchers(HttpMethod.PUT, "/api/inquiry/*/answer").hasRole("ADMIN")  // 답변 수정
+                        .requestMatchers(HttpMethod.DELETE, "/api/inquiry/*/answer").hasRole("ADMIN") // 답변 삭제
+                        .requestMatchers(HttpMethod.GET, "/api/inquiry/*/answer").permitAll()         // 답변 조회
+
+                        // ===== ETC =====
+                        .anyRequest().authenticated()
                 )
 
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
