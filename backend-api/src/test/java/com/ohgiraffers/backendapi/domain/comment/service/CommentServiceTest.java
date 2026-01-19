@@ -1,7 +1,7 @@
 package com.ohgiraffers.backendapi.domain.comment.service;
 
-import com.ohgiraffers.backendapi.domain.book.entity.Chapter;
-import com.ohgiraffers.backendapi.domain.book.repository.ChapterRepository;
+import com.ohgiraffers.backendapi.domain.chapter.entity.Chapter;
+import com.ohgiraffers.backendapi.domain.chapter.repository.ChapterRepository;
 import com.ohgiraffers.backendapi.domain.comment.dto.CommentRequestDTO;
 import com.ohgiraffers.backendapi.domain.comment.dto.CommentResponseDTO;
 import com.ohgiraffers.backendapi.domain.comment.entity.Comment;
@@ -55,7 +55,7 @@ class CommentServiceTest {
 
         userInfo = UserInformation.builder()
                 .user(user)
-                .userName("테스트닉네임") // 닉네임 설정
+                .nickname("테스트닉네임") // 닉네임 설정
                 .build();
 
         // User와 UserInformation 양방향 연결 흉내 (Service에서 getter 체이닝을 위해)
