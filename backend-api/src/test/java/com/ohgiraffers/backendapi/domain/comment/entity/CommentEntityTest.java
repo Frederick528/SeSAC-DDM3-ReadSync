@@ -18,7 +18,7 @@ class CommentEntityTest {
                 .build();
 
         // when
-        comment.updateContent("수정된 내용");
+        comment.updateContent("수정된 내용", true);
 
         // then
         assertThat(comment.getContent()).isEqualTo("수정된 내용");
@@ -35,7 +35,7 @@ class CommentEntityTest {
                 .build();
 
         // when
-        comment.updateContent("원본 내용");
+        comment.updateContent("원본 내용", false);
 
         // then
         assertThat(comment.isChanged()).isFalse(); // 그대로 false여야 함

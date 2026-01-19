@@ -70,11 +70,14 @@ public class Comment extends BaseTimeEntity {
         this.isChanged = false;
     }
     // 댓글 수정 로직
-    public void updateContent(String newContent) {
+    public void updateContent(String newContent, Boolean isSpoiler) {
         // 내용이 실제로 바뀌었을 때만 변경 처리
         if(newContent != null && !this.content.equals(newContent)) {
             this.content = newContent;
             this.isChanged = true;
+        }
+        if(isSpoiler != null) {
+            this.isSpoiler = isSpoiler;
         }
     }
 

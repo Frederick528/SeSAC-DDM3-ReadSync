@@ -61,9 +61,8 @@ import java.util.stream.Collectors;
                  .parentComment(parentComment)  // null이나 객체 중 하나
                  .build();
 
-         commentRepository.save(comment);
 
-         return toReponseDTO(comment);
+         return toReponseDTO(commentRepository.save(comment));
      }
 
      /* [2] 댓글 목록 조회 */
@@ -96,7 +95,7 @@ import java.util.stream.Collectors;
             throw new CustomException(ErrorCode.CANNOT_REPLY_TO_SUSPENDED);
         }
 
-        comment.updateContent(commentRequestDTO.getContent());
+        comment.updateContent(commentRequestDTO.getContent(), commentRequestDTO.isSpoiler());
 
         return toReponseDTO(comment);
     }
@@ -124,11 +123,11 @@ import java.util.stream.Collectors;
      private CommentResponseDTO toReponseDTO(Comment comment) {
          return CommentResponseDTO.builder()
                  .commentId(comment.getCommentId())
-                 .nickname(comment.getUser().getUserInformation().getUserName())
+                 .nickname(comment.getUser().getUserInformation().getNickname())
                  .content(comment.getContent())
                  // 부모가 있으면 ID 반환, 없으면 null
                  .parentCommentId(comment.getParentComment() != null ? comment.getParentComment().getCommentId() : null)
-                 .isSpoiler(comment.isSpoiler())
+                 .spoiler(comment.isSpoiler())
                  .isChanged(comment.isChanged())
                  .status(comment.getVisibilityStatus())
                  .createdAt(comment.getCreatedAt())

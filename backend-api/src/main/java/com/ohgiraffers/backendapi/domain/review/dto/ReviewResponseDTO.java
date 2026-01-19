@@ -28,7 +28,7 @@ public class ReviewResponseDTO {
     public static ReviewResponseDTO from(Review review) {
         return ReviewResponseDTO.builder()
                 .reviewId(review.getReviewId())
-                .writerName(review.getUser().getUserInformation().getUserName())
+                .writerName(review.getUser().getUserInformation().getNickname())
                 .bookTitle(review.getBook().getTitle())
                 .rating(review.getRating())
                 .content(review.getReviewContent())
