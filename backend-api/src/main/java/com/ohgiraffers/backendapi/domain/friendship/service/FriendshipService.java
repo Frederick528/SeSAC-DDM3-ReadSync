@@ -1,9 +1,9 @@
-package com.ohgiraffers.backendapi.domain.friendships.service;
+package com.ohgiraffers.backendapi.domain.friendship.service;
 
-import com.ohgiraffers.backendapi.domain.friendships.dto.FriendListResponseDTO;
-import com.ohgiraffers.backendapi.domain.friendships.entity.Friendships;
-import com.ohgiraffers.backendapi.domain.friendships.enums.FriendshipsStatus;
-import com.ohgiraffers.backendapi.domain.friendships.repository.FriendshipsRepository;
+import com.ohgiraffers.backendapi.domain.friendship.dto.FriendListResponseDTO;
+import com.ohgiraffers.backendapi.domain.friendship.entity.Friendship;
+import com.ohgiraffers.backendapi.domain.friendship.enums.FriendshipStatus;
+import com.ohgiraffers.backendapi.domain.friendship.repository.FriendshipRepository;
 import com.ohgiraffers.backendapi.domain.user.entity.User;
 import com.ohgiraffers.backendapi.domain.user.entity.UserInformation;
 import com.ohgiraffers.backendapi.domain.user.repository.UserRepository;
@@ -19,9 +19,9 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class FriendshipsService {
+public class FriendshipService {
 
-    private final FriendshipsRepository friendshipsRepository;
+    private final FriendshipRepository friendshipRepository;
     private final UserRepository userRepository;
 
     // 친구 요청
@@ -38,24 +38,24 @@ public class FriendshipsService {
                 .orElseThrow(() -> new CustomException(ErrorCode.ADDRESSEE_NOT_FOUND));
 
         // 중복 요청 방지
-        if (friendshipsRepository.existsByUsers(requester, addressee)) {
+        if (friendshipRepository.existsByUsers(requester, addressee)) {
             throw new CustomException(ErrorCode.ALREADY_FRIENDS);
         }
 
         // 친구 저장
-        Friendships friendships = Friendships.builder()
+        Friendship friendship = Friendship.builder()
                 .requester(requester)
                 .addressee(addressee)
-                .status(FriendshipsStatus.PENDING)
+                .status(FriendshipStatus.PENDING)
                 .build();
 
-        friendshipsRepository.save(friendships);
+        friendshipRepository.save(friendship);
 
     }
 
     // 친구 목록 조회
     public List<FriendListResponseDTO> getMyFriends(Long myUserId) {
-        List<Friendships> friendships = friendshipsRepository.findMyFriendships(myUserId, FriendshipsStatus.ACCEPTED);
+        List<Friendship> friendships = friendshipRepository.findMyFriendships(myUserId, FriendshipStatus.ACCEPTED);
 
         return friendships.stream()
                 .map(f -> {
@@ -80,90 +80,90 @@ public class FriendshipsService {
 
     // 친구 요청 수락
     @Transactional
-    public void acceptFriend(Long friendshipsId, Long myUserId) {
-        Friendships friendships = getFriendshipOrThrow(friendshipsId);
+    public void acceptFriend(Long friendshipId, Long myUserId) {
+        Friendship friendship = getFriendshipOrThrow(friendshipId);
 
         // 수신자(addressee) 본인만 수락 가능
-        if (!friendships.getAddressee().getId().equals(myUserId)) {
+        if (!friendship.getAddressee().getId().equals(myUserId)) {
             throw new CustomException(ErrorCode.NO_AUTHORITY_TO_UPDATE);
         }
 
-        friendships.accept();
+        friendship.accept();
     }
 
     // 친구 요청 거절
     @Transactional
-    public void rejectFriend(Long friendshipsId, Long myUserId) {
-        Friendships friendships = getFriendshipOrThrow(friendshipsId);
+    public void rejectFriend(Long friendshipId, Long myUserId) {
+        Friendship friendship = getFriendshipOrThrow(friendshipId);
 
         // 수신자(addressee) 본인만 거절 가능
-        if (!friendships.getAddressee().getId().equals(myUserId)) {
+        if (!friendship.getAddressee().getId().equals(myUserId)) {
             throw new CustomException(ErrorCode.NO_AUTHORITY_TO_UPDATE);
         }
 
-        friendships.reject();
+        friendship.reject();
     }
 
     // 친구 요청 취소
     @Transactional
-    public void cancelFriendRequest(Long friendshipsId, Long myUserId) {
-        Friendships friendships = getFriendshipOrThrow(friendshipsId);
+    public void cancelFriendRequest(Long friendshipId, Long myUserId) {
+        Friendship friendship = getFriendshipOrThrow(friendshipId);
 
         // 요청자(requester) 본인만 취소 가능
-        if (!friendships.getRequester().getId().equals(myUserId)) {
+        if (!friendship.getRequester().getId().equals(myUserId)) {
             throw new CustomException(ErrorCode.NO_AUTHORITY_TO_UPDATE);
         }
 
         // 아직 PENDING 상태일 때만 취소 가능
-        if (friendships.getStatus() != FriendshipsStatus.PENDING) {
+        if (friendship.getStatus() != FriendshipStatus.PENDING) {
             throw new CustomException(ErrorCode.INVALID_REQUEST_STATUS);
         }
 
-        friendships.cancel();
+        friendship.cancel();
     }
 
 
     // 친구 삭제
     @Transactional
-    public void unfriend(Long friendshipsId, Long myUserId) {
-        Friendships friendships = getFriendshipOrThrow(friendshipsId);
+    public void unfriend(Long friendshipId, Long myUserId) {
+        Friendship friendship = getFriendshipOrThrow(friendshipId);
 
-        validateFriendshipOwner(friendships, myUserId);
+        validateFriendshipOwner(friendship, myUserId);
 
-        friendships.unfriend();
+        friendship.unfriend();
     }
 
     // 상대방 차단
     @Transactional
-    public void blockFriend(Long friendshipsId, Long myUserId) {
-        Friendships friendships = getFriendshipOrThrow(friendshipsId);
+    public void blockFriend(Long friendshipId, Long myUserId) {
+        Friendship friendship = getFriendshipOrThrow(friendshipId);
 
-        validateFriendshipOwner(friendships, myUserId);
+        validateFriendshipOwner(friendship, myUserId);
 
-        friendships.block();
+        friendship.block();
     }
 
     // 상대방 차단 해제
     @Transactional
-    public void unblockFriend(Long friendshipsId, Long myUserId) {
-        Friendships friendships = getFriendshipOrThrow(friendshipsId);
+    public void unblockFriend(Long friendshipId, Long myUserId) {
+        Friendship friendship = getFriendshipOrThrow(friendshipId);
 
-        validateFriendshipOwner(friendships, myUserId);
+        validateFriendshipOwner(friendship, myUserId);
 
-        friendships.unblockFriendships();
+        friendship.unblockFriendships();
     }
 
 
 
     // 내부 편의 메서드
     // id 조회 에러
-    private Friendships getFriendshipOrThrow(Long friendshipId) {
-        return friendshipsRepository.findById(friendshipId)
+    private Friendship getFriendshipOrThrow(Long friendshipId) {
+        return friendshipRepository.findById(friendshipId)
                 .orElseThrow(() -> new CustomException(ErrorCode.FRIEND_REQUEST_NOT_FOUND));
     }
 
     // 당사자 확인 (내가 이 관계의 주인공(A or B)이 맞는지?)
-    private void validateFriendshipOwner(Friendships friendship, Long myUserId) {
+    private void validateFriendshipOwner(Friendship friendship, Long myUserId) {
         boolean isRequester = friendship.getRequester().getId().equals(myUserId);
         boolean isAddressee = friendship.getAddressee().getId().equals(myUserId);
 

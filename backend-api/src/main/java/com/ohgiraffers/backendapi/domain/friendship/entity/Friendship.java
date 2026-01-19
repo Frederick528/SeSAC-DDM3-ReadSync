@@ -1,7 +1,7 @@
-package com.ohgiraffers.backendapi.domain.friendships.entity;
+package com.ohgiraffers.backendapi.domain.friendship.entity;
 
 import com.ohgiraffers.backendapi.global.common.BaseTimeEntity;
-import com.ohgiraffers.backendapi.domain.friendships.enums.FriendshipsStatus;
+import com.ohgiraffers.backendapi.domain.friendship.enums.FriendshipStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -18,7 +18,7 @@ import com.ohgiraffers.backendapi.domain.user.entity.User;
                 @UniqueConstraint(name = "UQ_FRIENDSHIP_PAIR", columnNames = {"requester_id", "addressee_id"})
         }
 )
-public class Friendships extends BaseTimeEntity {
+public class Friendship extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,7 +36,7 @@ public class Friendships extends BaseTimeEntity {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     @Builder.Default
-    private FriendshipsStatus status = FriendshipsStatus.PENDING;
+    private FriendshipStatus status = FriendshipStatus.PENDING;
 
 
     // 상태 변경 편의 메서드
@@ -44,21 +44,21 @@ public class Friendships extends BaseTimeEntity {
      * 친구 요청 수락
      */
     public void accept() {
-        this.status = FriendshipsStatus.ACCEPTED;
+        this.status = FriendshipStatus.ACCEPTED;
     }
 
     /**
      * 친구 요청 거절
      */
     public void reject() {
-        this.status = FriendshipsStatus.REJECTED;
+        this.status = FriendshipStatus.REJECTED;
     }
 
     /**
      *  상대방 차단
      */
     public void block() {
-        this.status = FriendshipsStatus.BLOCKED;
+        this.status = FriendshipStatus.BLOCKED;
     }
 
     /**

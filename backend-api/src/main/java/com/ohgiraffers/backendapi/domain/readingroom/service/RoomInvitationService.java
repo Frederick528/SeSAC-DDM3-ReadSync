@@ -28,9 +28,9 @@ public class RoomInvitationService {
     private final RoomParticipantRepository roomParticipantRepository;
     private final UserRepository userRepository;
 
-    // TODO: 이거 무슨 말인지 이해하기
-    // 순환 참조 방지를 위해 ReadingRoomService 대신 로직을 직접 구현하거나,
-    // Facade 패턴을 사용하는 것이 좋지만 여기서는 enterRoom 로직 사용을 위해 주입 (주의 필요)
+    // TODO: ReadingRoomService 의존성 주입으로 인한 순환 참조 문제
+    // TODO: 추후 ReadingRoom 파훼시 Invitation 또한 없애고자 할 때
+    // TODO: ReadingRoomService에서 private Final 로 불러와선 안됨!
     private final ReadingRoomService readingRoomService;
 
     // 초대장 발송

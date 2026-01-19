@@ -1,6 +1,6 @@
-package com.ohgiraffers.backendapi.domain.friendships.enums;
+package com.ohgiraffers.backendapi.domain.friendship.enums;
 
-public enum FriendshipsStatus {
+public enum FriendshipStatus {
     PENDING,            // 대기중
     ACCEPTED,           // 친구 수락
     REJECTED,           // 거절함

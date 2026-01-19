@@ -31,7 +31,7 @@ public class ReadingRoomController {
     }
 
     @Operation(summary = "독서룸 입장")
-    @PostMapping
+    @PostMapping("/{roomId}/enter")
     public ResponseEntity<Void> enterRoom(
             @Parameter(hidden = true) @CurrentUserId Long userId,
             @PathVariable Long roomId
