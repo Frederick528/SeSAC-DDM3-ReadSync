@@ -48,9 +48,14 @@ public class UserRequest {
 
     @Getter
     @NoArgsConstructor
-    public static class Update {
-        private String userName;
+    @Schema(description = "유저 정보 수정 요청")
+    public static class UserUpdate {
+
+        @Schema(description = "변경할 닉네임", example = "책읽는선비")
+        private String nickname;
+        @Schema(description = "프로필 이미지 URL", example = "https://example.com/image.png")
         private String profileImage;
+        @Schema(description = "선호 장르", example = "소설")
         private String preferredGenre;
     }
 

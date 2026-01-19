@@ -69,6 +69,34 @@ public class AuthService {
         return user;
     }
 
+    @Transactional(readOnly = true)
+    public UserResponse.Detail userInformation(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        UserInformation userInfo = user.getUserInformation();
+
+        return UserResponse.Detail.from(user, userInfo);
+    }
+
+    @Transactional
+    public UserResponse.Detail updateInformation(Long userId, UserRequest.UserUpdate request) {
+        // 1. 유저 정보 엔티티 조회
+        // (UserInformationRepository에 findByUserId(Long userId) 메서드가 선언되어 있어야 합니다)
+        UserInformation userInfo = userInformationRepository.findByUserId(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        // 2. 엔티티 데이터 업데이트
+        userInfo.update(
+                request.getNickname(),
+                request.getProfileImage(),
+                request.getPreferredGenre()
+        );
+
+        // 3. 변경된 엔티티를 DTO로 변환하여 반환
+        return UserResponse.Detail.from(userInfo.getUser(), userInfo);
+    }
+
     //  일반(관리자) 로그인
     @Transactional
     public UserResponse.Login login(UserRequest.Login request) {

@@ -56,8 +56,7 @@ public class UserResponse {
     @Builder
     public static class Profile {
         private Long userId;
-        private String email;
-        private String name;
+        private String nickname;
         private String profileImage;
         private int experience;
         private String preferredGenre;
@@ -68,7 +67,7 @@ public class UserResponse {
             return Profile.builder()
                     .userId(user.getId())
                     .providerId(user.getProviderId())
-                    .name(user.getUserInformation().getNickname())
+                    .nickname(user.getUserInformation().getNickname())
                     .profileImage(user.getUserInformation().getProfileImage())
                     .experience(user.getUserInformation().getExperience())
                     .preferredGenre(user.getUserInformation().getPreferredGenre())

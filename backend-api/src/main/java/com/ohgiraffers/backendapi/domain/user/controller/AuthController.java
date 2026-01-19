@@ -3,15 +3,14 @@ package com.ohgiraffers.backendapi.domain.user.controller;
 import com.ohgiraffers.backendapi.domain.user.dto.UserRequest;
 import com.ohgiraffers.backendapi.domain.user.dto.UserResponse;
 import com.ohgiraffers.backendapi.domain.user.service.AuthService;
+import com.ohgiraffers.backendapi.global.common.annotation.CurrentUserId;
+import com.ohgiraffers.backendapi.global.common.annotation.LogExecutionTime;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Auth", description = "인증/로그인 관련 API")
 @RestController
@@ -38,5 +37,7 @@ public class AuthController {
 
         return ResponseEntity.ok(response);
     }
+
+
 
 }

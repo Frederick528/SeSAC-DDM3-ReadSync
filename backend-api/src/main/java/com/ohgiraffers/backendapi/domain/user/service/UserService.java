@@ -1,7 +1,10 @@
 package com.ohgiraffers.backendapi.domain.user.service;
 
+import com.ohgiraffers.backendapi.domain.user.dto.UserRequest;
 import com.ohgiraffers.backendapi.domain.user.dto.UserResponse;
 import com.ohgiraffers.backendapi.domain.user.entity.User;
+import com.ohgiraffers.backendapi.domain.user.entity.UserInformation;
+import com.ohgiraffers.backendapi.domain.user.repository.UserInformationRepository;
 import com.ohgiraffers.backendapi.domain.user.repository.UserRepository;
 import com.ohgiraffers.backendapi.global.error.CustomException;
 import com.ohgiraffers.backendapi.global.error.ErrorCode;
@@ -14,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final UserInformationRepository userInformationRepository;
 
     @Transactional(readOnly = true)
     public UserResponse.Profile getMyProfile(Long userId) {
@@ -23,5 +27,12 @@ public class UserService {
 
         // 2. DTO로 변환해서 반환
         return UserResponse.Profile.from(user);
+    }
+
+    @Transactional(readOnly = true)
+    public UserResponse.Detail getMyInformation(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        return UserResponse.Detail.from(user, user.getUserInformation());
     }
 }

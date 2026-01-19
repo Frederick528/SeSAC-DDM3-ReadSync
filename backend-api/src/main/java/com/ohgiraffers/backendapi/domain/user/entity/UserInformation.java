@@ -41,9 +41,9 @@ public class UserInformation extends BaseTimeEntity {
     @Builder.Default
     private Long levelId = 1L;
 
-    @Column(name = "preferred_genre", nullable = false) // NOT NULL 확인 필요 (일단 기본값이나 필수 입력 처리)
+    @Column(name = "preferred_genre", nullable = false)
     @Builder.Default
-    private String preferredGenre = "General"; // 가입 시 기본값 설정
+    private String preferredGenre = "General";
 
     // 비즈니스 로직: 경험치 추가
     public void addExperience(int exp) {
@@ -53,5 +53,11 @@ public class UserInformation extends BaseTimeEntity {
     // 비즈니스 로직: 레벨 업
     public void levelUp(Long nextLevelId) {
         this.levelId = nextLevelId;
+    }
+
+    public void update(String nickname, String profileImage, String preferredGenre) {
+        if (nickname != null) this.nickname = nickname;
+        if (profileImage != null) this.profileImage = profileImage;
+        if (preferredGenre != null) this.preferredGenre = preferredGenre;
     }
 }
