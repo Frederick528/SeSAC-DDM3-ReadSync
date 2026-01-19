@@ -154,22 +154,35 @@ public class ChapterService {
         }
 
         try {
-            // 디렉토리 생성
-            File directory = new File(uploadDir);
+            // 1. 상대 경로(./uploads...)를 절대 경로로 변환하여 명확하게 처리
+            Path uploadPath = Paths.get(uploadDir).toAbsolutePath().normalize();
+            File directory = uploadPath.toFile();
+
+            // 2. 디렉토리가 없으면 생성 (프로젝트 폴더 내에 uploads/chapters 폴더가 생김)
             if (!directory.exists()) {
-                directory.mkdirs();
+                boolean created = directory.mkdirs();
+                if (created) {
+                    log.info("디렉토리가 생성되었습니다: {}", directory.getAbsolutePath());
+                }
             }
-            // 유니크한 파일명 생성
+
+            // 3. 유니크한 파일명 생성
             String originalFilename = file.getOriginalFilename();
             String storeFileName = UUID.randomUUID() + "_" + originalFilename;
-            String fullPath = uploadDir + storeFileName;
 
-            // 저장
-            file.transferTo(new File(fullPath));
+            // 4. 저장 경로 결합
+            Path targetPath = uploadPath.resolve(storeFileName);
 
-            return fullPath;
+            // 5. 파일 저장
+            file.transferTo(targetPath.toFile());
+
+            log.info("파일이 저장되었습니다: {}", targetPath);
+
+            // DB에 저장할 경로 반환 (나중에 읽을 때 사용)
+            return targetPath.toString();
+
         } catch (IOException e) {
-            throw new CustomException(ErrorCode.FILE_UPLOAD_ERROR, e.getMessage());
+            throw new RuntimeException("파일 저장 중 오류가 발생했습니다.", e);
         }
     }
 
