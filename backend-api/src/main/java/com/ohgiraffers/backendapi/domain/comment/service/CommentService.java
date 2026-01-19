@@ -1,7 +1,7 @@
 package com.ohgiraffers.backendapi.domain.comment.service;
 
-import com.ohgiraffers.backendapi.domain.book.entity.Chapter;
-import com.ohgiraffers.backendapi.domain.book.repository.ChapterRepository;
+import com.ohgiraffers.backendapi.domain.chapter.entity.Chapter;
+import com.ohgiraffers.backendapi.domain.chapter.repository.ChapterRepository;
 import com.ohgiraffers.backendapi.domain.comment.dto.CommentRequestDTO;
 import com.ohgiraffers.backendapi.domain.comment.dto.CommentResponseDTO;
 import com.ohgiraffers.backendapi.domain.comment.entity.Comment;

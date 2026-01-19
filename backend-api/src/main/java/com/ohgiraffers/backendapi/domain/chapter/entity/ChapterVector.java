@@ -1,4 +1,4 @@
-package com.ohgiraffers.backendapi.domain.book.entity;
+package com.ohgiraffers.backendapi.domain.chapter.entity;
 
 import com.ohgiraffers.backendapi.global.common.BaseVectorEntity;
 
