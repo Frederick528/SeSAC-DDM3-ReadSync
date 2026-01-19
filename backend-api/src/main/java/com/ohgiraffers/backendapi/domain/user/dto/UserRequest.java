@@ -10,17 +10,13 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 public class UserRequest {
 
     @Getter
     @NoArgsConstructor
     public static class Join {
-
-        @NotBlank(message = "이메일은 필수항목입니다.")
-        private String email;
-
-        @NotBlank(message = "이름은 필수항목입니다.")
-        private String name;
 
         @NotBlank(message = "소셜 제공자는 필수항목입니다.")
         private String provider; // "google", "naver" "kakao"
@@ -28,10 +24,9 @@ public class UserRequest {
         @NotBlank(message = "소셜 ID는 필수항목입니다.")
         private String providerId;
 
+
         public User toUserEntity() {
             return User.builder()
-                    .email(this.email)
-                    .name(this.name)
                     .provider(SocialProvider.valueOf(this.provider.toUpperCase()))
                     .providerId(this.providerId)
                     .role(UserRole.USER)
@@ -40,9 +35,10 @@ public class UserRequest {
         }
 
         public UserInformation toUserInformationEntity(User user) {
+            String randomNickname = "User_" + UUID.randomUUID().toString().substring(0, 8);
             return UserInformation.builder()
                     .user(user)
-                    .userName(this.name)
+                    .nickname(randomNickname)
                     .experience(0)
                     .levelId(1L)
                     .preferredGenre("General")
