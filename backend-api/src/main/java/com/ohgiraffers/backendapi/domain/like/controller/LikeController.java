@@ -33,7 +33,7 @@ public class LikeController {
     @Operation(summary = "리뷰 좋아요/싫어요 토글")
     @PostMapping("/reviews/{reviewId}")
     public ResponseEntity<LikeResponseDTO> toggleReviewLike(
-            @Parameter(description = "대상 댓글 ID") @PathVariable Long reviewId,
+            @Parameter(description = "대상 리뷰 ID") @PathVariable Long reviewId,
             @RequestBody LikeRequestDTO likeRequestDTO
             /* , @AuthenticationPrincipal Long userId */
             ) {

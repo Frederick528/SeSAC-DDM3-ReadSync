@@ -18,16 +18,16 @@ public class Comment extends BaseTimeEntity {
     @Id
     @Column(name = "comment_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long comment_id;
+    private Long commentId;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private User user_id;
+    private User user;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
-    private Comment parent_id;
+    private Comment parentComment;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "chapter_id", nullable = false)
-    private Chapter chapterId;
+    private Chapter chapter;
     @Column(name = "comment_content", nullable = false)
     private String commentContent;
     @Column(name = "is_changed", nullable = false)
@@ -48,9 +48,9 @@ public class Comment extends BaseTimeEntity {
 
     // 1. 일반 댓글용 빌더
     @Builder(builderMethodName = "createComment")
-    public Comment(User user_id, Chapter chapterId, String commentContent, Boolean isSpoiler) {
-        this.user_id = user_id;
-        this.chapterId = chapterId;
+    public Comment(User user, Chapter chapter, String commentContent, Boolean isSpoiler) {
+        this.user = user;
+        this.chapter = chapter;
         this.commentContent = commentContent;
         this.isSpoiler = isSpoiler;
         this.visibilityStatus = VisibilityStatus.ACTIVE;
@@ -58,10 +58,10 @@ public class Comment extends BaseTimeEntity {
 
     // 2. 대댓글(답글)용 빌더
     @Builder(builderMethodName = "createReply")
-    public Comment(User user_id, Comment parent_id, Chapter chapterId, String commentContent, Boolean isSpoiler) {
-        this.user_id = user_id;
-        this.parent_id = parent_id;
-        this.chapterId = chapterId;
+    public Comment(User user, Comment parentComment, Chapter chapter, String commentContent, Boolean isSpoiler) {
+        this.user = user;
+        this.parentComment = parentComment;
+        this.chapter = chapter;
         this.commentContent = commentContent;
         this.isSpoiler = isSpoiler;
         this.visibilityStatus = VisibilityStatus.ACTIVE;  

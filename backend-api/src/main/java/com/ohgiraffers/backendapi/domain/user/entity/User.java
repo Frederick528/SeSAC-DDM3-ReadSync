@@ -20,19 +20,15 @@ public class User extends BaseTimeEntity {
     @Column(name = "user_id")
     private Long id;
 
-    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private UserInformation userInformation;
 
-    @Column(name = "user_email", length = 100)
-    private String email;
-
-    @Column(name = "user_name", nullable = false, length = 100)
-    private String name;
-
+    // 소셜제공자
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private SocialProvider provider;
 
+    // 소셜아이디
     @Column(name = "provider_id", nullable = false)
     private String providerId;
 
@@ -46,19 +42,19 @@ public class User extends BaseTimeEntity {
     @Builder.Default
     private UserStatus status = UserStatus.ACTIVE;
 
-    @Column(name = "level_id", nullable = false)
-    @Builder.Default
-    private Long levelId = 1L;
+    // 관리자 로그인용 아이디
+    @Column(name = "login_id", length = 30, unique = true)
+    private String loginId;
 
-    // 비즈니스 로직: 레벨 업데이트
-    public void updateLevel(Long newLevelId) {
-        this.levelId = newLevelId;
-    }
+    // 관리자 로그인용 비밀번호
+    @Column(name = "password")
+    private String password;
 
-    // 비즈니스 로직: 회원 탈퇴 (Soft Delete 재정의가 필요하다면 여기에 추가 로직 작성)
     @Override
     public void delete() {
         super.delete();
         this.status = UserStatus.WITHDRAWN;
     }
+
+
 }

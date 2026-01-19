@@ -33,19 +33,32 @@ public class Like extends BaseTimeEntity {
     @Column(name = "reaction_type", nullable = false, length = 10)
     private LikeType likeType;
 
-    // 1. 댓글 좋아요 빌더(Service의 Helper Method의 saveCommentLike에서 사용함)
-    @Builder(builderMethodName = "createCommentLike")
-    public Like(Comment comment, User user, LikeType likeType) {
-        this.comment = comment;
+    @Builder
+    public Like(User user, Comment comment, Review review, LikeType likeType) {
         this.user = user;
+        this.comment = comment;
+        this.review = review;
         this.likeType = likeType;
     }
 
-    // 2. 리뷰 좋아요 빌더(위와 동일)
-    @Builder(builderMethodName = "createReviewLike")
-    public Like(Review review, User user, LikeType likeType) {
-        this.review = review;
-        this.user = user;
-        this.likeType = likeType;
+    public void updateLikeType(LikeType newType) {
+        this.likeType = newType;
     }
+
+// ※ builderMethodName으로 사용시 작동 안함.
+//    // 1. 댓글 좋아요 빌더(Service의 Helper Method의 saveCommentLike에서 사용함)
+//    @Builder(builderMethodName = "createCommentLike")
+//    public Like(Comment comment, User user, LikeType likeType) {
+//        this.comment = comment;
+//        this.user = user;
+//        this.likeType = likeType;
+//    }
+//
+//    // 2. 리뷰 좋아요 빌더(위와 동일)
+//    @Builder(builderMethodName = "createReviewLike")
+//    public Like(Review review, User user, LikeType likeType) {
+//        this.review = review;
+//        this.user = user;
+//        this.likeType = likeType;
+//    }
 }

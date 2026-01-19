@@ -34,7 +34,7 @@ public class Subscription extends BaseTimeEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, length = 20)
-    private SubscriptionStatus status;
+    private SubscriptionStatus subscriptionStatus;
 
     @Column(name = "next_billing_date", nullable = false)
     private LocalDateTime nextBillingDate;

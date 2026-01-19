@@ -32,4 +32,11 @@ public interface FriendshipsRepository extends JpaRepository<Friendships, Long> 
             "and f.status = :status " +
             "and f.deletedAt is null")
     List<Friendships> findMyFriendships(@Param("userId") Long userId, @Param("status") FriendshipsStatus status);
+
+    // 친구 차단 확인
+    @Query("select case when count(f) > 0 then true else false end " +
+            "from Friendships f " +
+            "where f.requester.id = :blockerId and f.addressee.id = :blockedId " +
+            "and f.status = 'BLOCKED'")
+    boolean isBlocked(@Param("blockerId") Long blockerId, @Param("blockedId") Long blockedId);
 }

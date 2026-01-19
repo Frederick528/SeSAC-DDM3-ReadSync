@@ -2,6 +2,7 @@ package com.ohgiraffers.backendapi.domain.category.entity;
 
 
 import com.ohgiraffers.backendapi.domain.book.enums.ViewPermission;
+import com.ohgiraffers.backendapi.domain.category.dto.CategoryRequestDTO;
 import com.ohgiraffers.backendapi.global.common.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -28,12 +29,12 @@ public class Category extends BaseTimeEntity {
     @Column(nullable = false)
     private Integer expByCategory;
 
-    public void update(String categoryName, Integer expByCategory) {
+    public void update(CategoryRequestDTO request) {
         if (categoryName != null && !categoryName.isBlank()) {
-            this.categoryName = categoryName;
+            this.categoryName = request.getCategoryName();
         }
         if (expByCategory != null) {
-            this.expByCategory = expByCategory;
+            this.expByCategory = request.getExpByCategory();
         }
     }
 
