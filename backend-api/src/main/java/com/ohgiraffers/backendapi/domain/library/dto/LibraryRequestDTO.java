@@ -16,16 +16,21 @@ public class LibraryRequestDTO {
     private Long userId;
     private Long bookId;
     private OwnershipType ownershipType;
-    private ReadingStatus readingStatus;
-    private LocalDateTime expiresAt;
+    private int rentalDays;
 
     public Library toEntity(User user, Book book) {
+        LocalDateTime expiresAt = null;
+
+        if (this.ownershipType == OwnershipType.RENTED) {
+            expiresAt = LocalDateTime.now().plusDays(this.rentalDays);
+        }
+
         return Library.builder()
                 .user(user)
                 .book(book)
                 .ownershipType(this.ownershipType)
-                .readingStatus(this.readingStatus)
-                .expiresAt(this.expiresAt)
+                .readingStatus(ReadingStatus.BEFORE_READING)
+                .expiresAt(expiresAt)
                 .build();
     }
 }
