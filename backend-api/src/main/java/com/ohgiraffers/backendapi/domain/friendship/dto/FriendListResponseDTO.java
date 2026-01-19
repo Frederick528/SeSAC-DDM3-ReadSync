@@ -1,6 +1,5 @@
-package com.ohgiraffers.backendapi.domain.friendships.dto;
+package com.ohgiraffers.backendapi.domain.friendship.dto;
 
-import com.ohgiraffers.backendapi.domain.user.entity.UserInformation;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
