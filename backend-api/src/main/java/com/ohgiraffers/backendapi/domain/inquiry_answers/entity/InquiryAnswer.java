@@ -1,31 +1,29 @@
-package com.ohgiraffers.backendapi.domain.inquiry_answers.entity;
+package com.ohgiraffers.backendapi.domain.inquiry_answer.entity;
 
-import com.ohgiraffers.backendapi.domain.inquiries.entity.Inquiry;
-import com.ohgiraffers.backendapi.domain.user.entity.User;
-import com.ohgiraffers.backendapi.global.common.BaseEntity;
+import com.ohgiraffers.backendapi.domain.inquiry.entity.Inquiry;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "inquiry_answers")
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
-@Builder
-public class InquiryAnswer extends BaseEntity {
+@NoArgsConstructor
+public class InquiryAnswer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long answerId;
-
-    @Column(columnDefinition = "TEXT", nullable = false)
-    private String content;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "inquiry_id", nullable = false)
     private Inquiry inquiry;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User admin;
+    private Long adminUserId;
+
+    private String content;
+
+    public InquiryAnswer(Inquiry inquiry, Long adminUserId, String content) {
+        this.inquiry = inquiry;
+        this.adminUserId = adminUserId;
+        this.content = content;
+    }
 }

@@ -1,43 +1,36 @@
-package com.ohgiraffers.backendapi.domain.inquiry_answers.service;
+package com.ohgiraffers.backendapi.domain.inquiry_answer.service;
 
-import com.ohgiraffers.backendapi.domain.inquiries.entity.Inquiry;
-import com.ohgiraffers.backendapi.domain.inquiries.repository.InquiryRepository;
-import com.ohgiraffers.backendapi.domain.inquiry_answers.entity.InquiryAnswer;
-import com.ohgiraffers.backendapi.domain.inquiry_answers.repository.InquiryAnswerRepository;
-import com.ohgiraffers.backendapi.domain.user.entity.User;
-import com.ohgiraffers.backendapi.domain.user.enums.UserRole;
-import com.ohgiraffers.backendapi.domain.user.repository.UserRepository;
+import com.ohgiraffers.backendapi.domain.inquiry.entity.Inquiry;
+import com.ohgiraffers.backendapi.domain.inquiry.enums.InquiryStatus;
+import com.ohgiraffers.backendapi.domain.inquiry.repository.InquiryRepository;
+import com.ohgiraffers.backendapi.domain.inquiry_answer.dto.InquiryAnswerRequest;
+import com.ohgiraffers.backendapi.domain.inquiry_answer.entity.InquiryAnswer;
+import com.ohgiraffers.backendapi.domain.inquiry_answer.repository.InquiryAnswerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class InquiryAnswerService {
 
     private final InquiryRepository inquiryRepository;
-    private final InquiryAnswerRepository repository;
-    private final UserRepository userRepository;
+    private final InquiryAnswerRepository answerRepository;
 
-    public InquiryAnswer create(Long inquiryId, String content, Long adminId) {
-
-        User admin = userRepository.findById(adminId)
-                .orElseThrow();
-
-        if (admin.getRole() != UserRole.ADMIN) {
-            throw new IllegalStateException("관리자만 답변 가능");
-        }
+    public InquiryAnswer create(Long inquiryId, Long adminUserId, InquiryAnswerRequest request) {
 
         Inquiry inquiry = inquiryRepository.findById(inquiryId)
-                .orElseThrow();
+                .orElseThrow(() -> new IllegalArgumentException("문의 없음"));
 
-        inquiry.markAnswered();
+        inquiry.answer(); // 상태 변경 (WAIT → ANSWERED)
 
-        return repository.save(
-                InquiryAnswer.builder()
-                        .content(content)
-                        .inquiry(inquiry)
-                        .admin(admin)
-                        .build()
+        InquiryAnswer answer = new InquiryAnswer(
+                inquiry,
+                adminUserId,
+                request.getContent()
         );
+
+        return answerRepository.save(answer);
     }
 }

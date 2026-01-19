@@ -1,30 +1,22 @@
-package com.ohgiraffers.backendapi.domain.inquiry_answers.dto;
+package com.ohgiraffers.backendapi.domain.inquiry_answer.dto;
 
-import com.ohgiraffers.backendapi.domain.inquiry_answers.entity.InquiryAnswer;
+import com.ohgiraffers.backendapi.domain.inquiry_answer.entity.InquiryAnswer;
 import lombok.Builder;
 import lombok.Getter;
-
-import java.time.LocalDateTime;
 
 @Getter
 @Builder
 public class InquiryAnswerResponse {
 
     private Long answerId;
-    private String content;
     private Long inquiryId;
-    private Long userId;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private String content;
 
     public static InquiryAnswerResponse from(InquiryAnswer answer) {
         return InquiryAnswerResponse.builder()
-                .answerId(answer.getAnswerId())
+                .answerId(answer.getId())
+                .inquiryId(answer.getInquiry().getId())
                 .content(answer.getContent())
-                .inquiryId(answer.getInquiry().getInquiryId())
-                .userId(answer.getUser().getId())
-                .createdAt(answer.getCreatedAt())
-                .updatedAt(answer.getUpdatedAt())
                 .build();
     }
 }

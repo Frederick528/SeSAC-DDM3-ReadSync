@@ -16,16 +16,16 @@ import org.hibernate.type.SqlTypes;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder
-public class BaseVectorEntity extends BaseTimeEntity{
-    @Id
-    private Long id; // 자식 엔티티들에서 @MapsId에 의해 채워질 PK
+public class BaseVectorEntity extends BaseTimeEntity {
 
-    @Column(columnDefinition = "HALFVEC(1024)")
+    @Id
+    private Long id;
+
+    @Column(columnDefinition = "vector(1024)")
     @JdbcTypeCode(SqlTypes.OTHER)
     private float[] vector;
 
     public void updateVector(float[] vector) {
         this.vector = vector;
     }
-
 }

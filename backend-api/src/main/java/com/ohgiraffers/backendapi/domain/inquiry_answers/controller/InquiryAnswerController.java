@@ -1,17 +1,15 @@
-package com.ohgiraffers.backendapi.domain.inquiry_answers.controller;
+package com.ohgiraffers.backendapi.domain.inquiry_answer.controller;
 
-import com.ohgiraffers.backendapi.domain.inquiry_answers.dto.InquiryAnswerRequest;
-import com.ohgiraffers.backendapi.domain.inquiry_answers.dto.InquiryAnswerResponse;
-import com.ohgiraffers.backendapi.domain.inquiry_answers.service.InquiryAnswerService;
+import com.ohgiraffers.backendapi.domain.inquiry_answer.dto.InquiryAnswerRequest;
+import com.ohgiraffers.backendapi.domain.inquiry_answer.dto.InquiryAnswerResponse;
+import com.ohgiraffers.backendapi.domain.inquiry_answer.service.InquiryAnswerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/inquiries/{inquiryId}/answers")
+@RequestMapping("/api/inquiries/{inquiryId}/answer")
 public class InquiryAnswerController {
 
     private final InquiryAnswerService service;
@@ -19,7 +17,7 @@ public class InquiryAnswerController {
     @PostMapping
     public ResponseEntity<InquiryAnswerResponse> create(
             @PathVariable Long inquiryId,
-            @RequestBody InquiryAnswerRequest.Create request
+            @RequestBody InquiryAnswerRequest request
     ) {
         return ResponseEntity.ok(
                 InquiryAnswerResponse.from(
@@ -27,15 +25,5 @@ public class InquiryAnswerController {
                 )
         );
     }
-
-    @GetMapping
-    public ResponseEntity<List<InquiryAnswerResponse>> findAll(
-            @PathVariable Long inquiryId
-    ) {
-        return ResponseEntity.ok(
-                service.findByInquiry(inquiryId).stream()
-                        .map(InquiryAnswerResponse::from)
-                        .toList()
-        );
-    }
 }
+
