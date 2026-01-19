@@ -21,10 +21,10 @@ public class Review extends BaseTimeEntity {
     private Long reviewId;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private User userId;
+    private User user;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id", nullable = false)
-    private Book bookId;
+    private Book book;
     @Column(name = "rating", nullable = false)
     private Integer rating;
     @Column(name = "review_content", columnDefinition = "TEXT", nullable = false)
@@ -46,9 +46,9 @@ public class Review extends BaseTimeEntity {
     private Integer dislikeCount = 0;
 
     @Builder
-    public Review(User userId, Book bookId, Integer rating, String reviewContent, Boolean isSpoiler) {
-        this.userId = userId;
-        this.bookId = bookId;
+    public Review(User user, Book book, Integer rating, String reviewContent, Boolean isSpoiler) {
+        this.user = user;
+        this.book = book;
         this.rating = rating;
         this.reviewContent = reviewContent;
         this.isSpoiler = (isSpoiler != null) ? isSpoiler : false;
@@ -61,5 +61,10 @@ public class Review extends BaseTimeEntity {
         this.rating = rating;
         if (isSpoiler != null) {this.isSpoiler = isSpoiler;}
         this.isChanged = true;  // 내용이 수정되었다는것을 체크
+    }
+
+    // 라뷰 삭제(Soft Delete)
+    public void delete() {
+        this.visibilityStatus = VisibilityStatus.DELETED;
     }
 }
