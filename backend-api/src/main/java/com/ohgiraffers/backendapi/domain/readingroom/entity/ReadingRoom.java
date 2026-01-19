@@ -55,7 +55,8 @@ public class ReadingRoom extends BaseTimeEntity {
     @Builder.Default
     private RoomStatus status = RoomStatus.WAITING;
 
-    // TODO: 이거 chapter의 id랑 묶어야 하나 고민해볼 것
+    // 왜 서재에서 안 받아오나!
+    // 방장이 가진 책 중 임의의 책을 선택해서 읽는 것 따라서 library를 통해 내 책을 가져오지만 현재 독서룸에는 chapter가 연관관계를 맺을 필요 없음
     @Column(name = "current_chapter", nullable = false)
     private Integer currentChapterId;
 
