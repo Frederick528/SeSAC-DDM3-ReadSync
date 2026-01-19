@@ -4,6 +4,7 @@ import com.ohgiraffers.backendapi.domain.library.dto.LibraryRequestDTO;
 import com.ohgiraffers.backendapi.domain.library.dto.LibraryResponseDTO;
 import com.ohgiraffers.backendapi.domain.library.enums.ReadingStatus;
 import com.ohgiraffers.backendapi.domain.library.service.LibraryService;
+import com.ohgiraffers.backendapi.global.common.annotation.CurrentUserId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +26,13 @@ public class LibraryController {
     public ResponseEntity<List<LibraryResponseDTO>> getUserLibrary(@PathVariable Long userId) {
         return ResponseEntity.ok(libraryService.getUserLibrary(userId));
     }
+
+    @GetMapping("me")
+    public ResponseEntity<List<LibraryResponseDTO>> getMyBookLog(@CurrentUserId Long userId) {
+
+        return ResponseEntity.ok(libraryService.getUserLibrary(userId));
+    }
+
 
     @PatchMapping("/{libraryId}/status")
     public ResponseEntity<Void> updateStatus(@PathVariable Long libraryId, @RequestParam ReadingStatus status) {
