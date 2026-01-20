@@ -3,6 +3,7 @@ package com.ohgiraffers.backendapi.domain.like.controller;
 import com.ohgiraffers.backendapi.domain.like.dto.LikeRequestDTO;
 import com.ohgiraffers.backendapi.domain.like.dto.LikeResponseDTO;
 import com.ohgiraffers.backendapi.domain.like.service.LikeService;
+import com.ohgiraffers.backendapi.global.common.annotation.CurrentUserId;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -22,11 +23,10 @@ public class LikeController {
     @PostMapping("/comments/{commentId}")
     public ResponseEntity<LikeResponseDTO> toggleCommentLike(
             @Parameter(description = "대상 댓글 ID") @PathVariable Long commentId,
-            @RequestBody LikeRequestDTO likeRequestDTO
-            /* , @AuthenticationPrincipal Long userId */
+            @RequestBody LikeRequestDTO likeRequestDTO,
+            @CurrentUserId Long userId
             ) {
-        Long tempUserId = 1L; // 임시 유저 ID(나중에 로그인 기능 구현되면 지울 것
-        LikeResponseDTO response = likeService.toggleCommentLike(tempUserId, commentId, likeRequestDTO.getLikeType());
+        LikeResponseDTO response = likeService.toggleCommentLike(userId, commentId, likeRequestDTO.getLikeType());
         return ResponseEntity.ok(response);
     }
 
@@ -34,11 +34,10 @@ public class LikeController {
     @PostMapping("/reviews/{reviewId}")
     public ResponseEntity<LikeResponseDTO> toggleReviewLike(
             @Parameter(description = "대상 리뷰 ID") @PathVariable Long reviewId,
-            @RequestBody LikeRequestDTO likeRequestDTO
-            /* , @AuthenticationPrincipal Long userId */
+            @RequestBody LikeRequestDTO likeRequestDTO,
+            @CurrentUserId Long userId
             ) {
-        Long tempUserId = 1L; // 임시 유저 ID(나중에 로그인 기능 구현되면 지우고 밑의 파라미터도 변경할 것
-        LikeResponseDTO response = likeService.toggleReviewLike(tempUserId, reviewId, likeRequestDTO.getLikeType());
+        LikeResponseDTO response = likeService.toggleReviewLike(userId, reviewId, likeRequestDTO.getLikeType());
         return ResponseEntity.ok(response);
     }
 }
