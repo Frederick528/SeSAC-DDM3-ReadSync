@@ -670,3 +670,4 @@ HELP.md
 application-*.yml
 
 docker-compose.yml
+/backend-api/uploads

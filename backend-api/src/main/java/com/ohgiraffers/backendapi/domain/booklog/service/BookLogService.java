@@ -57,7 +57,7 @@ public class BookLogService {
                     Library library = libraryRepository.findById(request.getLibraryId())
                             .orElseThrow(() -> new IllegalArgumentException("서재 정보를 찾을 수 없습니다."));
 
-                    library.updateStatus(ReadingStatus.READING);
+//                    library.updateStatus(ReadingStatus.READING);
 
                     BookLog newLog = request.toEntity(library, today);
                     return BookLogResponseDTO.from(bookLogRepository.save(newLog));
