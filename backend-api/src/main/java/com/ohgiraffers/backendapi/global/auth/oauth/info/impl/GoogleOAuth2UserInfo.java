@@ -34,7 +34,7 @@ public class GoogleOAuth2UserInfo implements OAuth2UserInfo {
 
     @Override
     public String getProfileImage() {
-        return (String) attributes.get("picture"); // 구글은 프사가 "picture"
+        return (String) attributes.get("picture");
     }
 
     @Override

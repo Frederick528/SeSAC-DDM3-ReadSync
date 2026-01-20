@@ -43,11 +43,11 @@ public class User extends BaseTimeEntity {
     private UserStatus status = UserStatus.ACTIVE;
 
     // 관리자 로그인용 아이디
-    @Column(name = "login_id", length = 30, unique = true)
+    @Column(name = "login_id", length = 255, unique = true)
     private String loginId;
 
     // 관리자 로그인용 비밀번호
-    @Column(name = "password")
+    @Column(name = "password",length = 255)
     private String password;
 
     @Override

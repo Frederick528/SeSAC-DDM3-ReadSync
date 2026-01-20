@@ -3,6 +3,8 @@ package com.ohgiraffers.backendapi.domain.user.controller;
 import com.ohgiraffers.backendapi.domain.user.dto.UserRequest;
 import com.ohgiraffers.backendapi.domain.user.dto.UserResponse;
 import com.ohgiraffers.backendapi.domain.user.service.AuthService;
+import com.ohgiraffers.backendapi.global.auth.dto.ReissueRequestDto;
+import com.ohgiraffers.backendapi.global.auth.dto.TokenResponseDto;
 import com.ohgiraffers.backendapi.global.common.annotation.CurrentUserId;
 import com.ohgiraffers.backendapi.global.common.annotation.LogExecutionTime;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Auth", description = "인증/로그인 관련 API")
 @RestController
-@RequestMapping("/v1/auth")
+@RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
 public class AuthController {
 
@@ -56,6 +58,25 @@ public class AuthController {
         return "<h1>로그인 성공! 🥳</h1>" +
                 "<p><b>Access Token:</b> " + accessToken + "</p>" +
                 "<p><b>Refresh Token:</b> " + refreshToken + "</p>";
+    }
+
+    @PostMapping("/reissue")
+    @Operation(summary = "Refresh Token 확인")
+    public ResponseEntity<?> reissue(@RequestBody ReissueRequestDto request) {
+
+        // 이제 request가 객체이므로 .getRefreshToken()이 가능해집니다.
+        TokenResponseDto tokenDto = authService.reissue(request.getRefreshToken());
+
+        return ResponseEntity.ok(tokenDto);
+    }
+
+    @PostMapping("/logout")
+    @Operation(summary = "로그아웃", description = "DB에서 Refresh Token을 삭제하여 더 이상 토큰 갱신이 불가능하게 만듭니다.")
+    public ResponseEntity<String> logout(@CurrentUserId Long userId) {
+
+        authService.logout(userId);
+
+        return ResponseEntity.ok("로그아웃 되었습니다.");
     }
 
 }
