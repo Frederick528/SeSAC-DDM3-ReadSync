@@ -2,6 +2,8 @@ package com.ohgiraffers.backendapi.domain.library.service;
 
 import com.ohgiraffers.backendapi.domain.book.entity.Book;
 import com.ohgiraffers.backendapi.domain.book.repository.BookRepository;
+import com.ohgiraffers.backendapi.domain.exp.annotation.AwardExp;
+import com.ohgiraffers.backendapi.domain.exp.enums.ActivityType;
 import com.ohgiraffers.backendapi.domain.library.dto.LibraryRequestDTO;
 import com.ohgiraffers.backendapi.domain.library.dto.LibraryResponseDTO;
 import com.ohgiraffers.backendapi.domain.library.entity.Library;
@@ -45,16 +47,15 @@ public class LibraryService {
                 .toList();
     }
 
+    @AwardExp(type = ActivityType.READ_BOOK)
     @Transactional
-    public void updateReadingStatus(Long libraryId, ReadingStatus status) {
+    public Library updateReadingStatus(Long libraryId, ReadingStatus status) {
         Library library = libraryRepository.findById(libraryId)
                 .filter(l -> l.getDeletedAt() == null)
                 .orElseThrow(() -> new IllegalArgumentException("서재 정보를 찾을 수 없습니다."));
         library.updateStatus(status);
 
-        if (status == ReadingStatus.COMPLETED) {
-            // userExpService.giveExp(library.getUserId(), library.getBook().getCategory().getExpByCategory());
-        }
+        return library;
     }
 
     public List<LibraryResponseDTO> getLibraryByUserIdAndCategoryId(Long userId, Long categoryId) {

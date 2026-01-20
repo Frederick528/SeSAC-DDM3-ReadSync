@@ -17,7 +17,6 @@ public class CategoryResponseDTO {
 
     private Long categoryId;
     private String categoryName;
-    private Integer expByCategory;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
@@ -26,7 +25,6 @@ public class CategoryResponseDTO {
         return CategoryResponseDTO.builder()
                 .categoryId(category.getCategoryId())
                 .categoryName(category.getCategoryName())
-                .expByCategory(category.getExpByCategory())
                 .createdAt(category.getCreatedAt())
                 .updatedAt(category.getUpdatedAt())
                 .build();
