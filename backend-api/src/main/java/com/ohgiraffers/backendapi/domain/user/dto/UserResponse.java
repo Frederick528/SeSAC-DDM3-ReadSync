@@ -73,4 +73,16 @@ public class UserResponse {
                     .build();
         }
     }
+
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    public static class UserInfo {
+        private Long userId;
+        private String loginId;
+        private String nickname;
+        private String profileImage;
+        private String role;     // USER, ADMIN
+        private String provider; // kakao, google, naver
+    }
 }

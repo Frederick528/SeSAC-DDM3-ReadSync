@@ -88,4 +88,11 @@ public class UserRequest {
         private String password;
 
     }
+
+    @Getter
+    @NoArgsConstructor
+    public static class UpdateProfile {
+        private String nickname;
+        private String profileImage;
+    }
 }
