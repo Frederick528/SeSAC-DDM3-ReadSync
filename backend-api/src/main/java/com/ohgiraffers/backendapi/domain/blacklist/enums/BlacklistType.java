@@ -1,4 +1,4 @@
-package com.ohgiraffers.backendapi.domain.chat.enums;
+package com.ohgiraffers.backendapi.domain.blacklist.enums;
 
 public enum BlacklistType {
     SITE_BAN,       // 사이트 전체 이용 정지

@@ -1,4 +1,4 @@
-package com.ohgiraffers.backendapi.domain.chat.enums;
+package com.ohgiraffers.backendapi.domain.report.enums;
 
 public enum ReportStatus {
     PENDING,    // 접수 대기
