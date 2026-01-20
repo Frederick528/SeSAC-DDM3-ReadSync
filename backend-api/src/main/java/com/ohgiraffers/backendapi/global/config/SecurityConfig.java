@@ -35,16 +35,16 @@ public class SecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
-               /* .authorizeHttpRequests(auth -> auth
-                        .requestMatchers( // 인증불필요
-                                "/api/v1/auth/**",
-                                "/swagger-ui/**",
-                                "/v3/api-docs/**",
-                                "/api-docs/**"
-                        ).permitAll()
-                        // 나머지는 인증 필요
-                        .anyRequest().authenticated()
-                )*/
+                /* .authorizeHttpRequests(auth -> auth
+                         .requestMatchers( // 인증불필요
+                                 "/api/v1/auth/**",
+                                 "/swagger-ui/**",
+                                 "/v3/api-docs/**",
+                                 "/api-docs/**"
+                         ).permitAll()
+                         // 나머지는 인증 필요
+                         .anyRequest().authenticated()
+                 )*/
 
                 // 임시 모드 허용
                 .authorizeHttpRequests(auth -> auth
