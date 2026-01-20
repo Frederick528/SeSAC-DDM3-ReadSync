@@ -59,6 +59,12 @@ dependencies {
 
     // AOP 기능 라이브러리
     implementation 'org.springframework.boot:spring-boot-starter-aop'
+
+    // WebFlux (Toss Payments API 통신용)
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+    // Dotenv (환경변수 로드용)
+    implementation 'io.github.cdimascio:dotenv-java:3.0.0'
 }
 
 tasks.named('test') {

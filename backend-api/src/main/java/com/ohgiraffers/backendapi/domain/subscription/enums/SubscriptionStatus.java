@@ -1,15 +1,15 @@
 package com.ohgiraffers.backendapi.domain.subscription.enums;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@Getter
-@RequiredArgsConstructor
+@Schema(description = "구독 상태")
 public enum SubscriptionStatus {
-    PENDING("대기"),
-    ACTIVE("이용중"),
-    CANCELED("해지"),
-    EXPIRED("만료");
-
-    private final String description;
+    @Schema(description = "활성")
+    ACTIVE,
+    @Schema(description = "만료")
+    EXPIRED,
+    @Schema(description = "해지 예약(다음 결제일까지만 유효)")
+    CANCELED,
+    @Schema(description = "결제 대기")
+    PENDING_PAYMENT
 }

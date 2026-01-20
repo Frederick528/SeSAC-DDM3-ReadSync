@@ -75,8 +75,10 @@ public class ChapterService {
         }
 
         // 기본값 방어 로직
-        if (finalSequence == null) finalSequence = 1;
-        if (finalChapterName == null) finalChapterName = "Untitled Chapter";
+        if (finalSequence == null)
+            finalSequence = 1;
+        if (finalChapterName == null)
+            finalChapterName = "Untitled Chapter";
 
         // 4. 엔티티 생성 및 저장 (빌더 패턴 사용 가정)
 
@@ -103,7 +105,6 @@ public class ChapterService {
         // 내용을 포함하여 DTO 반환
         return convertToResponseDTO(chapter, true);
     }
-
 
     /* [3] 챕터 수정 (파일 변경 시 is_embedded -> false) */
     @Transactional
@@ -182,7 +183,7 @@ public class ChapterService {
             return targetPath.toString();
 
         } catch (IOException e) {
-            throw new RuntimeException("파일 저장 중 오류가 발생했습니다.", e);
+            throw new CustomException(ErrorCode.FILE_UPLOAD_ERROR);
         }
     }
 

@@ -21,8 +21,6 @@ public class CommentController {
 
     private final CommentService commentService;
 
-    // TODO: 추후 @AuthenticationPrincipal로 userId 교체 필요
-
     @Operation(summary = "댓글 작성", description = "특정 챕터에 댓글/대댓글 작성")
     @PostMapping("/{chapterId}")
     public ResponseEntity<CommentResponseDTO> createComment(
