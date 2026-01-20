@@ -31,6 +31,7 @@ public class UserResponse {
     public static class UserDetail {
         private Long userId;
         private String nickname;
+        private String tag;
         private String profileImage;
         private String role;
         private String status;
@@ -41,6 +42,8 @@ public class UserResponse {
         public static UserDetail from(User user, UserInformation userInfo) {
             return UserDetail.builder()
                     .userId(user.getId())
+                    .nickname(userInfo != null ? userInfo.getNickname() : null)
+                    .tag(userInfo != null ? userInfo.getTag() : null)
                     .profileImage(userInfo != null ? userInfo.getProfileImage() : null)
                     .role(user.getRole().getKey())
                     .status(user.getStatus().name())
@@ -56,6 +59,7 @@ public class UserResponse {
     public static class Profile {
         private Long userId;
         private String nickname;
+        private String tag;
         private String profileImage;
         private int experience;
         private String preferredGenre;
@@ -67,6 +71,7 @@ public class UserResponse {
                     .userId(user.getId())
                     .providerId(user.getProviderId())
                     .nickname(user.getUserInformation().getNickname())
+                    .tag(user.getUserInformation().getTag())
                     .profileImage(user.getUserInformation().getProfileImage())
                     .experience(user.getUserInformation().getExperience())
                     .preferredGenre(user.getUserInformation().getPreferredGenre())
@@ -74,6 +79,7 @@ public class UserResponse {
         }
     }
 
+    // 본인 조회
     @Getter
     @Builder
     @AllArgsConstructor
@@ -81,8 +87,34 @@ public class UserResponse {
         private Long userId;
         private String loginId;
         private String nickname;
+        private String tag;
         private String profileImage;
         private String role;     // USER, ADMIN
         private String provider; // kakao, google, naver
+    }
+
+    // 타인 조회 (검색 등)
+    @Getter
+    @Builder
+    public static class OtherProfile {
+        private Long userId;
+        private String nickname;
+        private String tag;
+        private String profileImage;
+    }
+
+    // 어드민이 유저 조회 (리스트)
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    public static class AdminUserDetail {
+        private Long userId;
+        private String loginId;
+        private String nickname;
+        private String tag;
+        private String role;
+        private String status;     // ACTIVE, BANNED, WITHDRAWN
+        private String provider;
+        private String createdAt;  // 가입일
     }
 }

@@ -1,21 +1,20 @@
 package com.ohgiraffers.backendapi.domain.user.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ohgiraffers.backendapi.global.common.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import org.springframework.data.annotation.LastModifiedDate;
+import org.hibernate.annotations.SQLDelete;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "user_informations")
+@Table(name = "user_informations", uniqueConstraints = { @UniqueConstraint(columnNames = {"user_name", "tag"}) })
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @SuperBuilder
+@SQLDelete(sql = "UPDATE users SET status = 'WITHDRAWN' WHERE user_id = ?")
 @EntityListeners(AuditingEntityListener.class)
 public class UserInformation extends BaseTimeEntity {
 
@@ -46,12 +45,14 @@ public class UserInformation extends BaseTimeEntity {
     @Builder.Default
     private String preferredGenre = "General";
 
-    // 비즈니스 로직: 경험치 추가
+    @Column(nullable = false, length = 4)
+    private String tag;
+
+
     public void addExperience(int exp) {
         this.experience += exp;
     }
 
-    // 비즈니스 로직: 레벨 업
     public void levelUp(Long nextLevelId) {
         this.levelId = nextLevelId;
     }
@@ -62,12 +63,13 @@ public class UserInformation extends BaseTimeEntity {
         if (preferredGenre != null) this.preferredGenre = preferredGenre;
     }
 
-    public void updateNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
     public void updateProfileImage(String profileImage) {
         this.profileImage = profileImage;
+    }
+
+    public void updateNicknameAndTag(String nickname, String tag) {
+        this.nickname = nickname;
+        this.tag = tag;
     }
 
 }

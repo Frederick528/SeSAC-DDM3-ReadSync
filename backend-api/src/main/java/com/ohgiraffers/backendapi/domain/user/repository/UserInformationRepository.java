@@ -11,4 +11,6 @@ public interface UserInformationRepository extends JpaRepository<UserInformation
 
     // user_id로 상세 정보 조회
     Optional<UserInformation> findByUserId(Long userId);
+
+    boolean existsByNicknameAndTag(String nickname, String tag);
 }

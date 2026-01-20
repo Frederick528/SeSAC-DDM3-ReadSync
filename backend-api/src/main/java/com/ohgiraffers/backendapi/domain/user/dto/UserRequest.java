@@ -10,8 +10,6 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.UUID;
-
 public class UserRequest {
 
     @Getter
@@ -19,11 +17,13 @@ public class UserRequest {
     public static class Join {
 
         @NotBlank(message = "소셜 제공자는 필수항목입니다.")
-        private String provider; // "google", "naver" "kakao"
+        private String provider; // "google", "naver", "kakao"
 
         @NotBlank(message = "소셜 ID는 필수항목입니다.")
         private String providerId;
 
+        private String nickname;
+        private String profileImage;
 
         public User toUserEntity() {
             return User.builder()
@@ -34,11 +34,12 @@ public class UserRequest {
                     .build();
         }
 
-        public UserInformation toUserInformationEntity(User user) {
-            String randomNickname = "User_" + UUID.randomUUID().toString().substring(0, 8);
+        public UserInformation toUserInformationEntity(User user, String tag) {
             return UserInformation.builder()
                     .user(user)
-                    .nickname(randomNickname)
+                    .nickname(this.nickname)
+                    .tag(tag)
+                    .profileImage(this.profileImage)
                     .experience(0)
                     .levelId(1L)
                     .preferredGenre("General")
@@ -49,7 +50,7 @@ public class UserRequest {
     @Getter
     @NoArgsConstructor
     @Schema(description = "유저 정보 수정 요청")
-    public static class Update {
+    public static class UpdateProfile {
 
         @Schema(description = "변경할 닉네임", example = "책읽는선비")
         private String nickname;
@@ -75,7 +76,6 @@ public class UserRequest {
         private String nickname;
     }
 
-    // 어드민 전용 로그인 ^^
     @Getter
     @NoArgsConstructor
     public static class Login {
@@ -86,13 +86,5 @@ public class UserRequest {
         @Schema(description = "비밀번호", example = "1234")
         @NotBlank(message = "비밀번호는 필수입니다.")
         private String password;
-
-    }
-
-    @Getter
-    @NoArgsConstructor
-    public static class UpdateProfile {
-        private String nickname;
-        private String profileImage;
     }
 }

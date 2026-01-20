@@ -57,5 +57,9 @@ public class User extends BaseTimeEntity {
         this.status = UserStatus.WITHDRAWN;
     }
 
+    public void updateStatus(UserStatus status) {
+        this.status = status;
+    }
+
 
 }
