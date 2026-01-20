@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/comments")
+@RequestMapping("/v1/comments")
 @RequiredArgsConstructor
 @Tag(name = "Comment (댓글)", description = "챕터별 댓글 작성, 수정, 삭제, 조회 API")
 public class CommentController {
@@ -28,8 +28,7 @@ public class CommentController {
     public ResponseEntity<CommentResponseDTO> createComment(
             @CurrentUserId Long userId,
             @Parameter(description = "챕터ID") @PathVariable Long chapterId,
-            @RequestBody CommentRequestDTO requestDTO
-    ) {
+            @RequestBody CommentRequestDTO requestDTO) {
         CommentResponseDTO response = commentService.createComment(userId, chapterId, requestDTO);
         return ResponseEntity.ok(response);
     }
@@ -37,8 +36,7 @@ public class CommentController {
     @Operation(summary = "댓글 목록 조회", description = "특정 챕터의 모든 댓글 조회")
     @GetMapping("/{chapterId}")
     public ResponseEntity<List<CommentResponseDTO>> getComments(
-            @Parameter(description = "챕터 ID") @PathVariable Long chapterId
-    ) {
+            @Parameter(description = "챕터 ID") @PathVariable Long chapterId) {
         List<CommentResponseDTO> response = commentService.getCommentsByChapter(chapterId);
         return ResponseEntity.ok(response);
     }
@@ -48,8 +46,7 @@ public class CommentController {
     public ResponseEntity<CommentResponseDTO> updateComment(
             @CurrentUserId Long userId,
             @Parameter(description = "수정할 댓글 ID") @PathVariable Long commentId,
-            @RequestBody CommentRequestDTO requestDTO
-    ) {
+            @RequestBody CommentRequestDTO requestDTO) {
         CommentResponseDTO response = commentService.updateComment(userId, commentId, requestDTO);
         return ResponseEntity.ok(response);
     }
@@ -58,8 +55,7 @@ public class CommentController {
     @DeleteMapping("/{commentId}")
     public ResponseEntity<Void> deleteComment(
             @CurrentUserId Long userId,
-            @Parameter(description = "삭제할 댓글 ID") @PathVariable Long commentId
-    ) {
+            @Parameter(description = "삭제할 댓글 ID") @PathVariable Long commentId) {
         commentService.deleteComment(userId, commentId);
         return ResponseEntity.noContent().build();
     }

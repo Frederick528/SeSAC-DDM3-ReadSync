@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("/api/v1/chapters")
+@RequestMapping("/v1/chapters")
 @RequiredArgsConstructor
 @Tag(name = "Chapter API", description = "도서 챕터 관리 및 뷰어 연동")
 public class ChapterController {
@@ -25,8 +25,7 @@ public class ChapterController {
             @RequestPart(value = "file") MultipartFile file,
             @RequestParam(value = "bookId") Long bookId,
             @RequestParam(value = "chapterName", required = false) String chapterName,
-            @RequestParam(value = "sequence", required = false) Integer sequence
-    ) {
+            @RequestParam(value = "sequence", required = false) Integer sequence) {
         ChapterRequestDTO requestDTO = ChapterRequestDTO.builder()
                 .bookId(bookId)
                 .chapterName(chapterName)
@@ -44,8 +43,7 @@ public class ChapterController {
             @PathVariable Long chapterId,
             @RequestPart(value = "file", required = false) MultipartFile file,
             @RequestParam(value = "chapterName", required = false) String chapterName,
-            @RequestParam(value = "sequence", required = false) Integer sequence
-    ) {
+            @RequestParam(value = "sequence", required = false) Integer sequence) {
         // 수정 시 bookId는 보통 변경하지 않으므로 DTO에 null 혹은 기존값 유지
         ChapterRequestDTO requestDTO = ChapterRequestDTO.builder()
                 .chapterName(chapterName)

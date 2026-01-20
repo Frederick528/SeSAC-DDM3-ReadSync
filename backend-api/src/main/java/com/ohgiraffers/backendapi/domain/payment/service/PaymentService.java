@@ -56,7 +56,8 @@ public class PaymentService {
         // 기존 기본 결제 수단 해제 (필요시)
         paymentMethodRepository.findByUserAndIsDefaultTrueAndDeletedAtIsNull(user)
                 .ifPresent(m -> {
-                    // m.setDefault(false); // 수동 업데이트 로직 필요시 추가
+                    m.updateDefaultStatus(false);
+                    paymentMethodRepository.save(m);
                 });
 
         PaymentMethod paymentMethod = PaymentMethod.builder()
@@ -65,6 +66,7 @@ public class PaymentService {
                 .pgProvider(PgProvider.TOSS)
                 .cardCompany(cardCompany)
                 .cardLast4(cardLast4)
+                .customerKey(request.getCustomerKey())
                 .isDefault(true)
                 .build();
 

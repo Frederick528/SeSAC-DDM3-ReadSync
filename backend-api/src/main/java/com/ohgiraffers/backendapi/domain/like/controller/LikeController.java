@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/likes")
+@RequestMapping("/v1/likes")
 @RequiredArgsConstructor
 @Tag(name = "Like (좋아요/싫어요)", description = "댓글 및 리뷰에 대한 좋아요/싫어요 기능 API")
 public class LikeController {
@@ -24,8 +24,7 @@ public class LikeController {
     public ResponseEntity<LikeResponseDTO> toggleCommentLike(
             @Parameter(description = "대상 댓글 ID") @PathVariable Long commentId,
             @RequestBody LikeRequestDTO likeRequestDTO,
-            @CurrentUserId Long userId
-            ) {
+            @CurrentUserId Long userId) {
         LikeResponseDTO response = likeService.toggleCommentLike(userId, commentId, likeRequestDTO.getLikeType());
         return ResponseEntity.ok(response);
     }
@@ -35,8 +34,7 @@ public class LikeController {
     public ResponseEntity<LikeResponseDTO> toggleReviewLike(
             @Parameter(description = "대상 리뷰 ID") @PathVariable Long reviewId,
             @RequestBody LikeRequestDTO likeRequestDTO,
-            @CurrentUserId Long userId
-            ) {
+            @CurrentUserId Long userId) {
         LikeResponseDTO response = likeService.toggleReviewLike(userId, reviewId, likeRequestDTO.getLikeType());
         return ResponseEntity.ok(response);
     }

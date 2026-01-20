@@ -15,7 +15,7 @@ import java.math.BigDecimal;
  * 구독 관련 API를 제공하는 컨트롤러 클래스입니다.
  */
 @RestController
-@RequestMapping("/api/v1/subscriptions")
+@RequestMapping("/v1/subscriptions")
 @RequiredArgsConstructor
 @Tag(name = "Subscription (구독)", description = "정기 결제 구독 신청, 해지 API")
 public class SubscriptionController {

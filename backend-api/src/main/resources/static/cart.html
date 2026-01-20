@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>장바구니 - ReadSync</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .nav-bar {
+            display: flex;
+            align-items: center;
+            margin-bottom: 40px;
+            gap: 20px;
+        }
+
+        .nav-bar a {
+            color: #a0a0b0;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .nav-bar a:hover {
+            color: #667eea;
+        }
+
+        .nav-bar h1 {
+            font-size: 1.8rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .section h2 {
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #a0a0b0;
+            font-size: 0.9rem;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 14px 18px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: #fff;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        /* 장바구니 아이템 */
+        .cart-list {
+            margin-top: 20px;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            margin-bottom: 15px;
+        }
+
+        .cart-item-info {
+            flex: 1;
+        }
+
+        .cart-item-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .cart-item-price {
+            color: #a0a0b0;
+        }
+
+        .cart-item-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .quantity-control button {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        .quantity-control span {
+            min-width: 40px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 25px;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
+            border-radius: 12px;
+            margin-top: 20px;
+        }
+
+        .cart-total .total-label {
+            font-size: 1.2rem;
+            color: #a0a0b0;
+        }
+
+        .cart-total .total-amount {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .empty-cart {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6a6a7a;
+        }
+
+        .empty-cart-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        /* 로그 영역 */
+        .log-area {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            max-height: 200px;
+            overflow-y: auto;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        .log-success {
+            color: #22c55e;
+        }
+
+        .log-error {
+            color: #ef4444;
+        }
+
+        .log-info {
+            color: #a0a0b0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- 네비게이션 -->
+        <div class="nav-bar">
+            <a href="index.html">← 홈으로</a>
+            <h1>🛒 장바구니</h1>
+        </div>
+
+        <!-- 도서 추가 섹션 -->
+        <div class="section">
+            <h2>📚 도서 추가</h2>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Book ID (도서 번호)</label>
+                    <input type="number" id="bookId" value="1" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Quantity (수량)</label>
+                    <input type="number" id="quantity" value="1" min="1" max="10">
+                </div>
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="addToCart()">장바구니에 담기</button>
+                <button class="btn btn-secondary" onclick="refreshCart()">🔄 새로고침</button>
+            </div>
+        </div>
+
+        <!-- 장바구니 목록 -->
+        <div class="section">
+            <h2>📋 장바구니 목록</h2>
+            <div id="cartList" class="cart-list">
+                <div class="empty-cart">
+                    <div class="empty-cart-icon">🛒</div>
+                    <p>장바구니가 비어있습니다.</p>
+                </div>
+            </div>
+            <div id="cartTotal" class="cart-total" style="display: none;">
+                <span class="total-label">총 결제금액</span>
+                <span class="total-amount" id="totalAmount">₩0</span>
+            </div>
+            <div style="margin-top: 20px; text-align: right;">
+                <a href="payment.html" class="btn btn-primary" id="checkoutBtn"
+                    style="display: none; text-decoration: none;">💳 결제하러 가기</a>
+            </div>
+        </div>
+
+        <!-- 로그 영역 -->
+        <div class="section">
+            <h2>📝 API 로그</h2>
+            <div id="logArea" class="log-area">
+                <div class="log-info">대기 중...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Base API URL
+        const API_BASE = '/api/v1';
+
+        // 페이지 로드 시
+        window.onload = function () {
+            checkAuth();
+            refreshCart();
+        };
+
+        // 인증 확인
+        function checkAuth() {
+            const token = localStorage.getItem('rs_jwt_token');
+            if (!token) {
+                log('⚠️ JWT 토큰이 설정되지 않았습니다. 홈에서 설정해주세요.', 'error');
+            }
+        }
+
+        // 인증 헤더
+        function getAuthHeader() {
+            let token = localStorage.getItem('rs_jwt_token') || '';
+            if (token && !token.startsWith('Bearer ')) {
+                token = 'Bearer ' + token;
+            }
+            return {
+                'Authorization': token,
+                'Content-Type': 'application/json'
+            };
+        }
+
+        // 로그 출력
+        function log(message, type = 'info') {
+            const area = document.getElementById('logArea');
+            const time = new Date().toLocaleTimeString();
+            const className = type === 'error' ? 'log-error' : type === 'success' ? 'log-success' : 'log-info';
+            area.innerHTML = `<div class="${className}">[${time}] ${message}</div>` + area.innerHTML;
+        }
+
+        // 장바구니 담기
+        async function addToCart() {
+            const bookId = parseInt(document.getElementById('bookId').value);
+            const quantity = parseInt(document.getElementById('quantity').value);
+
+            try {
+                log(`장바구니 추가 요청: bookId=${bookId}, quantity=${quantity}`);
+                const response = await fetch(`${API_BASE}/carts`, {
+                    method: 'POST',
+                    headers: getAuthHeader(),
+                    body: JSON.stringify({ bookId, quantity })
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.message || 'Failed to add to cart');
+                }
+
+                const data = await response.json();
+                log(`✅ 장바구니 담기 성공: ${data.bookTitle}`, 'success');
+                refreshCart();
+            } catch (error) {
+                log(`❌ 에러: ${error.message}`, 'error');
+            }
+        }
+
+        // 장바구니 조회
+        async function refreshCart() {
+            try {
+                log('장바구니 조회 중...');
+                const response = await fetch(`${API_BASE}/carts`, {
+                    headers: getAuthHeader()
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch cart');
+                }
+
+                const data = await response.json();
+                renderCart(data);
+                log(`✅ 장바구니 조회 완료: ${data.length}개 항목`, 'success');
+            } catch (error) {
+                log(`❌ 조회 실패: ${error.message}`, 'error');
+            }
+        }
+
+        // 장바구니 렌더링
+        function renderCart(items) {
+            const container = document.getElementById('cartList');
+            const totalContainer = document.getElementById('cartTotal');
+            const checkoutBtn = document.getElementById('checkoutBtn');
+
+            if (!items || items.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-cart">
+                        <div class="empty-cart-icon">🛒</div>
+                        <p>장바구니가 비어있습니다.</p>
+                    </div>
+                `;
+                totalContainer.style.display = 'none';
+                checkoutBtn.style.display = 'none';
+                return;
+            }
+
+            let html = '';
+            let total = 0;
+
+            items.forEach(item => {
+                total += item.totalPrice;
+                html += `
+                    <div class="cart-item" data-id="${item.cartId}">
+                        <div class="cart-item-info">
+                            <div class="cart-item-title">${item.bookTitle}</div>
+                            <div class="cart-item-price">₩${item.bookPrice.toLocaleString()} × ${item.quantity} = ₩${item.totalPrice.toLocaleString()}</div>
+                        </div>
+                        <div class="cart-item-actions">
+                            <div class="quantity-control">
+                                <button onclick="updateQuantity(${item.cartId}, ${item.quantity - 1})">−</button>
+                                <span>${item.quantity}</span>
+                                <button onclick="updateQuantity(${item.cartId}, ${item.quantity + 1})">+</button>
+                            </div>
+                            <button class="btn btn-danger" onclick="deleteItem(${item.cartId})" style="padding: 10px 15px;">🗑️</button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+            document.getElementById('totalAmount').textContent = `₩${total.toLocaleString()}`;
+            totalContainer.style.display = 'flex';
+            checkoutBtn.style.display = 'inline-block';
+
+            // 결제 페이지에서 사용할 수 있도록 총액 저장
+            localStorage.setItem('rs_cart_total', total);
+        }
+
+        // 수량 수정
+        async function updateQuantity(cartId, newQuantity) {
+            if (newQuantity < 1) {
+                deleteItem(cartId);
+                return;
+            }
+
+            try {
+                log(`수량 수정: cartId=${cartId}, quantity=${newQuantity}`);
+                const response = await fetch(`${API_BASE}/carts/${cartId}`, {
+                    method: 'PATCH',
+                    headers: getAuthHeader(),
+                    body: JSON.stringify({ quantity: newQuantity })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to update quantity');
+                }
+
+                log(`✅ 수량 수정 완료`, 'success');
+                refreshCart();
+            } catch (error) {
+                log(`❌ 수정 실패: ${error.message}`, 'error');
+            }
+        }
+
+        // 항목 삭제
+        async function deleteItem(cartId) {
+            if (!confirm('이 항목을 삭제하시겠습니까?')) return;
+
+            try {
+                log(`항목 삭제: cartId=${cartId}`);
+                const response = await fetch(`${API_BASE}/carts/${cartId}`, {
+                    method: 'DELETE',
+                    headers: getAuthHeader()
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to delete item');
+                }
+
+                log(`✅ 항목 삭제 완료`, 'success');
+                refreshCart();
+            } catch (error) {
+                log(`❌ 삭제 실패: ${error.message}`, 'error');
+            }
+        }
+    </script>
+</body>
+
+</html>

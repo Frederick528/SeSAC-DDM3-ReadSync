@@ -21,7 +21,7 @@ import java.util.Map;
  * 결제 관련 API를 제공하는 컨트롤러 클래스입니다.
  */
 @RestController
-@RequestMapping("/api/v1/payments")
+@RequestMapping("/v1/payments")
 @RequiredArgsConstructor
 @Tag(name = "Payment (결제)", description = "결제 승인 및 결제 수단 관리 API")
 public class PaymentController {

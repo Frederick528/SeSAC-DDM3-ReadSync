@@ -64,11 +64,15 @@ public class SubscriptionService {
         PaymentMethod paymentMethod = paymentMethodRepository.findByUserAndIsDefaultTrueAndDeletedAtIsNull(user)
                 .orElseThrow(() -> new CustomException(ErrorCode.INTERNAL_SERVER_ERROR, "등록된 기본 결제 수단이 없습니다."));
 
+        if (paymentMethod.getCustomerKey() == null) {
+            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR, "결제 수단 정보가 만료되었습니다. 카드를 다시 등록해주세요.");
+        }
+
         // 첫 결제 수행
         String orderId = UUID.randomUUID().toString();
         Map<String, Object> paymentResult = tossPaymentService.executeBillingPayment(
                 paymentMethod.getBillingKey(),
-                user.getProviderId(), // 또는 내부 customerKey
+                paymentMethod.getCustomerKey(),
                 price,
                 orderId,
                 planName + " 구독");
@@ -171,7 +175,7 @@ public class SubscriptionService {
         String orderId = UUID.randomUUID().toString();
         Map<String, Object> paymentResult = tossPaymentService.executeBillingPayment(
                 paymentMethod.getBillingKey(),
-                sub.getUser().getProviderId(),
+                paymentMethod.getCustomerKey(),
                 sub.getPrice(),
                 orderId,
                 sub.getPlanName() + " 정기 갱신");

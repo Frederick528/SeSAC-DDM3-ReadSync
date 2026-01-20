@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>일반 결제 - ReadSync</title>
+    <!-- Toss Payments SDK v2 -->
+    <script src="https://js.tosspayments.com/v2/standard"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .nav-bar {
+            display: flex;
+            align-items: center;
+            margin-bottom: 40px;
+            gap: 20px;
+        }
+
+        .nav-bar a {
+            color: #a0a0b0;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .nav-bar a:hover {
+            color: #667eea;
+        }
+
+        .nav-bar h1 {
+            font-size: 1.8rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .section h2 {
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #a0a0b0;
+            font-size: 0.9rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px 18px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            padding: 16px 32px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* 주문 요약 */
+        .order-summary {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .order-summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .order-summary-row:last-child {
+            border-bottom: none;
+            padding-top: 20px;
+        }
+
+        .order-summary-row.total {
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        .order-summary-row.total .value {
+            color: #667eea;
+        }
+
+        /* 결제 위젯 영역 */
+        #payment-widget-container {
+            background: #fff;
+            border-radius: 16px;
+            padding: 5px;
+            margin-bottom: 25px;
+            min-height: 400px;
+        }
+
+        #agreement-container {
+            background: #fff;
+            border-radius: 16px;
+            padding: 5px;
+            margin-bottom: 25px;
+        }
+
+        /* 로딩 상태 */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            display: none;
+        }
+
+        .loading-overlay.active {
+            display: flex;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(102, 126, 234, 0.3);
+            border-top-color: #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading-text {
+            margin-top: 20px;
+            font-size: 1.1rem;
+            color: #a0a0b0;
+        }
+
+        /* 결과 메시지 */
+        .result-box {
+            padding: 25px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+        }
+
+        .result-box.success {
+            background: rgba(34, 197, 94, 0.2);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+
+        .result-box.error {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        /* 로그 영역 */
+        .log-area {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            max-height: 200px;
+            overflow-y: auto;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        .log-success {
+            color: #22c55e;
+        }
+
+        .log-error {
+            color: #ef4444;
+        }
+
+        .log-info {
+            color: #a0a0b0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- 네비게이션 -->
+        <div class="nav-bar">
+            <a href="index.html">← 홈으로</a>
+            <h1>💳 일반 결제</h1>
+        </div>
+
+        <!-- 주문 정보 -->
+        <div class="section">
+            <h2>📦 주문 정보</h2>
+            <div class="form-group">
+                <label>주문명</label>
+                <input type="text" id="orderName" value="ReadSync 도서 결제">
+            </div>
+            <div class="order-summary">
+                <div class="order-summary-row">
+                    <span>상품금액</span>
+                    <span id="itemPrice">₩0</span>
+                </div>
+                <div class="order-summary-row">
+                    <span>배송비</span>
+                    <span>무료</span>
+                </div>
+                <div class="order-summary-row total">
+                    <span>총 결제금액</span>
+                    <span class="value" id="totalPrice">₩0</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>결제 금액 (직접 입력)</label>
+                <input type="number" id="paymentAmount" value="0" min="1000">
+            </div>
+        </div>
+
+        <!-- 결제 위젯 -->
+        <div class="section">
+            <h2>💰 결제 수단 선택</h2>
+            <div id="payment-widget-container">
+                <!-- Toss 결제 위젯이 여기에 렌더링됩니다 -->
+            </div>
+            <div id="agreement-container">
+                <!-- 이용약관 동의가 여기에 렌더링됩니다 -->
+            </div>
+            <button class="btn btn-primary" id="payButton" onclick="requestPayment()" disabled>
+                결제하기
+            </button>
+        </div>
+
+        <!-- 결과 표시 영역 -->
+        <div id="resultSection" class="section" style="display: none;">
+            <h2>📋 결제 결과</h2>
+            <div id="resultBox" class="result-box"></div>
+        </div>
+
+        <!-- 로그 영역 -->
+        <div class="section">
+            <h2>📝 API 로그</h2>
+            <div id="logArea" class="log-area">
+                <div class="log-info">결제 위젯 초기화 중...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 로딩 오버레이 -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="spinner"></div>
+        <div class="loading-text">결제 처리 중...</div>
+    </div>
+
+    <script>
+        // 전역 변수
+        const API_BASE = '/api/v1';
+        let tossPayments = null;
+        let widgets = null;
+
+        // 페이지 로드 시
+        window.onload = async function () {
+            // 저장된 장바구니 총액 불러오기
+            const savedTotal = localStorage.getItem('rs_cart_total');
+            if (savedTotal) {
+                const amount = parseInt(savedTotal);
+                document.getElementById('itemPrice').textContent = `₩${amount.toLocaleString()}`;
+                document.getElementById('totalPrice').textContent = `₩${amount.toLocaleString()}`;
+                document.getElementById('paymentAmount').value = amount;
+            }
+
+            // URL 파라미터 확인 (결제 리다이렉트 처리)
+            await processPaymentRedirect();
+
+            // 결제 위젯 초기화
+            await initPaymentWidget();
+        };
+
+        // 인증 헤더
+        function getAuthHeader() {
+            let token = localStorage.getItem('rs_jwt_token') || '';
+            if (token && !token.startsWith('Bearer ')) {
+                token = 'Bearer ' + token;
+            }
+            return {
+                'Authorization': token,
+                'Content-Type': 'application/json'
+            };
+        }
+
+        // 로그 출력
+        function log(message, type = 'info') {
+            const area = document.getElementById('logArea');
+            const time = new Date().toLocaleTimeString();
+            const className = type === 'error' ? 'log-error' : type === 'success' ? 'log-success' : 'log-info';
+            area.innerHTML = `<div class="${className}">[${time}] ${message}</div>` + area.innerHTML;
+        }
+
+        // 결제 위젯 초기화
+        async function initPaymentWidget() {
+            const clientKey = localStorage.getItem('rs_client_key');
+            if (!clientKey) {
+                log('⚠️ Client Key가 설정되지 않았습니다. 홈에서 설정해주세요.', 'error');
+                return;
+            }
+
+            try {
+                // 고객 키 생성
+                const customerKey = 'CUSTOMER_' + Math.random().toString(36).substring(2, 12);
+
+                // TossPayments SDK 초기화
+                tossPayments = TossPayments(clientKey);
+                widgets = tossPayments.widgets({ customerKey });
+
+                // 초기 금액 설정
+                const amount = parseInt(document.getElementById('paymentAmount').value) || 0;
+                await widgets.setAmount({
+                    currency: 'KRW',
+                    value: amount
+                });
+
+                // 결제 수단 렌더링
+                await widgets.renderPaymentMethods({
+                    selector: '#payment-widget-container',
+                    variantKey: 'DEFAULT'
+                });
+
+                // 이용약관 렌더링
+                await widgets.renderAgreement({
+                    selector: '#agreement-container',
+                    variantKey: 'AGREEMENT'
+                });
+
+                // 결제 버튼 활성화
+                document.getElementById('payButton').disabled = false;
+                log('✅ 결제 위젯 초기화 완료', 'success');
+
+                // 금액 변경 이벤트 연결
+                document.getElementById('paymentAmount').addEventListener('change', async (e) => {
+                    const newAmount = parseInt(e.target.value) || 0;
+                    await widgets.setAmount({
+                        currency: 'KRW',
+                        value: newAmount
+                    });
+                    document.getElementById('totalPrice').textContent = `₩${newAmount.toLocaleString()}`;
+                    log(`금액 업데이트: ₩${newAmount.toLocaleString()}`);
+                });
+
+            } catch (error) {
+                log(`❌ 위젯 초기화 실패: ${error.message}`, 'error');
+                console.error(error);
+            }
+        }
+
+        // 결제 요청
+        async function requestPayment() {
+            if (!widgets) {
+                alert('결제 위젯이 초기화되지 않았습니다.');
+                return;
+            }
+
+            const orderId = 'ORDER_' + Date.now() + '_' + Math.random().toString(36).substring(2, 8);
+            const orderName = document.getElementById('orderName').value;
+
+            try {
+                log(`결제 요청 시작: ${orderId}`);
+
+                await widgets.requestPayment({
+                    orderId: orderId,
+                    orderName: orderName,
+                    successUrl: window.location.origin + window.location.pathname,
+                    failUrl: window.location.origin + window.location.pathname,
+                    customerEmail: 'customer@readsync.com',
+                    customerName: '리드싱크 고객'
+                });
+
+            } catch (error) {
+                if (error.code === 'USER_CANCEL') {
+                    log('ℹ️ 사용자가 결제를 취소했습니다.', 'info');
+                } else {
+                    log(`❌ 결제 요청 실패: ${error.message}`, 'error');
+                }
+            }
+        }
+
+        // 결제 리다이렉트 처리
+        async function processPaymentRedirect() {
+            const urlParams = new URLSearchParams(window.location.search);
+
+            // 결제 성공 (paymentKey, orderId, amount)
+            if (urlParams.has('paymentKey') && urlParams.has('orderId') && urlParams.has('amount')) {
+                showLoading(true);
+                log('결제 인증 성공! 백엔드 승인 요청 중...');
+
+                const paymentData = {
+                    paymentKey: urlParams.get('paymentKey'),
+                    orderId: urlParams.get('orderId'),
+                    amount: parseInt(urlParams.get('amount'))
+                };
+
+                try {
+                    const response = await fetch(`${API_BASE}/payments/confirm`, {
+                        method: 'POST',
+                        headers: getAuthHeader(),
+                        body: JSON.stringify(paymentData)
+                    });
+
+                    const result = await response.json();
+
+                    if (response.ok) {
+                        showResult('success', `
+                            <h3 style="color: #22c55e; margin-bottom: 15px;">✅ 결제가 완료되었습니다!</h3>
+                            <p><strong>주문번호:</strong> ${result.orderId || paymentData.orderId}</p>
+                            <p><strong>결제금액:</strong> ₩${paymentData.amount.toLocaleString()}</p>
+                            <p><strong>상태:</strong> ${result.status || 'DONE'}</p>
+                        `);
+                        log('✅ 결제 승인 완료!', 'success');
+
+                        // 장바구니 총액 초기화
+                        localStorage.removeItem('rs_cart_total');
+                    } else {
+                        throw new Error(result.message || '결제 승인 실패');
+                    }
+                } catch (error) {
+                    showResult('error', `
+                        <h3 style="color: #ef4444; margin-bottom: 15px;">❌ 결제 승인 실패</h3>
+                        <p>${error.message}</p>
+                    `);
+                    log(`❌ 결제 승인 실패: ${error.message}`, 'error');
+                }
+
+                showLoading(false);
+                clearUrlParams();
+            }
+
+            // 결제 실패
+            else if (urlParams.has('code')) {
+                showResult('error', `
+                    <h3 style="color: #ef4444; margin-bottom: 15px;">❌ 결제 실패</h3>
+                    <p><strong>에러 코드:</strong> ${urlParams.get('code')}</p>
+                    <p><strong>메시지:</strong> ${urlParams.get('message') || '알 수 없는 오류'}</p>
+                `);
+                log(`❌ 결제 실패: ${urlParams.get('message')}`, 'error');
+                clearUrlParams();
+            }
+        }
+
+        // 결과 표시
+        function showResult(type, html) {
+            const section = document.getElementById('resultSection');
+            const box = document.getElementById('resultBox');
+            section.style.display = 'block';
+            box.className = `result-box ${type}`;
+            box.innerHTML = html;
+        }
+
+        // 로딩 표시
+        function showLoading(show) {
+            document.getElementById('loadingOverlay').classList.toggle('active', show);
+        }
+
+        // URL 파라미터 제거
+        function clearUrlParams() {
+            const newUrl = window.location.origin + window.location.pathname;
+            window.history.replaceState({}, '', newUrl);
+        }
+    </script>
+</body>
+
+</html>

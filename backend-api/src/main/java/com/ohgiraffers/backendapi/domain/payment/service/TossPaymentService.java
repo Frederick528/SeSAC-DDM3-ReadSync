@@ -105,8 +105,7 @@ public class TossPaymentService {
      */
     private HttpHeaders getHeaders() {
         HttpHeaders headers = new HttpHeaders();
-        String encodedKey = Base64.getEncoder().encodeToString((secretKey + ":").getBytes(StandardCharsets.UTF_8));
-        headers.setBasicAuth(encodedKey);
+        headers.setBasicAuth(secretKey, ""); // Spring이 자동으로 Basic Auth 인코딩 처리
         headers.setContentType(MediaType.APPLICATION_JSON);
         return headers;
     }

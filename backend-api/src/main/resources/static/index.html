@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ReadSync - 결제 테스트 포털</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        header h1 {
+            font-size: 3rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            color: #a0a0b0;
+            font-size: 1.2rem;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 35px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(102, 126, 234, 0.5);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .card h2 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+
+        .card p {
+            color: #a0a0b0;
+            line-height: 1.6;
+        }
+
+        .card-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-top: 15px;
+        }
+
+        .config-section {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 35px;
+            margin-bottom: 30px;
+        }
+
+        .config-section h3 {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #a0a0b0;
+            font-size: 0.9rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px 18px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-group input::placeholder {
+            color: #6a6a7a;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(34, 197, 94, 0.2);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            border-radius: 20px;
+            color: #22c55e;
+            font-size: 0.9rem;
+            margin-left: auto;
+        }
+
+        .status-badge.warning {
+            background: rgba(245, 158, 11, 0.2);
+            border-color: rgba(245, 158, 11, 0.3);
+            color: #f59e0b;
+        }
+
+        .footer {
+            text-align: center;
+            color: #6a6a7a;
+            padding-top: 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>📚 ReadSync</h1>
+            <p>토스페이먼츠 결제 연동 테스트 포털</p>
+        </header>
+
+        <!-- 설정 섹션 -->
+        <div class="config-section">
+            <h3>
+                ⚙️ 기본 설정
+                <span id="statusBadge" class="status-badge warning">미설정</span>
+            </h3>
+            <div class="form-group">
+                <label>JWT Token (로그인 후 발급받은 토큰)</label>
+                <input type="text" id="jwtToken" placeholder="eyJhbGciOiJIUzI1NiJ9...">
+            </div>
+            <div class="form-group">
+                <label>Toss Client Key (테스트 클라이언트 키)</label>
+                <input type="text" id="clientKey" placeholder="test_ck_...">
+            </div>
+            <button class="btn btn-primary" onclick="saveConfig()">설정 저장</button>
+        </div>
+
+        <!-- 메인 기능 카드 -->
+        <div class="cards-grid">
+            <a href="cart.html" class="card">
+                <div class="card-icon">🛒</div>
+                <h2>장바구니</h2>
+                <p>도서를 장바구니에 담고, 수량을 조절하거나 삭제할 수 있습니다.</p>
+                <span class="card-badge">Cart API</span>
+            </a>
+
+            <a href="payment.html" class="card">
+                <div class="card-icon">💳</div>
+                <h2>일반 결제</h2>
+                <p>장바구니에 담긴 도서를 토스페이먼츠 결제 위젯으로 결제합니다.</p>
+                <span class="card-badge">Payment Widget</span>
+            </a>
+
+            <a href="subscription.html" class="card">
+                <div class="card-icon">📅</div>
+                <h2>정기 구독</h2>
+                <p>빌링키를 등록하고 프리미엄 멤버십을 정기 결제로 이용합니다.</p>
+                <span class="card-badge">Billing Key</span>
+            </a>
+
+            <a href="orders.html" class="card">
+                <div class="card-icon">📦</div>
+                <h2>주문 내역</h2>
+                <p>결제가 완료된 주문 내역과 결제 이력을 확인합니다.</p>
+                <span class="card-badge">Order History</span>
+            </a>
+        </div>
+
+        <!-- 도움말 -->
+        <div class="config-section">
+            <h3>📖 사용 가이드</h3>
+            <ol style="color: #a0a0b0; line-height: 2; padding-left: 20px;">
+                <li><strong>JWT 토큰 발급</strong>: Swagger에서 로그인 API를 호출하여 토큰을 복사하세요.</li>
+                <li><strong>Client Key 입력</strong>: 토스페이먼츠 개발자센터에서 발급받은 테스트 키를 입력하세요.</li>
+                <li><strong>장바구니 담기</strong>: 원하는 도서를 장바구니에 추가합니다.</li>
+                <li><strong>결제하기</strong>: 일반 결제 또는 정기 구독을 선택하여 결제를 진행합니다.</li>
+            </ol>
+        </div>
+
+        <footer class="footer">
+            <p>© 2026 ReadSync Team. 토스페이먼츠 SDK v2 연동</p>
+        </footer>
+    </div>
+
+    <script>
+        // 저장된 설정 불러오기
+        window.onload = function () {
+            const token = localStorage.getItem('rs_jwt_token');
+            const key = localStorage.getItem('rs_client_key');
+
+            if (token) document.getElementById('jwtToken').value = token;
+            if (key) document.getElementById('clientKey').value = key;
+
+            updateStatusBadge();
+        };
+
+        // 설정 저장
+        function saveConfig() {
+            const token = document.getElementById('jwtToken').value.trim();
+            const key = document.getElementById('clientKey').value.trim();
+
+            localStorage.setItem('rs_jwt_token', token);
+            localStorage.setItem('rs_client_key', key);
+
+            updateStatusBadge();
+            alert('설정이 저장되었습니다!');
+        }
+
+        // 상태 배지 업데이트
+        function updateStatusBadge() {
+            const badge = document.getElementById('statusBadge');
+            const token = localStorage.getItem('rs_jwt_token');
+            const key = localStorage.getItem('rs_client_key');
+
+            if (token && key) {
+                badge.className = 'status-badge';
+                badge.textContent = '✓ 설정 완료';
+            } else {
+                badge.className = 'status-badge warning';
+                badge.textContent = '⚠ 미설정';
+            }
+        }
+    </script>
+</body>
+
+</html>

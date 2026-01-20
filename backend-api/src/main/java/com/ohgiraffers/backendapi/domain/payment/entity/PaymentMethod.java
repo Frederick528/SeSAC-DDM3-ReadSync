@@ -41,8 +41,11 @@ public class PaymentMethod extends BaseTimeEntity {
     @Builder.Default
     private Boolean isDefault = false;
 
-    @Column(name = "customer_key", nullable = false)
+    @Column(name = "customer_key", nullable = true)
     private String customerKey;
 
     // created_at, deleted_at은 BaseTimeEntity에서 상속
+    public void updateDefaultStatus(boolean isDefault) {
+        this.isDefault = isDefault;
+    }
 }
