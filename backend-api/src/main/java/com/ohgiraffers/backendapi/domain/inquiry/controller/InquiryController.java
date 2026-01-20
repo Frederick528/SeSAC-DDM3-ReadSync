@@ -39,7 +39,7 @@ public class InquiryController {
         );
     }
 
-    /** 문의 상세 */
+    /** 문의 상세 조회 */
     @GetMapping("/{inquiryId}")
     public ResponseEntity<InquiryResponse> findOne(
             @PathVariable Long inquiryId
@@ -47,5 +47,29 @@ public class InquiryController {
         return ResponseEntity.ok(
                 InquiryResponse.from(inquiryService.find(inquiryId))
         );
+    }
+
+    /** 문의 수정 (본인만) */
+    @PutMapping("/{inquiryId}")
+    public ResponseEntity<InquiryResponse> update(
+            @PathVariable Long inquiryId,
+            @RequestBody InquiryRequest request
+    ) {
+        Long userId = 1L; // TODO JWT 연동
+        return ResponseEntity.ok(
+                InquiryResponse.from(
+                        inquiryService.update(inquiryId, userId, request)
+                )
+        );
+    }
+
+    /** 문의 삭제 (본인만) */
+    @DeleteMapping("/{inquiryId}")
+    public ResponseEntity<Void> delete(
+            @PathVariable Long inquiryId
+    ) {
+        Long userId = 1L; // TODO JWT 연동
+        inquiryService.delete(inquiryId, userId);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -1,4 +1,4 @@
-package com.ohgiraffers.backendapi.domain.inquiry_answer.dto;
+package com.ohgiraffers.backendapi.domain.inquiryanswer.dto;
 
 import lombok.Getter;
 

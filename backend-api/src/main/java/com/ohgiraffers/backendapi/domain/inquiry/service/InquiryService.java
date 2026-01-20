@@ -37,4 +37,33 @@ public class InquiryService {
         return inquiryRepository.findById(inquiryId)
                 .orElseThrow(() -> new IllegalArgumentException("문의 없음"));
     }
+
+    /** 문의 수정 (본인만 가능) */
+    @Transactional
+    public Inquiry update(Long inquiryId, Long userId, InquiryRequest request) {
+
+        Inquiry inquiry = inquiryRepository.findById(inquiryId)
+                .orElseThrow(() -> new IllegalArgumentException("문의 없음"));
+
+        if (!inquiry.getUserId().equals(userId)) {
+            throw new SecurityException("본인 문의만 수정할 수 있습니다.");
+        }
+
+        inquiry.update(request.getTitle(), request.getContent());
+        return inquiry;
+    }
+
+    /** 문의 삭제 (본인만 가능) */
+    @Transactional
+    public void delete(Long inquiryId, Long userId) {
+
+        Inquiry inquiry = inquiryRepository.findById(inquiryId)
+                .orElseThrow(() -> new IllegalArgumentException("문의 없음"));
+
+        if (!inquiry.getUserId().equals(userId)) {
+            throw new SecurityException("본인 문의만 삭제할 수 있습니다.");
+        }
+
+        inquiryRepository.delete(inquiry);
+    }
 }

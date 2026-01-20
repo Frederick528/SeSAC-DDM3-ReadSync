@@ -16,21 +16,46 @@ public class NoticeController {
 
     private final NoticeService noticeService;
 
-    /** 공지 생성 (ADMIN) */
+    /* =========================
+       관리자 전용
+       ========================= */
+
+    /** 공지 등록 (관리자) */
     @PostMapping
     public ResponseEntity<NoticeResponse> create(
-            @RequestBody NoticeRequest.Create request
+            @RequestBody NoticeRequest request
     ) {
-        Long adminId = 1L; // 임시 관리자 ID
-
+        Long adminId = 1L; // TODO 관리자 JWT 연동
         return ResponseEntity.ok(
-                NoticeResponse.from(
-                        noticeService.create(request, adminId)
-                )
+                NoticeResponse.from(noticeService.create(request, adminId))
         );
     }
 
-    /** 공지 전체 조회 (회원/비회원) */
+    /** 공지 수정 (관리자) */
+    @PutMapping("/{noticeId}")
+    public ResponseEntity<NoticeResponse> update(
+            @PathVariable Long noticeId,
+            @RequestBody NoticeRequest request
+    ) {
+        return ResponseEntity.ok(
+                NoticeResponse.from(noticeService.update(noticeId, request))
+        );
+    }
+
+    /** 공지 삭제 (관리자) */
+    @DeleteMapping("/{noticeId}")
+    public ResponseEntity<Void> delete(
+            @PathVariable Long noticeId
+    ) {
+        noticeService.delete(noticeId);
+        return ResponseEntity.noContent().build();
+    }
+
+    /* =========================
+       회원 / 공통
+       ========================= */
+
+    /** 공지 목록 */
     @GetMapping
     public ResponseEntity<List<NoticeResponse>> findAll() {
         return ResponseEntity.ok(
@@ -41,13 +66,13 @@ public class NoticeController {
         );
     }
 
-    /** 공지 상세 조회 */
+    /** 공지 상세 */
     @GetMapping("/{noticeId}")
-    public ResponseEntity<NoticeResponse> find(@PathVariable Long noticeId) {
+    public ResponseEntity<NoticeResponse> findOne(
+            @PathVariable Long noticeId
+    ) {
         return ResponseEntity.ok(
-                NoticeResponse.from(
-                        noticeService.find(noticeId)
-                )
+                NoticeResponse.from(noticeService.find(noticeId))
         );
     }
 }

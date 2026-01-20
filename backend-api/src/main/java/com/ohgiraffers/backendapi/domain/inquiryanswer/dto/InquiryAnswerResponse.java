@@ -1,6 +1,6 @@
-package com.ohgiraffers.backendapi.domain.inquiry_answer.dto;
+package com.ohgiraffers.backendapi.domain.inquiryanswer.dto;
 
-import com.ohgiraffers.backendapi.domain.inquiry_answer.entity.InquiryAnswer;
+import com.ohgiraffers.backendapi.domain.inquiryanswer.entity.InquiryAnswer;
 import lombok.Builder;
 import lombok.Getter;
 
