@@ -59,6 +59,9 @@ dependencies {
 
     // AOP 기능 라이브러리
     implementation 'org.springframework.boot:spring-boot-starter-aop'
+
+    // Dotenv (환경변수 관리)
+    implementation 'io.github.cdimascio:dotenv-java:3.0.0'
 }
 
 tasks.named('test') {
