@@ -9,7 +9,9 @@ import com.ohgiraffers.backendapi.domain.chapter.repository.ChapterRepository;
 import com.ohgiraffers.backendapi.domain.exp.annotation.AwardExp;
 import com.ohgiraffers.backendapi.domain.exp.enums.ActivityType;
 import com.ohgiraffers.backendapi.domain.library.entity.Library;
+import com.ohgiraffers.backendapi.domain.library.enums.ReadingStatus;
 import com.ohgiraffers.backendapi.domain.library.repository.LibraryRepository;
+import com.ohgiraffers.backendapi.domain.library.service.LibraryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +28,7 @@ import java.util.stream.Collectors;
 public class BookmarkService {
 
     private final BookmarkRepository bookmarkRepository;
+    private final LibraryService libraryService;
     private final LibraryRepository libraryRepository;
     private final ChapterRepository chapterRepository;
 
@@ -43,6 +46,7 @@ public class BookmarkService {
 
                     String emptyMask = "0".repeat(totalLength);
                     byte[] maskBytes = emptyMask.getBytes(StandardCharsets.UTF_8);
+                    libraryService.updateReadingStatus(library.getLibraryId() ,ReadingStatus.READING);
                     // DTO를 통해 신규 엔티티 생성 후 즉시 저장
                     return bookmarkRepository.save(dto.toEntity(library, chapter, maskBytes));
                 });
