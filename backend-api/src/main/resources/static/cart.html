@@ -310,7 +310,7 @@
 
     <script>
         // Base API URL
-        const API_BASE = '/api/v1';
+        const API_BASE = '/api/api/v1';
 
         // 페이지 로드 시
         window.onload = function () {
@@ -414,12 +414,13 @@
             let total = 0;
 
             items.forEach(item => {
-                total += item.totalPrice;
+                const itemTotal = item.totalPrice || (item.price * item.quantity);
+                total += itemTotal;
                 html += `
                     <div class="cart-item" data-id="${item.cartId}">
                         <div class="cart-item-info">
-                            <div class="cart-item-title">${item.bookTitle}</div>
-                            <div class="cart-item-price">₩${item.bookPrice.toLocaleString()} × ${item.quantity} = ₩${item.totalPrice.toLocaleString()}</div>
+                            <div class="cart-item-title">${item.title || '도서'}</div>
+                            <div class="cart-item-price">₩${(item.price || 0).toLocaleString()} × ${item.quantity} = ₩${itemTotal.toLocaleString()}</div>
                         </div>
                         <div class="cart-item-actions">
                             <div class="quantity-control">

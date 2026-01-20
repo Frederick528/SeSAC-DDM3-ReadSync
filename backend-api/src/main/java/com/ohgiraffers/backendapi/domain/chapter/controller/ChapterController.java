@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("/v1/chapters")
+@RequestMapping("/api/v1/chapters")
 @RequiredArgsConstructor
 @Tag(name = "Chapter API", description = "도서 챕터 관리 및 뷰어 연동")
 public class ChapterController {

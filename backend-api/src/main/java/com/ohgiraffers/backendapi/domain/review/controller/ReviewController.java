@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Review (리뷰)", description = "도서별 리뷰 작성, 수정, 삭제, 조회 API")
 @RestController
-@RequestMapping("/v1/reviews")
+@RequestMapping("/api/v1/reviews")
 @RequiredArgsConstructor
 public class ReviewController {
 

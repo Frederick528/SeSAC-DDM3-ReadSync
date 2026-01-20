@@ -18,7 +18,7 @@ import java.util.List;
  * 장바구니 관련 API를 제공하는 컨트롤러 클래스입니다.
  */
 @RestController
-@RequestMapping("/v1/carts")
+@RequestMapping("/api/v1/carts")
 @RequiredArgsConstructor
 @Tag(name = "Cart (장바구니)", description = "장바구니 담기, 조회, 수정, 삭제 API")
 public class CartController {

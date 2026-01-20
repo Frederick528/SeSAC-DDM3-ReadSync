@@ -186,7 +186,7 @@
             const bookId = document.getElementById('bookId').value;
             const quantity = document.getElementById('quantity').value;
 
-            fetch('/api/v1/carts', {
+            fetch('/api/api/v1/carts', {
                 method: 'POST',
                 headers: getAuthHeader(),
                 body: JSON.stringify({ bookId: parseInt(bookId), quantity: parseInt(quantity) })
@@ -200,7 +200,7 @@
         }
 
         function getCart() {
-            fetch('/api/v1/carts', { headers: getAuthHeader() })
+            fetch('/api/api/v1/carts', { headers: getAuthHeader() })
                 .then(res => res.json())
                 .then(data => {
                     document.getElementById('cartResult').innerText = JSON.stringify(data, null, 2);
@@ -291,7 +291,7 @@
             const price = document.getElementById('subPrice').value;
 
             // API 호출
-            fetch(`/api/v1/subscriptions?planName=${encodeURIComponent(planName)}&price=${price}`, {
+            fetch(`/api/api/v1/subscriptions?planName=${encodeURIComponent(planName)}&price=${price}`, {
                 method: 'POST',
                 headers: getAuthHeader()
             })
@@ -319,7 +319,7 @@
                     amount: parseInt(urlParams.get('amount'))
                 };
 
-                fetch('/api/v1/payments/confirm', {
+                fetch('/api/api/v1/payments/confirm', {
                     method: 'POST',
                     headers: getAuthHeader(),
                     body: JSON.stringify(body)
@@ -344,7 +344,7 @@
                     customerKey: urlParams.get('customerKey')
                 };
 
-                fetch('/api/v1/payments/billing-key', {
+                fetch('/api/api/v1/payments/billing-key', {
                     method: 'POST',
                     headers: getAuthHeader(),
                     body: JSON.stringify(body)

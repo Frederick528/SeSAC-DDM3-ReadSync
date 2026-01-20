@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/v1/comments")
+@RequestMapping("/api/v1/comments")
 @RequiredArgsConstructor
 @Tag(name = "Comment (댓글)", description = "챕터별 댓글 작성, 수정, 삭제, 조회 API")
 public class CommentController {
