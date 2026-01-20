@@ -26,15 +26,9 @@ public class Category extends BaseTimeEntity {
     @Column(nullable = false)
     private String categoryName;
 
-    @Column(nullable = false)
-    private Integer expByCategory;
-
     public void update(CategoryRequestDTO request) {
         if (categoryName != null && !categoryName.isBlank()) {
             this.categoryName = request.getCategoryName();
-        }
-        if (expByCategory != null) {
-            this.expByCategory = request.getExpByCategory();
         }
     }
 

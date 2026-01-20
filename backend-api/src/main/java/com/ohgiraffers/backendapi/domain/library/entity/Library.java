@@ -45,7 +45,6 @@ public class Library extends BaseTimeEntity {
     @Column(nullable = false)
     private ReadingStatus readingStatus = ReadingStatus.BEFORE_READING; // 기본값: 읽기 전
 
-    @Column(nullable = false)
     private LocalDateTime expiresAt; // 대여 시 만료일 (소유 시에는 매우 먼 미래 날짜 혹은 특정 규칙 적용)
 
     // 독서 상태 및 만료일 수정 로직
