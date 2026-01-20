@@ -2,6 +2,7 @@ package com.ohgiraffers.backendapi.domain.chat.dto;
 
 import com.ohgiraffers.backendapi.domain.chat.entity.ChatLog;
 import com.ohgiraffers.backendapi.domain.chat.enums.MessageType;
+import com.ohgiraffers.backendapi.domain.user.entity.UserInformation;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -41,11 +42,14 @@ public class ChatMessageResponse {
 
     // Entity -> DTO 변환 메서드 (팩토리 메서드)
     public static ChatMessageResponse from(ChatLog chatLog) {
+
+        UserInformation userInfo = chatLog.getUser().getUserInformation();
+
         return ChatMessageResponse.builder()
                 .chatId(chatLog.getChatId())
                 .senderId(chatLog.getUser().getId())
-                .senderName(chatLog.getUser().getUserInformation().getNickname()) // User 엔티티에 닉네임 필드가 있다고 가정
-                .senderProfileImage(chatLog.getUser().getUserInformation().getProfileImage()) // 프로필 이미지 있으면 추가
+                .senderName(userInfo.getNickname())
+                .senderProfileImage(userInfo.getProfileImage())
                 .messageType(chatLog.getMessageType())
                 .content(chatLog.getContent())
                 .imageUrl(chatLog.getImageUrl())
