@@ -1,0 +1,251 @@
+/* ===============================
+   COMMUNITY PAGE BASE
+=============================== */
+.community-page {
+  min-height: calc(100vh - 90px);
+  background: #5c432f;
+  padding: 32px 20px;
+  font-family: "Pretendard", sans-serif;
+  color: #f1e8dc;
+}
+
+/* ===============================
+   PAGE WIDTH (기준 폭)
+=============================== */
+.community-inner {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+/* ===============================
+   TITLE
+=============================== */
+.community-title {
+  text-align: center;
+  font-size: 22px;
+  font-weight: 800;
+  margin-bottom: 18px;
+  color: #f3e6d1;
+}
+
+/* ===============================
+   TOP MESSAGE BOX
+=============================== */
+.community-character {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: rgba(0, 0, 0, 0.25);
+  padding: 16px 18px;
+  border-radius: 16px;
+  margin-bottom: 18px;
+  box-sizing: border-box;
+}
+
+.character-icon {
+  font-size: 44px;
+}
+
+.character-text {
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* ===============================
+   POST LIST
+=============================== */
+.post-list {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ===============================
+   POST CARD (안내 박스와 동일 폭)
+=============================== */
+.post-card {
+  width: 100%;
+  background: #c8ad88;
+  border-radius: 15px;
+  padding: 15px 18px;
+  box-sizing: border-box;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  color: #2e1b0f;
+}
+
+.post-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.32);
+}
+
+.post-card a {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+/* 제목 */
+.post-title {
+  font-size: 16px;
+  font-weight: 800;
+  margin-bottom: 6px;
+  color: #2b170a;
+}
+
+/* 메타 */
+.post-meta {
+  font-size: 12px;
+  display: flex;
+  justify-content: space-between;
+  color: rgba(46, 27, 15, 0.75);
+}
+
+/* ===============================
+   POST DETAIL
+=============================== */
+.post-detail-card {
+  width: 100%;
+  background: #c8ad88;
+  border-radius: 16px;
+  padding: 22px;
+  box-sizing: border-box;
+  color: #2e1b0f;
+}
+
+.post-detail-meta {
+  font-size: 12px;
+  opacity: 0.7;
+  margin-bottom: 14px;
+}
+
+.post-content {
+  font-size: 14px;
+  line-height: 1.7;
+  margin-bottom: 20px;
+}
+
+.back-btn {
+  background: none;
+  border: 1px solid rgba(46, 27, 15, 0.45);
+  color: #2e1b0f;
+  padding: 7px 16px;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+/* ===============================
+   CHAT / COMMENT
+=============================== */
+.chat-section {
+  margin-top: 26px;
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 16px;
+  padding: 16px;
+}
+
+.chat-title {
+  font-size: 14px;
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+
+.chat-box {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 260px;
+  overflow-y: auto;
+}
+
+/* 한 줄 */
+.chat-line {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.chat-line.mine {
+  justify-content: flex-end;
+}
+
+/* 아바타 */
+.chat-avatar {
+  font-size: 25px;
+  animation: avatarFade 0.2s ease-out;
+}
+
+/* 말풍선 */
+.chat-bubble {
+  background: #7a5b3f;
+  padding: 9px 13px;
+  border-radius: 15px;
+  font-size: 13px;
+  max-width: 70%;
+  line-height: 1.5;
+  animation: chatPop 0.28s ease-out;
+}
+
+.chat-line.mine .chat-bubble {
+  background: #8b6a4a;
+}
+
+/* ===============================
+   INPUT
+=============================== */
+.chat-input {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.chat-input input {
+  flex: 1;
+  border-radius: 13px;
+  border: none;
+  padding: 9px 13px;
+  background: #5f452f;
+  color: #fff;
+  font-size: 13px;
+}
+
+.chat-input input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.chat-input button {
+  border: none;
+  border-radius: 13px;
+  padding: 0 16px;
+  background: #d2b48c;
+  color: #3b2a1a;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+/* ===============================
+   ANIMATION
+=============================== */
+@keyframes chatPop {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes avatarFade {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
