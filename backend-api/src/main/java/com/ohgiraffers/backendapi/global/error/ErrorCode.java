@@ -35,6 +35,12 @@ public enum ErrorCode {
     // 챕터
     CHAPTER_NOT_FOUND(HttpStatus.NOT_FOUND, "CH001", "해당 챕터를 찾을 수 없습니다."),
 
+    // 파일
+    FILE_NOT_FOUND(HttpStatus.NO_CONTENT, "FI001", "해당 파일이 비어있습니다"),
+    FILE_UPLOAD_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "FI002", "파일 업로드 중 오류가 발생했습니다."),
+    FILE_READ_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "FI003", "파일을 읽는 중 오류가 발생했습니다."),
+    FILE_DELETE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "FI004", "파일 삭제 중 오류가 발생했습니다."),
+
     // 리뷰
     REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND, "R001", "해당 리뷰를 찾을 수 없습니다."),
     REVIEW_SUSPENDED(HttpStatus.FORBIDDEN, "R002", "신고 누적으로 인해 제한된 리뷰입니다."),
