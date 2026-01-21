@@ -7,6 +7,7 @@ import com.ohgiraffers.backendapi.domain.chat.repository.ChatLogRepository;
 import com.ohgiraffers.backendapi.domain.readingroom.entity.ReadingRoom;
 import com.ohgiraffers.backendapi.domain.readingroom.repository.ReadingRoomRepository;
 import com.ohgiraffers.backendapi.domain.user.entity.User;
+import com.ohgiraffers.backendapi.domain.user.entity.UserInformation;
 import com.ohgiraffers.backendapi.domain.user.repository.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -52,7 +53,18 @@ class ChatLogServiceTest {
                 .build();
 
         // Mocking (가짜 객체 행동 정의)
-        User mockUser = User.builder().id(userId).build();
+
+        // 1. 가짜 UserInformation 생성 (닉네임 보유)
+        UserInformation mockUserInfo = UserInformation.builder()
+                .nickname("테스트닉네임")
+                .build();
+
+        // 2. 가짜 User 생성 시 정보 주입
+        User mockUser = User.builder()
+                .id(userId)
+                .userInformation(mockUserInfo) // ★ 핵심: 이게 없어서 에러가 났던 것임!
+                .build();
+
         ReadingRoom mockRoom = ReadingRoom.builder().roomId(roomId).build();
         ChatLog mockChatLog = ChatLog.createTextMessage(mockRoom, mockUser, "테스트");
 

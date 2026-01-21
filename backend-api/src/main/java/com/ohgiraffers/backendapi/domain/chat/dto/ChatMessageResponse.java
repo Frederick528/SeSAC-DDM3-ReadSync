@@ -45,6 +45,14 @@ public class ChatMessageResponse {
 
         UserInformation userInfo = chatLog.getUser().getUserInformation();
 
+        // 닉네임 안전하게 꺼내기 (Null 방어)
+        String nickname = (userInfo != null && userInfo.getNickname() != null)
+                ? userInfo.getNickname()
+                : "알 수 없음"; // 혹은 user.getLoginId() 등 대체값
+
+        // 프로필 이미지 안전하게 꺼내기
+        String profileImage = (userInfo != null) ? userInfo.getProfileImage() : null;
+
         return ChatMessageResponse.builder()
                 .chatId(chatLog.getChatId())
                 .senderId(chatLog.getUser().getId())
