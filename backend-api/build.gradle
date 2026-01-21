@@ -60,6 +60,12 @@ dependencies {
     // AOP 기능 라이브러리
     implementation 'org.springframework.boot:spring-boot-starter-aop'
 
+    // Redis (데이터 저장 및 Pub/Sub 메시징) - 이소현 추가
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+    // WebSocket (실시간 통신) - 이소현 추가
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
     // 소셜로그인
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 }
