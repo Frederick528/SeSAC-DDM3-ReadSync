@@ -62,7 +62,8 @@ public class ReviewService {
                 .orElseThrow(() -> new CustomException(ErrorCode.BOOK_NOT_FOUND));
 
         // 삭제된 리뷰를 제외한 리뷰 조회
-        Page<Review> reviews = reviewRepository.findByBookAndVisibilityStatusNot(book, VisibilityStatus.DELETED, pageable);
+        Page<Review> reviews = reviewRepository.findByBookAndVisibilityStatusNot(book, VisibilityStatus.DELETED,
+                pageable);
 
         // Entity Page -> DTO Page 변환
         return reviews.map(ReviewResponseDTO::from);
@@ -92,6 +93,19 @@ public class ReviewService {
         review.delete();
     }
 
+    // [5] 관리자용 리뷰 전체 조회
+    public Page<ReviewResponseDTO> getAllReviewsAdmin(Pageable pageable) {
+        Page<Review> reviews = reviewRepository.findAll(pageable);
+        return reviews.map(ReviewResponseDTO::from);
+    }
+
+    // [6] 관리자용 리뷰 강제 삭제
+    @Transactional
+    public void deleteReviewAdmin(Long reviewId) {
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new CustomException(ErrorCode.REVIEW_NOT_FOUND));
+        review.delete(); // Soft delete
+    }
 
     /* [ Helper Method ] */
 
@@ -107,7 +121,7 @@ public class ReviewService {
     }
 
     // 리뷰 작성자인지 검증
-    private void validateOwner(Review review, Long userId){
+    private void validateOwner(Review review, Long userId) {
         if (!review.getUser().getId().equals(userId)) {
             throw new CustomException(ErrorCode.REVIEW_NOT_OWNER);
         }
