@@ -672,3 +672,4 @@ application-*.yml
 docker-compose.yml
 
 application-oauth.yml
+/backend-api/uploads
