@@ -1,5 +1,6 @@
 {
-    "python-envs.defaultEnvManager": "ms-python.python:conda",
-    "python-envs.defaultPackageManager": "ms-python.python:conda",
-    "python-envs.pythonProjects": []
+    "python.defaultInterpreterPath": ".venv/Scripts/python.exe",
+    "python.terminal.activateEnvInCurrentTerminal": true,
+    "python-envs.defaultEnvManager": "ms-python.python:poetry",
+    "python-envs.defaultPackageManager": "ms-python.python:poetry"
 }
