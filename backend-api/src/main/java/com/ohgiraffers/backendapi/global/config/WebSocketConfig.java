@@ -9,7 +9,7 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @Configuration
 @EnableWebSocketMessageBroker       // STOMP 메시징 활성화
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
-    
+
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         // 1. 소켓 연결 엔드포인트: ws://localhost:8080/ws-stomp

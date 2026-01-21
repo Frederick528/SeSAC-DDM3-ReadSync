@@ -71,7 +71,8 @@ public enum ErrorCode {
     INVITATION_NOT_ALLOWED_FULL(HttpStatus.BAD_REQUEST, "R011", "정원이 초과되어 초대장을 보낼 수 없습니다."),
     INVALID_PLAY_SPEED(HttpStatus.BAD_REQUEST, "R012", "재생 속도는 0.5배에서 2.0배 사이여야 합니다."),
     INVITATION_NOT_FOUND(HttpStatus.NOT_FOUND, "R013", "존재하지 않거나 삭제된 초대장입니다."),
-    INVITATION_EXPIRED(HttpStatus.BAD_REQUEST, "R014", "만료된 초대장입니다.");
+    INVITATION_EXPIRED(HttpStatus.BAD_REQUEST, "R014", "만료된 초대장입니다."),
+    ROOM_FINISHED(HttpStatus.CONFLICT, "R015", "종료된 독서룸입니다.");
 
     private final HttpStatus status;
     private final String code;
