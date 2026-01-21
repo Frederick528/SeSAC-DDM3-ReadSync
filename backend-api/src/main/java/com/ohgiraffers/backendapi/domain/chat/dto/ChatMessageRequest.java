@@ -3,11 +3,15 @@ package com.ohgiraffers.backendapi.domain.chat.dto;
 import com.ohgiraffers.backendapi.domain.chat.enums.MessageType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class ChatMessageRequest {
     @Schema(description = "채팅방 ID")
     @NotNull(message = "채팅방 ID는 필수입니다.")
