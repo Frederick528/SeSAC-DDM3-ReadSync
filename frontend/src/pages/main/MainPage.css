@@ -1,0 +1,160 @@
+/* ===== Wrapper ===== */
+.main-wrapper {
+  padding: 20px 40px 60px;
+}
+
+/* ===== 타이틀 ===== */
+.main-title {
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 6px;
+  color: #2f5d3a;
+}
+
+.main-subtitle {
+  font-size: 16px;
+  color: #6b8f7a;
+  margin-bottom: 32px;
+}
+
+/* ===== GRID ===== */
+.main-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+}
+
+/* ===== CARD ===== */
+.main-card {
+  background: linear-gradient(
+    180deg,
+    #f1f8ec,
+    #e4f1db
+  );
+  border-radius: 22px;
+  padding: 28px;
+  min-height: 160px;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.06);
+  color: #355f45;
+}
+
+.main-card h3 {
+  margin-top: 0;
+  margin-bottom: 12px;
+  font-size: 18px;
+}
+
+.main-card.large {
+  grid-row: span 2;
+}
+
+/* ===== 성장의 나무 (중앙 강조) ===== */
+.tree-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* 나무 시각 영역 */
+.tree-visual-wrapper {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* SVG 나무 */
+.tree-svg {
+  width: 260px;
+  height: auto;
+}
+
+/* 줄기 */
+.tree-svg rect {
+  fill: #8d6e63;
+}
+
+/* 🌱 성장 단계별 나무 컬러 (레벨 10 단위) */
+.tree-stage-0 circle {
+  fill: #dcedc8; /* Lv 0~9 */
+}
+
+.tree-stage-1 circle {
+  fill: #c5e1a5; /* Lv 10~19 */
+}
+
+.tree-stage-2 circle {
+  fill: #aed581; /* Lv 20~29 */
+}
+
+.tree-stage-3 circle {
+  fill: #9ccc65; /* Lv 30~39 */
+}
+
+.tree-stage-4 circle {
+  fill: #7cb342; /* Lv 40+ */
+}
+
+/* 레벨 텍스트 */
+.tree-level-text {
+  margin-top: 14px;
+  font-size: 26px;
+  font-weight: 800;
+  color: #2f5d3a;
+}
+
+/* 설명 텍스트 */
+.tree-text {
+  font-size: 13px;
+  color: #4f7d60;
+  margin-top: 4px;
+}
+
+/* ===== 공통 텍스트 ===== */
+.card-desc {
+  font-size: 14px;
+  color: #5f7f6c;
+}
+
+.highlight {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 10px 0 4px;
+}
+
+/* ===== 리스트 ===== */
+.card-list {
+  padding-left: 16px;
+  margin: 0;
+}
+
+.card-list li {
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+/* ===== 하단 네비바 (작게, 유지) ===== */
+.bottom-nav {
+  margin-top: 36px;
+  padding-top: 16px;
+  border-top: 1px solid #d6e7cf;
+
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+}
+
+.bottom-nav button {
+  background: none;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  color: #4f7d60;
+  cursor: pointer;
+  padding: 6px 10px;
+}
+
+.bottom-nav button:hover {
+  text-decoration: underline;
+}

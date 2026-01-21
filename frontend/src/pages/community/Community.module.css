@@ -1,0 +1,62 @@
+/* 공통 wrapper */
+.list {
+  width: 100%;
+  max-width: 1100px;   /* ← 게시글 창 넓게 */
+  margin: 24px auto 0; 
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* 게시글 카드 */
+.card {
+  width: 100%;
+  background-color: #dfeedd; /* 연녹색보다 더 진한 톤 */
+  border-radius: 16px;
+  padding: 20px 26px;
+  cursor: pointer;
+
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.12);
+}
+
+.card h3 {
+  margin: 0 0 8px;
+  font-size: 18px;
+  color: #2f5d3a;
+}
+
+/* 작성자 / 날짜 */
+.meta {
+  font-size: 13px;
+  color: #5f7f6c;
+}
+
+/* ===== 상세 페이지 ===== */
+.detail {
+  max-width: 900px;
+  margin: 0 auto;
+  background-color: #edf6e3;
+  border-radius: 20px;
+  padding: 32px;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.06);
+}
+
+.detail h2 {
+  margin-top: 12px;
+  color: #2f5d3a;
+}
+
+.detail button {
+  background: none;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+  color: #4f7d60;
+  margin-bottom: 10px;
+}
