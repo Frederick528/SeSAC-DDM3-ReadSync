@@ -65,6 +65,9 @@ dependencies {
 
     // WebSocket (실시간 통신) - 이소현 추가
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
+    // 소셜로그인
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 }
 
 tasks.named('test') {

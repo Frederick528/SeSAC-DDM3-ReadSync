@@ -11,17 +11,16 @@ public class UserResponse {
     @Getter
     @Builder
     @AllArgsConstructor
-    public static class Login {
+    public static class UserLoginResponse {
         private String accessToken;
         private String refreshToken;
-        private Detail detail;
+        private UserDetail detail;
 
-        // [수정] userInfo가 null이어도 안전하게 Detail을 생성
-        public static Login of(String accessToken, String refreshToken, User user, UserInformation userInfo) {
-            return Login.builder()
+        public static UserLoginResponse of(String accessToken, String refreshToken, User user, UserInformation userInfo) {
+            return UserLoginResponse.builder()
                     .accessToken(accessToken)
                     .refreshToken(refreshToken)
-                    .detail(Detail.from(user, userInfo))
+                    .detail(UserDetail.from(user, userInfo))
                     .build();
         }
     }
@@ -29,9 +28,10 @@ public class UserResponse {
     @Getter
     @Builder
     @AllArgsConstructor
-    public static class Detail {
+    public static class UserDetail {
         private Long userId;
-        private String userName;
+        private String nickname;
+        private String tag;
         private String profileImage;
         private String role;
         private String status;
@@ -39,9 +39,11 @@ public class UserResponse {
         private int experience;
         private String preferredGenre;
 
-        public static Detail from(User user, UserInformation userInfo) {
-            return Detail.builder()
+        public static UserDetail from(User user, UserInformation userInfo) {
+            return UserDetail.builder()
                     .userId(user.getId())
+                    .nickname(userInfo != null ? userInfo.getNickname() : null)
+                    .tag(userInfo != null ? userInfo.getTag() : null)
                     .profileImage(userInfo != null ? userInfo.getProfileImage() : null)
                     .role(user.getRole().getKey())
                     .status(user.getStatus().name())
@@ -56,8 +58,8 @@ public class UserResponse {
     @Builder
     public static class Profile {
         private Long userId;
-        private String email;
-        private String name;
+        private String nickname;
+        private String tag;
         private String profileImage;
         private int experience;
         private String preferredGenre;
@@ -68,11 +70,52 @@ public class UserResponse {
             return Profile.builder()
                     .userId(user.getId())
                     .providerId(user.getProviderId())
-                    .name(user.getUserInformation().getNickname())
+                    .nickname(user.getUserInformation().getNickname())
+                    .tag(user.getUserInformation().getTag())
                     .profileImage(user.getUserInformation().getProfileImage())
                     .experience(user.getUserInformation().getExperience())
                     .preferredGenre(user.getUserInformation().getPreferredGenre())
                     .build();
         }
+    }
+
+    // 본인 조회
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    public static class UserInfo {
+        private Long userId;
+        private String loginId;
+        private String nickname;
+        private String tag;
+        private String profileImage;
+        private String role;     // USER, ADMIN
+        private String provider; // kakao, google, naver
+        private String preferredGenre;
+    }
+
+    // 타인 조회 (검색 등)
+    @Getter
+    @Builder
+    public static class OtherProfile {
+        private Long userId;
+        private String nickname;
+        private String tag;
+        private String profileImage;
+    }
+
+    // 어드민이 유저 조회 (리스트)
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    public static class AdminUserDetail {
+        private Long userId;
+        private String loginId;
+        private String nickname;
+        private String tag;
+        private String role;
+        private String status;     // ACTIVE, BANNED, WITHDRAWN
+        private String provider;
+        private String createdAt;  // 가입일
     }
 }

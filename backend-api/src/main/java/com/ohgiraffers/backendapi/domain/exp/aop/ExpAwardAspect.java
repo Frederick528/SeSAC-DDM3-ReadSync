@@ -43,12 +43,12 @@ public class ExpAwardAspect {
         // 1. 리뷰 작성 (WRITE_REVIEW)
         if (result instanceof Review review) {
             return ExpLogRequestDTO.builder()
-                    .userId(review.getUserId().getId())
+                    .userId(review.getUser().getId())
                     .activityType(type)
                     .targetId(review.getReviewId())           // 어떤 리뷰인지
-                    .referenceId(review.getBookId().getBookId()) // 어느 책에 대한 리뷰인지 (중복 체크용)
-                    .categoryId(review.getBookId().getCategory() != null ?
-                            review.getBookId().getCategory().getCategoryId() : null)
+                    .referenceId(review.getBook().getBookId()) // 어느 책에 대한 리뷰인지 (중복 체크용)
+                    .categoryId(review.getBook().getCategory() != null ?
+                            review.getBook().getCategory().getCategoryId() : null)
                     .build();
         }
 

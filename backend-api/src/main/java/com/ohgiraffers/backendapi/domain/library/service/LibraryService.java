@@ -49,13 +49,11 @@ public class LibraryService {
 
     @AwardExp(type = ActivityType.READ_BOOK)
     @Transactional
-    public Library updateReadingStatus(Long libraryId, ReadingStatus status) {
+    public void updateReadingStatus(Long libraryId, ReadingStatus status) {
         Library library = libraryRepository.findById(libraryId)
                 .filter(l -> l.getDeletedAt() == null)
                 .orElseThrow(() -> new IllegalArgumentException("서재 정보를 찾을 수 없습니다."));
         library.updateStatus(status);
-
-        return library;
     }
 
     public List<LibraryResponseDTO> getLibraryByUserIdAndCategoryId(Long userId, Long categoryId) {
