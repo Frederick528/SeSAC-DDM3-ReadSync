@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 
 @Tag(name = "Reading Room", description = "TTS 독서룸 관련 API")
 @RestController
-@RequestMapping("/api/v1/reading-rooms")
+@RequestMapping("/v1/reading-rooms")
 @RequiredArgsConstructor
 public class ReadingRoomController {
 

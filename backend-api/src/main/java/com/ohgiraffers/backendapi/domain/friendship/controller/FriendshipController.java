@@ -14,7 +14,7 @@ import java.util.List;
 
 @Tag(name = "Friendships", description = "친구 관계 관리 API")
 @RestController
-@RequestMapping("/api/v1/friendship")
+@RequestMapping("/v1/friendship")
 @RequiredArgsConstructor
 public class FriendshipController {
 
