@@ -91,6 +91,7 @@ public class UserResponse {
         private String profileImage;
         private String role;     // USER, ADMIN
         private String provider; // kakao, google, naver
+        private String preferredGenre;
     }
 
     // 타인 조회 (검색 등)

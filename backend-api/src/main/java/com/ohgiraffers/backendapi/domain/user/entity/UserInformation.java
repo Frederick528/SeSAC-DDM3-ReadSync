@@ -63,6 +63,8 @@ public class UserInformation extends BaseTimeEntity {
         if (preferredGenre != null) this.preferredGenre = preferredGenre;
     }
 
+    public void updatePreferredGenre(String preferredGenre){this.preferredGenre = preferredGenre;}
+
     public void updateProfileImage(String profileImage) {
         this.profileImage = profileImage;
     }

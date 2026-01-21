@@ -47,8 +47,6 @@ public class UserController {
         return ResponseEntity.ok("회원 탈퇴가 완료되었습니다.");
     }
 
-
-
     //  [공통 기능] - 타인 조회 및 검색
 
     @GetMapping("/{userId}")
@@ -64,8 +62,6 @@ public class UserController {
             Pageable pageable) {
         return ResponseEntity.ok(userService.searchUsers(keyword, pageable));
     }
-
-
 
     //  [관리자 전용] - 회원 관리
 
