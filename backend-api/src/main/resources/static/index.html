@@ -206,11 +206,21 @@
                 <label>JWT Token (로그인 후 발급받은 토큰)</label>
                 <input type="text" id="jwtToken" placeholder="eyJhbGciOiJIUzI1NiJ9...">
             </div>
-            <div class="form-group">
-                <label>Toss Client Key (테스트 클라이언트 키)</label>
-                <input type="text" id="clientKey" placeholder="test_ck_...">
-            </div>
             <button class="btn btn-primary" onclick="saveConfig()">설정 저장</button>
+
+            <div style="margin-top: 25px; padding: 20px; background: rgba(0,0,0,0.2); border-radius: 12px;">
+                <h4 style="color: #667eea; margin-bottom: 15px;">🔑 테스트 클라이언트 키 (하드코딩됨)</h4>
+                <div style="margin-bottom: 10px;">
+                    <span style="color: #a0a0b0;">일반 결제 (Widget v2):</span>
+                    <code
+                        style="color: #22c55e; margin-left: 10px; font-size: 0.85rem;">test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm</code>
+                </div>
+                <div>
+                    <span style="color: #a0a0b0;">구독 결제 (Billing):</span>
+                    <code
+                        style="color: #22c55e; margin-left: 10px; font-size: 0.85rem;">test_ck_eqRGgYO1r54g5P1wnlY5VQnN2Eya</code>
+                </div>
+            </div>
         </div>
 
         <!-- 메인 기능 카드 -->
@@ -226,7 +236,7 @@
                 <div class="card-icon">💳</div>
                 <h2>일반 결제</h2>
                 <p>장바구니에 담긴 도서를 토스페이먼츠 결제 위젯으로 결제합니다.</p>
-                <span class="card-badge">Payment Widget</span>
+                <span class="card-badge">Payment Widget v2</span>
             </a>
 
             <a href="subscription.html" class="card">
@@ -249,10 +259,13 @@
             <h3>📖 사용 가이드</h3>
             <ol style="color: #a0a0b0; line-height: 2; padding-left: 20px;">
                 <li><strong>JWT 토큰 발급</strong>: Swagger에서 로그인 API를 호출하여 토큰을 복사하세요.</li>
-                <li><strong>Client Key 입력</strong>: 토스페이먼츠 개발자센터에서 발급받은 테스트 키를 입력하세요.</li>
+                <li><strong>토큰 저장</strong>: 위 설정 섹션에서 JWT Token을 저장합니다.</li>
                 <li><strong>장바구니 담기</strong>: 원하는 도서를 장바구니에 추가합니다.</li>
                 <li><strong>결제하기</strong>: 일반 결제 또는 정기 구독을 선택하여 결제를 진행합니다.</li>
             </ol>
+            <p style="color: #6a6a7a; margin-top: 15px; font-size: 0.9rem;">
+                ※ 클라이언트 키는 페이지에 하드코딩되어 있어 별도 입력이 필요 없습니다.
+            </p>
         </div>
 
         <footer class="footer">
@@ -264,38 +277,29 @@
         // 저장된 설정 불러오기
         window.onload = function () {
             const token = localStorage.getItem('rs_jwt_token');
-            const key = localStorage.getItem('rs_client_key');
-
             if (token) document.getElementById('jwtToken').value = token;
-            if (key) document.getElementById('clientKey').value = key;
-
             updateStatusBadge();
         };
 
         // 설정 저장
         function saveConfig() {
             const token = document.getElementById('jwtToken').value.trim();
-            const key = document.getElementById('clientKey').value.trim();
-
             localStorage.setItem('rs_jwt_token', token);
-            localStorage.setItem('rs_client_key', key);
-
             updateStatusBadge();
-            alert('설정이 저장되었습니다!');
+            alert('JWT Token이 저장되었습니다!');
         }
 
         // 상태 배지 업데이트
         function updateStatusBadge() {
             const badge = document.getElementById('statusBadge');
             const token = localStorage.getItem('rs_jwt_token');
-            const key = localStorage.getItem('rs_client_key');
 
-            if (token && key) {
+            if (token) {
                 badge.className = 'status-badge';
                 badge.textContent = '✓ 설정 완료';
             } else {
                 badge.className = 'status-badge warning';
-                badge.textContent = '⚠ 미설정';
+                badge.textContent = '⚠ JWT 토큰 필요';
             }
         }
     </script>

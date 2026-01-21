@@ -543,11 +543,9 @@
 
         // 빌링키 발급 요청
         function requestBillingAuth() {
-            const clientKey = localStorage.getItem('rs_client_key');
-            if (!clientKey) {
-                alert('Client Key가 설정되지 않았습니다. 홈에서 설정해주세요.');
-                return;
-            }
+            // 구독 결제용 클라이언트 키 (test_ck_ 형식 - 빌링/정기결제 전용)
+            // 백엔드의 TOSS_SECRET_KEY와 매칭되는 키
+            const clientKey = 'test_ck_eqRGgYO1r54g5P1wnlY5VQnN2Eya';
 
             log('빌링키 발급 요청 중...');
 
@@ -658,7 +656,7 @@
 
                 if (!response.ok) {
                     const error = await response.json();
-                    throw new Error(error.message || '구독 실패');
+                    throw new Error(error.detail || error.message || '구독 실패');
                 }
 
                 const data = await response.json();

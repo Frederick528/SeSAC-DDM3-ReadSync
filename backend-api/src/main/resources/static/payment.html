@@ -366,11 +366,9 @@
 
         // 결제 위젯 초기화
         async function initPaymentWidget() {
-            const clientKey = localStorage.getItem('rs_client_key');
-            if (!clientKey) {
-                log('⚠️ Client Key가 설정되지 않았습니다. 홈에서 설정해주세요.', 'error');
-                return;
-            }
+            // 일반 결제용 클라이언트 키 (test_gck_docs_ 형식 - Payment Widget v2 전용)
+            // 백엔드의 TOSS_REGULAR_SECRET_KEY와 매칭되는 키
+            const clientKey = 'test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm';
 
             try {
                 // 고객 키 생성

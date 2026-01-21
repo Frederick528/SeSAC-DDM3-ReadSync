@@ -76,7 +76,11 @@ public enum ErrorCode {
     INVITATION_EXPIRED(HttpStatus.BAD_REQUEST, "R014", "만료된 초대장입니다."),
 
     // 장바구니
-    CART_ITEM_NOT_FOUND(HttpStatus.NOT_FOUND, "CA001", "장바구니에서 해당 항목을 찾을 수 없습니다.");
+    CART_ITEM_NOT_FOUND(HttpStatus.NOT_FOUND, "CA001", "장바구니에서 해당 항목을 찾을 수 없습니다."),
+
+    // 결제
+    PAYMENT_METHOD_NOT_FOUND(HttpStatus.BAD_REQUEST, "PAY001", "등록된 기본 결제 수단이 없습니다. 카드를 먼저 등록해주세요."),
+    ALREADY_SUBSCRIBED(HttpStatus.BAD_REQUEST, "SUB001", "이미 구독 중인 사용자입니다.");
 
     private final HttpStatus status;
     private final String code;

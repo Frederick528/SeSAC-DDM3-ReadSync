@@ -10,8 +10,6 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,16 +23,19 @@ public class TossPaymentService {
     private final RestTemplate restTemplate;
 
     @Value("${toss.secret-key}")
-    private String secretKey;
+    private String secretKey; // 구독 결제용 시크릿 키
+
+    @Value("${toss.regular-secret-key}")
+    private String regularSecretKey; // 일반 결제용 시크릿 키
 
     private static final String CONFIRM_URL = "https://api.tosspayments.com/v1/payments/confirm";
     private static final String BILLING_KEY_URL = "https://api.tosspayments.com/v1/billing/authorizations/issue";
 
     /**
-     * 일반 결제 승인 요청
+     * 일반 결제 승인 요청 (일반 결제용 시크릿 키 사용)
      */
     public Map<String, Object> confirmPayment(PaymentConfirmRequest request) {
-        HttpHeaders headers = getHeaders();
+        HttpHeaders headers = getHeaders(regularSecretKey); // 일반 결제용 키 사용
         Map<String, Object> params = new HashMap<>();
         params.put("paymentKey", request.getPaymentKey());
         params.put("orderId", request.getOrderId());
@@ -55,7 +56,7 @@ public class TossPaymentService {
      * 빌링키 발급 요청 (정기 결제용)
      */
     public Map<String, Object> issueBillingKey(BillingKeyRequest request) {
-        HttpHeaders headers = getHeaders();
+        HttpHeaders headers = getHeaders(secretKey); // 구독용 시크릿 키 사용
         Map<String, Object> params = new HashMap<>();
         params.put("authKey", request.getAuthKey());
         params.put("customerKey", request.getCustomerKey());
@@ -83,7 +84,7 @@ public class TossPaymentService {
             String orderId, String orderName) {
         String url = "https://api.tosspayments.com/v1/billing/" + billingKey;
 
-        HttpHeaders headers = getHeaders();
+        HttpHeaders headers = getHeaders(secretKey); // 구독용 시크릿 키 사용
         Map<String, Object> params = new HashMap<>();
         params.put("customerKey", customerKey);
         params.put("amount", amount);
@@ -102,10 +103,12 @@ public class TossPaymentService {
 
     /**
      * 토스 API 헤더 생성 (Basic 인증 포함)
+     * 
+     * @param key 사용할 시크릿 키 (일반 결제: regularSecretKey, 구독 결제: secretKey)
      */
-    private HttpHeaders getHeaders() {
+    private HttpHeaders getHeaders(String key) {
         HttpHeaders headers = new HttpHeaders();
-        headers.setBasicAuth(secretKey, ""); // Spring이 자동으로 Basic Auth 인코딩 처리
+        headers.setBasicAuth(key, ""); // Spring이 자동으로 Basic Auth 인코딩 처리
         headers.setContentType(MediaType.APPLICATION_JSON);
         return headers;
     }
