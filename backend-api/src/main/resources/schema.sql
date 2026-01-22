@@ -115,6 +115,7 @@ CREATE TABLE "books" (
     "language" VARCHAR(100) NOT NULL,
     "created_at" TIMESTAMP DEFAULT now() NOT NULL,
     "updated_at" TIMESTAMP DEFAULT now() NOT NULL,
+    "deleted_at" TIMESTAMP NULL,
     CONSTRAINT "PK_BOOKS" PRIMARY KEY ("book_id")
 );
 
@@ -126,6 +127,8 @@ CREATE TABLE "likes" (
     "user_id" BIGINT NOT NULL,
     "reaction_type" VARCHAR(10) NOT NULL,
     "created_at" TIMESTAMP DEFAULT Now() NOT NULL,
+    "updated_at" TIMESTAMP NULL,
+    "deleted_at" TIMESTAMP NULL,
     CONSTRAINT "PK_LIKES" PRIMARY KEY ("like_id")
 );
 
@@ -214,6 +217,8 @@ CREATE TABLE "carts" (
     "book_id" BIGINT NOT NULL,
     "quantity" INT DEFAULT 1 NOT NULL,
     "created_at" TIMESTAMP DEFAULT Now() NOT NULL,
+    "updated_at" TIMESTAMP NULL,
+    "deleted_at" TIMESTAMP NULL,
     CONSTRAINT "PK_CARTS" PRIMARY KEY ("cart_id")
 );
 
@@ -229,6 +234,8 @@ CREATE TABLE "book_ai_chats" (
     "created_at" TIMESTAMP DEFAULT now() NOT NULL,
     "token_count" INT NULL,
     "response_time_ms" INT NULL,
+    "updated_at" TIMESTAMP NULL,
+    "deleted_at" TIMESTAMP NULL,
     CONSTRAINT "PK_BOOK_AI_CHATS" PRIMARY KEY ("chat_id")
 );
 
@@ -248,6 +255,7 @@ CREATE TABLE "reviews" (
     "violation_report_count" INT DEFAULT 0 NOT NULL,
     "like_count" INT DEFAULT 0 NOT NULL,
     "dislike_count" INT DEFAULT 0 NOT NULL,
+    "deleted_at" TIMESTAMP NULL,
     CONSTRAINT "PK_REVIEWS" PRIMARY KEY ("review_id")
 );
 
@@ -267,6 +275,7 @@ CREATE TABLE "comments" (
     "violation_report_count" INT DEFAULT 0 NOT NULL,
     "like_count" INT DEFAULT 0 NOT NULL,
     "dislike_count" INT DEFAULT 0 NOT NULL,
+    "deleted_at" TIMESTAMP NULL,
     CONSTRAINT "PK_COMMENTS" PRIMARY KEY ("comment_id")
 );
 
@@ -434,6 +443,7 @@ CREATE TABLE "chapters" (
     "updated_at" TIMESTAMP DEFAULT Now() NOT NULL,
     "is_embedded" BOOLEAN DEFAULT FALSE NOT NULL,
     "paragraphs" INT DEFAULT -1 NOT NULL,
+    "deleted_at" TIMESTAMP NULL,
     CONSTRAINT "PK_CHAPTERS" PRIMARY KEY ("chapter_id")
 );
 
@@ -464,6 +474,8 @@ CREATE TABLE "payment_history" (
     "receipt_url" VARCHAR(500) NULL,
     "fail_reason" VARCHAR(255) NULL,
     "order_id" BIGINT NOT NULL,
+    "updated_at" TIMESTAMP NULL,
+    "deleted_at" TIMESTAMP NULL,
     CONSTRAINT "PK_PAYMENT_HISTORY" PRIMARY KEY ("history_id")
 );
 

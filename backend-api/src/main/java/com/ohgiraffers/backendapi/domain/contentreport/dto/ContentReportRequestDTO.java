@@ -16,10 +16,10 @@ public class ContentReportRequestDTO {
     @Schema(description = "신고 대상 유형 (CHAPTERS_COMMENT, REVIEW)", example = "REVIEW")
     private ContentReportTargetType targetType;
 
-    @Schema(description = "신고 대상 ID (댓글ID 또는 리뷰ID)", example = "10")
+    @Schema(description = "신고 대상 ID (댓글ID 또는 리뷰ID)", example = "1")
     private Long targetId;
 
-    @Schema(description = "신고 사유 유형 (BAD_LANGUAGE, SPOILER, ADVERTISEMENT, OTHER)", example = "BAD_LANGUAGE")
+    @Schema(description = "신고 사유 유형 (BAD_LANGUAGE, SPOILER, ADVERTISEMENT, OTHER)", example = "ABUSE")
     private ContentReportReasonType reasonType;
 
     @Schema(description = "상세 사유 (기타 선택 시 작성)", example = "지나친 욕설이 포함되어 있습니다.")

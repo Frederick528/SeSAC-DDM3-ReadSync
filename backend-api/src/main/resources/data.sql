@@ -77,12 +77,12 @@ INSERT INTO "book_vectors" ("book_id", "vector") VALUES
                                                      (3, array_fill(0, ARRAY[1024])::halfvec(1024));
 
 -- [11] Chapters (챕터 정보 - Book 참조)
-INSERT INTO "chapters" ("book_id", "chapter_name", "sequence", "book_content_path") VALUES
-                                                                                        (1, '1장: 관계형 모델', 1, 'https://drive.google.com/file/d/16LgsOHk6FwihTrLuLVH_5Cqx8Q_KyOU5/view?usp=drive_link'),
-                                                                                        (1, '2장: 정규화', 2, '/path/db_ch2'),
-                                                                                        (2, '1장: 자바 입문', 1, '/path/java_ch1'),
-                                                                                        (2, '2장: 객체지향', 2, '/path/java_ch2'),
-                                                                                        (3, '1장: AI의 역사', 1, '/path/ai_ch1');
+INSERT INTO "chapters" ("book_id", "chapter_name", "sequence", "book_content_path", paragraphs) VALUES
+                                                                                        (1, '1장: 관계형 모델', 1, 'https://drive.google.com/file/d/16LgsOHk6FwihTrLuLVH_5Cqx8Q_KyOU5/view?usp=drive_link', -1),
+                                                                                        (1, '2장: 정규화', 2, '/path/db_ch2', -1),
+                                                                                        (2, '1장: 자바 입문', 1, '/path/java_ch1', -1),
+                                                                                        (2, '2장: 객체지향', 2, '/path/java_ch2', -1),
+                                                                                        (3, '1장: AI의 역사', 1, '/path/ai_ch1', -1);
 
 -- [12] Chapter Vectors (챕터 벡터 - Chapter 참조)
 INSERT INTO "chapter_vectors" ("chapter_id", "vector") VALUES

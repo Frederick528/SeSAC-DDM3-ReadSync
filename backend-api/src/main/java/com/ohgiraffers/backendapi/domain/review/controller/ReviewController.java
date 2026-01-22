@@ -34,9 +34,9 @@ public class ReviewController {
         return ResponseEntity.ok(reviewId);
     }
 
-    @Operation(summary = "[사용자/관리자] 리뷰 단건 조회", description = "리뷰  ID로 리뷰 상세 정보 조회")
+    @Operation(summary = "[누구나] 리뷰 단건 조회", description = "리뷰  ID로 리뷰 상세 정보 조회")
     @GetMapping("/{reviewId}")
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+//    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<ReviewResponseDTO> getReview(@PathVariable Long reviewId) {
         ReviewResponseDTO response = reviewService.getReview(reviewId);
         return ResponseEntity.ok(response);
@@ -85,7 +85,7 @@ public class ReviewController {
 
     // --- Admin Endpoints ---
 
-    @Operation(summary = "[관리자] 리뷰 전체 조회", description = "모든 리뷰를 조회합니다.")
+    @Operation(summary = "[관리자] 리뷰 전체 조회", description = "모든 리뷰를 조회합니다.{ \"page\": 0, \"size\": 10, \"sort\": \"ASC\" }")
     @GetMapping("/admin")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Page<ReviewResponseDTO>> getAllReviewsAdmin(

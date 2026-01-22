@@ -2,6 +2,7 @@ package com.ohgiraffers.backendapi.domain.chapter.controller;
 
 import com.ohgiraffers.backendapi.domain.chapter.dto.ChapterRequestDTO;
 import com.ohgiraffers.backendapi.domain.chapter.dto.ChapterResponseDTO;
+import com.ohgiraffers.backendapi.domain.chapter.dto.ChapterUrlRequestDTO;
 import com.ohgiraffers.backendapi.domain.chapter.service.ChapterService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -20,7 +21,7 @@ public class ChapterController {
 
     private final ChapterService chapterService;
 
-    @Operation(summary = "[관리자] 챕터 등록", description = "JSON 파일을 업로드하여 챕터를 생성. 메타데이터 미입력 시 파일에서 자동 추출.")
+    @Operation(summary = "[관리자] 챕터 등록 (파일 업로드)", description = "JSON 파일을 업로드하여 챕터를 생성. 메타데이터 미입력 시 파일에서 자동 추출.")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ChapterResponseDTO> createChapter(
@@ -39,7 +40,16 @@ public class ChapterController {
         return ResponseEntity.ok(response);
     }
 
-    @Operation(summary = "[관리자] 챕터 수정", description = "챕터의 파일 또는 메타데이터를 수정. 파일 변경 시 'isEmbedded' 상태가 초기화됨.")
+    @Operation(summary = "[관리자] 챕터 등록 (URL 기반)", description = "URL을 입력하여 챕터를 생성. 문단 개수(paragraphs)도 함께 입력 가능.")
+    @PostMapping("/url")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ChapterResponseDTO> createChapterByUrl(
+            @RequestBody ChapterUrlRequestDTO requestDTO) {
+        ChapterResponseDTO response = chapterService.createChapterByUrl(requestDTO);
+        return ResponseEntity.ok(response);
+    }
+
+    @Operation(summary = "[관리자] 챕터 수정 (파일 업로드)", description = "챕터의 파일 또는 메타데이터를 수정. 파일 변경 시 'isEmbedded' 상태가 초기화됨.")
     @PutMapping(value = "/{chapterId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ChapterResponseDTO> updateChapter(
@@ -55,6 +65,16 @@ public class ChapterController {
                 .build();
 
         ChapterResponseDTO response = chapterService.updateChapter(chapterId, requestDTO);
+        return ResponseEntity.ok(response);
+    }
+
+    @Operation(summary = "[관리자] 챕터 수정 (URL 기반)", description = "URL 및 메타데이터를 수정. URL 변경 시 'isEmbedded' 상태가 초기화됨.")
+    @PutMapping("/{chapterId}/url")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ChapterResponseDTO> updateChapterByUrl(
+            @PathVariable Long chapterId,
+            @RequestBody ChapterUrlRequestDTO requestDTO) {
+        ChapterResponseDTO response = chapterService.updateChapterByUrl(chapterId, requestDTO);
         return ResponseEntity.ok(response);
     }
 
