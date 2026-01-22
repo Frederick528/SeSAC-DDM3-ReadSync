@@ -34,17 +34,17 @@ public class ReviewController {
         return ResponseEntity.ok(reviewId);
     }
 
-    @Operation(summary = "[사용자/관리자] 리뷰 단건 조회", description = "리뷰  ID로 리뷰 상세 정보 조회 (USER, ADMIN)")
+    @Operation(summary = "[누구나] 리뷰 단건 조회", description = "리뷰  ID로 리뷰 상세 정보 조회")
     @GetMapping("/{reviewId}")
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+//    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<ReviewResponseDTO> getReview(@PathVariable Long reviewId) {
         ReviewResponseDTO response = reviewService.getReview(reviewId);
         return ResponseEntity.ok(response);
     }
 
-    @Operation(summary = "[사용자/관리자] 도서별 리뷰 목록 조회(DELETED 제외)", description = "특정 도서에 작성된 리뷰 목록 조회 (USER, ADMIN)")
+    @Operation(summary = "[누구나] 도서별 리뷰 목록 조회(DELETED 제외)", description = "특정 도서에 작성된 리뷰 목록 조회")
     @GetMapping
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+//    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<Page<ReviewResponseDTO>> getReviewsByBook(
             @RequestParam Long bookId,
             @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
@@ -52,7 +52,7 @@ public class ReviewController {
         return ResponseEntity.ok(responses);
     }
 
-    @Operation(summary = "[사용자] 리뷰 수정", description = "작성자가 자신의 리뷰 내용, 별점, 스포일러 여부 수정(USER)")
+    @Operation(summary = "[사용자] 리뷰 수정", description = "작성자가 자신의 리뷰 내용, 별점, 스포일러 여부 수정")
     @PutMapping("/{reviewId}")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<String> updateReview(
@@ -63,7 +63,7 @@ public class ReviewController {
         return ResponseEntity.ok("리뷰가 성공적으로 수정되었습니다.");
     }
 
-    @Operation(summary = "[사용자] 리뷰 삭제", description = "작성자가 자신의 리뷰 삭제(soft delete)(USER)")
+    @Operation(summary = "[사용자] 리뷰 삭제", description = "작성자가 자신의 리뷰 삭제(soft delete)")
     @DeleteMapping("/{reviewId}")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<String> deleteReview(
