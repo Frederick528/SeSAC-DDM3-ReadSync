@@ -16,12 +16,15 @@ import com.ohgiraffers.backendapi.global.auth.jwt.JwtTokenProvider;
 import com.ohgiraffers.backendapi.global.error.CustomException;
 import com.ohgiraffers.backendapi.global.error.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Random; // ★ Random import 필수
+import java.util.Random;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -31,6 +34,9 @@ public class AuthService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final PasswordEncoder passwordEncoder;
+
+    // Redis 템플릿 주입 (RedisConfig에서 설정한 이름과 타입 일치)
+    private final RedisTemplate<String, Object> redisTemplate;
 
     // 1. 소셜 로그인
     @Transactional
@@ -44,7 +50,7 @@ public class AuthService {
             throw new CustomException(ErrorCode.LOGIN_FAILED);
         }
 
-        return issueTokens(user);
+        return issueTokens(user); // 내부에서 킥 신호 발송함
     }
 
     // (내부 메서드) 회원가입 처리
@@ -52,15 +58,13 @@ public class AuthService {
         User user = request.toUserEntity();
         userRepository.save(user);
 
-        // ▼ [추가] 태그 생성
         String tag = generateUniqueTag(request.getNickname());
 
-        // DTO의 메서드 대신 직접 Builder로 생성
         UserInformation userInfo = UserInformation.builder()
                 .user(user)
                 .nickname(request.getNickname())
                 .tag(tag)
-                .profileImage(request.getProfileImage()) // DTO에 있다면
+                .profileImage(request.getProfileImage())
                 .experience(0)
                 .levelId(1L)
                 .preferredGenre("General")
@@ -162,11 +166,19 @@ public class AuthService {
     // 6. 로그아웃
     @Transactional
     public void logout(Long userId) {
+        // DB에서 리프레시 토큰 삭제
         refreshTokenRepository.deleteByUserId(userId);
+
+        //  로그아웃 시에도 소켓 끊으라고 신호 보냄
+        publishKickEvent(userId);
     }
 
-    // (내부) 토큰 발급 공통 로직
+
+    //  토큰 발급 공통 로직 + 킥 이벤트 발행
     private UserResponse.UserLoginResponse issueTokens(User user) {
+
+        publishKickEvent(user.getId());
+
         String accessToken = jwtTokenProvider.createAccessToken(user.getId(), user.getRole());
         String refreshToken = jwtTokenProvider.createRefreshToken(user.getId());
 
@@ -184,7 +196,16 @@ public class AuthService {
         return UserResponse.UserLoginResponse.of(accessToken, refreshToken, user, user.getUserInformation());
     }
 
-    //  태그 생성기 (중복 체크 포함)
+    private void publishKickEvent(Long userId) {
+        try {
+            redisTemplate.convertAndSend("user-kick", String.valueOf(userId));
+            log.info("Kick event published for user: {}", userId);
+        } catch (Exception e) {
+            log.error("Failed to publish kick event for user: {}", userId, e);
+        }
+    }
+
+    // 태그 생성기
     private String generateUniqueTag(String nickname) {
         String tag;
         do {
