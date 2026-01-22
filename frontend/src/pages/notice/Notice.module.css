@@ -1,0 +1,35 @@
+.list {
+  max-width: 900px;
+  margin: 40px auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.card {
+  background: #cfe9d3; /* 메인보다 진한 연녹색 */
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+
+.card h3 {
+  margin-bottom: 6px;
+}
+
+.meta {
+  font-size: 13px;
+  color: #355f3b;
+  margin-bottom: 10px;
+}
+
+.content {
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.footer {
+  margin-top: 12px;
+  font-size: 13px;
+  color: #2f6b3a;
+}

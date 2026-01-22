@@ -1,0 +1,70 @@
+/* =========================
+   전체 레이아웃
+========================= */
+.layout-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #eef6ea; /* 흰색 제거 */
+}
+
+/* =========================
+   HEADER
+========================= */
+.header {
+  padding: 16px 40px;
+  background-color: #e2f0dd;
+  border-bottom: 1px solid #cfe3c8;
+}
+
+.logo {
+  font-size: 22px;
+  font-weight: 800;
+  color: #2f5d3a;
+  margin: 0;
+}
+
+/* =========================
+   MAIN CONTENT
+========================= */
+.main-content {
+  flex: 1;
+  background-color: #eef6ea;
+}
+
+/* =========================
+   BOTTOM NAV (하단 네비만 존재)
+========================= */
+.bottom-nav {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+
+  padding: 10px 0;
+  background-color: #e2f0dd;
+  border-top: 1px solid #cfe3c8;
+}
+
+.bottom-nav a {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  padding: 6px 14px;
+  border-radius: 999px;
+
+  font-size: 13px;
+  font-weight: 600;
+  color: #4f7d60;
+  text-decoration: none;
+
+  transition: background-color 0.15s ease,
+              transform 0.15s ease,
+              color 0.15s ease;
+}
+
+.bottom-nav a:hover {
+  background-color: #c5e2aa;
+  color: #2f5d3a;
+  transform: translateY(-1px);
+}
