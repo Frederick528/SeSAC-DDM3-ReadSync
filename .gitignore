@@ -671,3 +671,8 @@ application-*.yml
 
 docker-compose.yml
 /backend-api/uploads
+
+data/
+db/
+redis/
+postgres_data/
