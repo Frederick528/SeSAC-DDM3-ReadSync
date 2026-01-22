@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 public enum ErrorCode {
 
+    // Payment
+    INVALID_PAYMENT_AMOUNT(HttpStatus.BAD_REQUEST, "PAY-003", "결제 금액이 일치하지 않습니다."),
     // 공통
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "C001", "서버 내부 오류가 발생했습니다."),
     INVALID_INPUT_VALUE(HttpStatus.BAD_REQUEST, "C002", "잘못된 입력값입니다."),
@@ -72,7 +74,24 @@ public enum ErrorCode {
     INVALID_PLAY_SPEED(HttpStatus.BAD_REQUEST, "R012", "재생 속도는 0.5배에서 2.0배 사이여야 합니다."),
     INVITATION_NOT_FOUND(HttpStatus.NOT_FOUND, "R013", "존재하지 않거나 삭제된 초대장입니다."),
     INVITATION_EXPIRED(HttpStatus.BAD_REQUEST, "R014", "만료된 초대장입니다."),
-    ROOM_FINISHED(HttpStatus.CONFLICT, "R015", "종료된 독서룸입니다.");
+
+    // 장바구니
+    CART_ITEM_NOT_FOUND(HttpStatus.NOT_FOUND, "CA001", "장바구니에서 해당 항목을 찾을 수 없습니다."),
+
+    // 결제
+    PAYMENT_METHOD_NOT_FOUND(HttpStatus.BAD_REQUEST, "PAY001", "등록된 기본 결제 수단이 없습니다. 카드를 먼저 등록해주세요."),
+    ALREADY_SUBSCRIBED(HttpStatus.BAD_REQUEST, "SUB001", "이미 구독 중인 사용자입니다."),
+    ROOM_FINISHED(HttpStatus.CONFLICT, "R015", "종료된 독서룸입니다."),
+
+    // 신고
+    REPORT_NOT_FOUND(HttpStatus.NOT_FOUND, "RPT001", "해당 신고를 찾을 수 없습니다."),
+
+    // AI 채팅
+    AI_CHAT_ROOM_NOT_FOUND(HttpStatus.NOT_FOUND, "AI001", "해당 AI 채팅방을 찾을 수 없습니다."),
+    AI_CHAT_NOT_FOUND(HttpStatus.NOT_FOUND, "AI002", "해당 AI 채팅 메시지를 찾을 수 없습니다."),
+    AI_CHAT_NOT_OWNER(HttpStatus.FORBIDDEN, "AI003", "해당 채팅방의 소유자가 아닙니다."),
+    AI_SERVER_ERROR(HttpStatus.SERVICE_UNAVAILABLE, "AI004", "AI 서버와 통신 중 오류가 발생했습니다."),
+    AI_RATING_INVALID(HttpStatus.BAD_REQUEST, "AI005", "평점은 1~5 사이의 값이어야 합니다.");
 
     private final HttpStatus status;
     private final String code;
@@ -80,11 +99,12 @@ public enum ErrorCode {
 }
 
 /*
- 결과: "해당 유저를 찾을 수 없습니다."
- throw new CustomException(ErrorCode.USER_NOT_FOUND);
+ * 결과: "해당 유저를 찾을 수 없습니다."
+ * throw new CustomException(ErrorCode.USER_NOT_FOUND);
+ * 
+ * Long userId = 100L;
+ * // 결과: "해당 유저를 찾을 수 없습니다. (ID: 100)"
+ * throw new CustomException(ErrorCode.USER_NOT_FOUND, "ID: " + userId);
+ * 
+ */
 
- Long userId = 100L;
- // 결과: "해당 유저를 찾을 수 없습니다. (ID: 100)"
- throw new CustomException(ErrorCode.USER_NOT_FOUND, "ID: " + userId);
-
-* */

@@ -66,7 +66,7 @@ public class UserController {
     //  [관리자 전용] - 회원 관리
 
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/list")
+    @GetMapping("/admin/list")
     @Operation(summary = "[관리자] 전체 회원 조회", description = "가입된 모든 회원을 페이징하여 조회합니다.")
     public ResponseEntity<Page<UserResponse.AdminUserDetail>> getAllUsers(Pageable pageable) {
 
@@ -74,7 +74,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/{userId}/detail")
+    @GetMapping("/admin/{userId}/detail")
     @Operation(summary = "[관리자] 회원 상세 정보 조회", description = "특정 회원의 모든 상세 정보를 조회합니다.")
     public ResponseEntity<UserResponse.UserDetail> getUserDetail(@PathVariable Long userId) {
 
@@ -82,7 +82,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PatchMapping("/{userId}/status")
+    @PatchMapping("/admin/{userId}/status")
     @Operation(summary = "[관리자] 회원 상태 변경", description = "특정 회원을 정지(BANNED)시키거나 상태를 변경합니다.")
     public ResponseEntity<String> changeStatus(
             @PathVariable Long userId,
