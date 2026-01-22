@@ -33,9 +33,9 @@ public class CommentController {
         return ResponseEntity.ok(response);
     }
 
-    @Operation(summary = "[사용자/관리자] 댓글 목록 조회", description = "특정 챕터의 모든 댓글 조회(USER, ADMIN)")
+    @Operation(summary = "[누구나] 댓글 목록 조회", description = "특정 챕터의 모든 댓글 조회")
     @GetMapping("/{chapterId}")
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+//    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<List<CommentResponseDTO>> getComments(
             @Parameter(description = "챕터 ID") @PathVariable Long chapterId) {
         List<CommentResponseDTO> response = commentService.getCommentsByChapter(chapterId);
