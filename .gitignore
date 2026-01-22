@@ -684,3 +684,4 @@ redis/
 postgres_data/
 
 
+**/docker-compose.yml
