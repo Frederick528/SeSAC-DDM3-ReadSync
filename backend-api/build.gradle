@@ -68,6 +68,9 @@ dependencies {
 
     // 소셜로그인
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
+    // WebFlux (WebClient for AI 서버 통신) - 김선준 추가
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
 }
 
 tasks.named('test') {

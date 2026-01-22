@@ -75,7 +75,14 @@ public enum ErrorCode {
     ROOM_FINISHED(HttpStatus.CONFLICT, "R015", "종료된 독서룸입니다."),
 
     // 신고
-    REPORT_NOT_FOUND(HttpStatus.NOT_FOUND, "RPT001", "해당 신고를 찾을 수 없습니다.");
+    REPORT_NOT_FOUND(HttpStatus.NOT_FOUND, "RPT001", "해당 신고를 찾을 수 없습니다."),
+
+    // AI 채팅
+    AI_CHAT_ROOM_NOT_FOUND(HttpStatus.NOT_FOUND, "AI001", "해당 AI 채팅방을 찾을 수 없습니다."),
+    AI_CHAT_NOT_FOUND(HttpStatus.NOT_FOUND, "AI002", "해당 AI 채팅 메시지를 찾을 수 없습니다."),
+    AI_CHAT_NOT_OWNER(HttpStatus.FORBIDDEN, "AI003", "해당 채팅방의 소유자가 아닙니다."),
+    AI_SERVER_ERROR(HttpStatus.SERVICE_UNAVAILABLE, "AI004", "AI 서버와 통신 중 오류가 발생했습니다."),
+    AI_RATING_INVALID(HttpStatus.BAD_REQUEST, "AI005", "평점은 1~5 사이의 값이어야 합니다.");
 
     private final HttpStatus status;
     private final String code;
