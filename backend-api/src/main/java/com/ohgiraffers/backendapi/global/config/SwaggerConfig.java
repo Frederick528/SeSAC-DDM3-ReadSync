@@ -13,12 +13,12 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SwaggerConfig {
 
-    // ▼ [핵심 1] 어떤 경로를 스캔할지 명시 (이게 없어서 에러가 났을 확률 높음)
+    //  어떤 경로를 스캔할지 명시 (이게 없어서 에러가 났을 확률 높음)
     @Bean
     public GroupedOpenApi publicApi() {
         return GroupedOpenApi.builder()
                 .group("v1-definition")
-                .pathsToMatch("/**") // 컨트롤러에서 /api를 뺐으니 /v1/**으로 찾습니다.
+                .pathsToMatch("/**")
                 .build();
     }
 
@@ -35,7 +35,7 @@ public class SwaggerConfig {
         );
 
         return new OpenAPI()
-                // ▼ [핵심 2] Swagger UI가 요청 보낼 때 /api를 붙이도록 강제 설정
+                //  Swagger UI가 요청 보낼 때 /api를 붙이도록 강제 설정
                 .addServersItem(new Server().url("/api").description("Default Server URL"))
                 .components(components)
                 .info(apiInfo())
