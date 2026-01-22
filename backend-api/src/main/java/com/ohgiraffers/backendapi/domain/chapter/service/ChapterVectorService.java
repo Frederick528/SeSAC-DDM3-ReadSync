@@ -52,7 +52,7 @@ public class ChapterVectorService {
     @Async
     @Transactional
     public void saveOrUpdateChapterVector(Long chapterId) {
-        log.info("비동기 벡터 생성 시작 [Thread: {}] - ChapterId: {}", Thread.currentThread().getName(), chapterId);
+        log.info("▶▶ 3. 비동기 벡터 생성 시작 [Thread: {}] - ChapterId: {}", Thread.currentThread().getName(), chapterId);
 
         try {
             // 1. 챕터 조회 (DB 작업)
@@ -64,7 +64,7 @@ public class ChapterVectorService {
             // (더 고도화하려면 이 부분을 트랜잭션 밖으로 빼야 하지만, 현 단계에선 이 방식도 무방합니다)
             float[] vectorResponse = getVectorGD(chapter.getBookContentPath());
 
-            log.info("파이썬 서버 응답 완료 - 벡터 데이터 수신");
+            log.info("▶▶ 4.파이썬 서버 응답 완료 - 벡터 데이터 수신");
 
             // 3. Upsert 로직 (DB 작업)
             ChapterVector chapterVector = chapterVectorRepository.findById(chapterId)
