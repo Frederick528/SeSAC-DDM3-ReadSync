@@ -3,12 +3,12 @@ package com.ohgiraffers.backendapi.domain.comment.entity;
 import com.ohgiraffers.backendapi.domain.chapter.entity.Chapter;
 import com.ohgiraffers.backendapi.domain.user.entity.User;
 import com.ohgiraffers.backendapi.global.common.BaseTimeEntity;
+import com.ohgiraffers.backendapi.domain.contentreport.enums.ContentReportReasonType;
 import com.ohgiraffers.backendapi.global.common.enums.VisibilityStatus;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Getter
@@ -68,15 +68,18 @@ public class Comment extends BaseTimeEntity {
         this.isSpoiler = isSpoiler;
         this.visibilityStatus = VisibilityStatus.ACTIVE;
         this.isChanged = false;
+        this.spoilerReportCount = 0; // Initialize in constructor
+        this.violationReportCount = 0; // Initialize in constructor
     }
+
     // 댓글 수정 로직
     public void updateContent(String newContent, Boolean isSpoiler) {
         // 내용이 실제로 바뀌었을 때만 변경 처리
-        if(newContent != null && !this.content.equals(newContent)) {
+        if (newContent != null && !this.content.equals(newContent)) {
             this.content = newContent;
             this.isChanged = true;
         }
-        if(isSpoiler != null) {
+        if (isSpoiler != null) {
             this.isSpoiler = isSpoiler;
         }
     }
@@ -84,5 +87,24 @@ public class Comment extends BaseTimeEntity {
     // 댓글 삭제(soft delete) 로직
     public void delete() {
         this.visibilityStatus = VisibilityStatus.DELETED;
+    }
+
+    public void changeVisibility(VisibilityStatus status) {
+        this.visibilityStatus = status;
+    }
+
+    // 신고 누적 처리 로직
+    public void incrementReportCount(ContentReportReasonType reasonType) {
+        if (reasonType == ContentReportReasonType.SPOILER) {
+            this.spoilerReportCount++;
+            if (this.spoilerReportCount >= 5) {
+                this.visibilityStatus = VisibilityStatus.BLINDED;
+            }
+        } else if (reasonType == ContentReportReasonType.ABUSE || reasonType == ContentReportReasonType.ADVERTISEMENT) {
+            this.violationReportCount++;
+            if (this.violationReportCount >= 5) {
+                this.visibilityStatus = VisibilityStatus.SUSPENDED;
+            }
+        }
     }
 }
