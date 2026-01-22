@@ -6,13 +6,14 @@ import com.ohgiraffers.backendapi.domain.user.enums.UserStatus;
 import com.ohgiraffers.backendapi.global.common.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = "users")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Builder
+@SuperBuilder
 public class User extends BaseTimeEntity {
 
     @Id
@@ -43,17 +44,21 @@ public class User extends BaseTimeEntity {
     private UserStatus status = UserStatus.ACTIVE;
 
     // 관리자 로그인용 아이디
-    @Column(name = "login_id", length = 30, unique = true)
+    @Column(name = "login_id", length = 255, unique = true)
     private String loginId;
 
     // 관리자 로그인용 비밀번호
-    @Column(name = "password")
+    @Column(name = "password",length = 255)
     private String password;
 
     @Override
     public void delete() {
         super.delete();
         this.status = UserStatus.WITHDRAWN;
+    }
+
+    public void updateStatus(UserStatus status) {
+        this.status = status;
     }
 
 

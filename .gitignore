@@ -669,7 +669,11 @@ HELP.md
 !**/src/test/**/build/
 application-*.yml
 
+
 docker-compose.yml
+
+
+application-oauth.yml
 /backend-api/uploads
 
 data/

@@ -64,6 +64,14 @@ dependencies {
     implementation 'io.github.cdimascio:dotenv-java:3.0.0'
 
     implementation 'io.github.cdimascio:java-dotenv:5.2.2'
+    // Redis (데이터 저장 및 Pub/Sub 메시징) - 이소현 추가
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+    // WebSocket (실시간 통신) - 이소현 추가
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
+    // 소셜로그인
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 }
 
 tasks.named('test') {

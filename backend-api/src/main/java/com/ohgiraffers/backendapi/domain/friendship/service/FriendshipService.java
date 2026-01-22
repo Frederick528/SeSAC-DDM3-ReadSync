@@ -63,14 +63,24 @@ public class FriendshipService {
 
                     UserInformation info = friend.getUserInformation();
 
-                    String nickname = (info != null && info.getNickname() != null) ? info.getNickname() : info.getNickname();
+                    // 1. 표시할 이름 결정 로직 (닉네임 -> 아이디 -> 기본값)
+                    String displayName;
+
+                    if (info != null && info.getNickname() != null) {
+                        displayName = info.getNickname();
+                    } else if (friend.getLoginId() != null) {
+                        displayName = friend.getLoginId();
+                    } else {
+                        // 소셜 로그인 유저라 loginId도 없는 경우를 대비
+                        displayName = "알 수 없음";
+                    }
+
                     String profileImg = (info != null) ? info.getProfileImage() : null;
 
                     return new FriendListResponseDTO(
                             f.getFriendshipId(),
                             friend.getId(),
-                            info.getNickname(),
-                            nickname,
+                            displayName,
                             profileImg,
                             "OFFLINE"   // 실시간 접속 상태
                     );

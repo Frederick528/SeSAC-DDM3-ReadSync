@@ -81,6 +81,10 @@ public enum ErrorCode {
     // 결제
     PAYMENT_METHOD_NOT_FOUND(HttpStatus.BAD_REQUEST, "PAY001", "등록된 기본 결제 수단이 없습니다. 카드를 먼저 등록해주세요."),
     ALREADY_SUBSCRIBED(HttpStatus.BAD_REQUEST, "SUB001", "이미 구독 중인 사용자입니다.");
+    ROOM_FINISHED(HttpStatus.CONFLICT, "R015", "종료된 독서룸입니다."),
+
+    // 신고
+    REPORT_NOT_FOUND(HttpStatus.NOT_FOUND, "RPT001", "해당 신고를 찾을 수 없습니다.");
 
     private final HttpStatus status;
     private final String code;
@@ -96,3 +100,4 @@ public enum ErrorCode {
  * throw new CustomException(ErrorCode.USER_NOT_FOUND, "ID: " + userId);
  * 
  */
+

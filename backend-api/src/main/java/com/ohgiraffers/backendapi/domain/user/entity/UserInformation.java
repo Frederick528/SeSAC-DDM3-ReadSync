@@ -1,20 +1,20 @@
 package com.ohgiraffers.backendapi.domain.user.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ohgiraffers.backendapi.global.common.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.LastModifiedDate;
+import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.SQLDelete;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "user_informations")
+@Table(name = "user_informations", uniqueConstraints = { @UniqueConstraint(columnNames = {"user_name", "tag"}) })
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Builder
+@SuperBuilder
+@SQLDelete(sql = "UPDATE users SET status = 'WITHDRAWN' WHERE user_id = ?")
 @EntityListeners(AuditingEntityListener.class)
 public class UserInformation extends BaseTimeEntity {
 
@@ -41,17 +41,37 @@ public class UserInformation extends BaseTimeEntity {
     @Builder.Default
     private Long levelId = 1L;
 
-    @Column(name = "preferred_genre", nullable = false) // NOT NULL 확인 필요 (일단 기본값이나 필수 입력 처리)
+    @Column(name = "preferred_genre", nullable = false)
     @Builder.Default
-    private String preferredGenre = "General"; // 가입 시 기본값 설정
+    private String preferredGenre = "General";
 
-    // 비즈니스 로직: 경험치 추가
+    @Column(nullable = false, length = 4)
+    private String tag;
+
+
     public void addExperience(int exp) {
         this.experience += exp;
     }
 
-    // 비즈니스 로직: 레벨 업
     public void levelUp(Long nextLevelId) {
         this.levelId = nextLevelId;
     }
+
+    public void update(String nickname, String profileImage, String preferredGenre) {
+        if (nickname != null) this.nickname = nickname;
+        if (profileImage != null) this.profileImage = profileImage;
+        if (preferredGenre != null) this.preferredGenre = preferredGenre;
+    }
+
+    public void updatePreferredGenre(String preferredGenre){this.preferredGenre = preferredGenre;}
+
+    public void updateProfileImage(String profileImage) {
+        this.profileImage = profileImage;
+    }
+
+    public void updateNicknameAndTag(String nickname, String tag) {
+        this.nickname = nickname;
+        this.tag = tag;
+    }
+
 }

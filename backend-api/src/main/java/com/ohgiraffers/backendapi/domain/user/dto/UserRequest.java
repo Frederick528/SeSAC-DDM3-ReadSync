@@ -10,8 +10,6 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.UUID;
-
 public class UserRequest {
 
     @Getter
@@ -19,11 +17,13 @@ public class UserRequest {
     public static class Join {
 
         @NotBlank(message = "소셜 제공자는 필수항목입니다.")
-        private String provider; // "google", "naver" "kakao"
+        private String provider; // "google", "naver", "kakao"
 
         @NotBlank(message = "소셜 ID는 필수항목입니다.")
         private String providerId;
 
+        private String nickname;
+        private String profileImage;
 
         public User toUserEntity() {
             return User.builder()
@@ -34,11 +34,12 @@ public class UserRequest {
                     .build();
         }
 
-        public UserInformation toUserInformationEntity(User user) {
-            String randomNickname = "User_" + UUID.randomUUID().toString().substring(0, 8);
+        public UserInformation toUserInformationEntity(User user, String tag) {
             return UserInformation.builder()
                     .user(user)
-                    .nickname(randomNickname)
+                    .nickname(this.nickname)
+                    .tag(tag)
+                    .profileImage(this.profileImage)
                     .experience(0)
                     .levelId(1L)
                     .preferredGenre("General")
@@ -48,13 +49,33 @@ public class UserRequest {
 
     @Getter
     @NoArgsConstructor
-    public static class Update {
-        private String userName;
+    @Schema(description = "유저 정보 수정 요청")
+    public static class UpdateProfile {
+
+        @Schema(description = "변경할 닉네임", example = "책읽는선비")
+        private String nickname;
+        @Schema(description = "프로필 이미지 URL", example = "https://example.com/image.png")
         private String profileImage;
+        @Schema(description = "선호 장르", example = "소설")
         private String preferredGenre;
     }
 
-    // 어드민 전용 로그인 ^^
+    @Getter
+    @NoArgsConstructor
+    public static class AdminSignup {
+        @Schema(description = "로그인 아이디", example = "admin")
+        @NotBlank(message = "아이디는 필수입니다.")
+        private String loginId;
+
+        @Schema(description = "비밀번호", example = "1234")
+        @NotBlank(message = "비밀번호는 필수입니다.")
+        private String password;
+
+        @Schema(description = "관리자 닉네임", example = "총관리자")
+        @NotBlank(message = "닉네임은 필수입니다.")
+        private String nickname;
+    }
+
     @Getter
     @NoArgsConstructor
     public static class Login {

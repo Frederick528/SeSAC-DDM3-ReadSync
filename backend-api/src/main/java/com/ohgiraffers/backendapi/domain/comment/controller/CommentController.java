@@ -9,22 +9,22 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/comments")
+@RequestMapping("/v1/comments")
 @RequiredArgsConstructor
 @Tag(name = "Comment (댓글)", description = "챕터별 댓글 작성, 수정, 삭제, 조회 API")
 public class CommentController {
 
     private final CommentService commentService;
 
-    // TODO: 추후 @AuthenticationPrincipal로 userId 교체 필요
-
-    @Operation(summary = "댓글 작성", description = "특정 챕터에 댓글/대댓글 작성")
+    @Operation(summary = "[사용자] 댓글 작성", description = "특정 챕터에 댓글/대댓글 작성(USER)")
     @PostMapping("/{chapterId}")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<CommentResponseDTO> createComment(
             @CurrentUserId Long userId,
             @Parameter(description = "챕터ID") @PathVariable Long chapterId,
@@ -33,16 +33,18 @@ public class CommentController {
         return ResponseEntity.ok(response);
     }
 
-    @Operation(summary = "댓글 목록 조회", description = "특정 챕터의 모든 댓글 조회")
+    @Operation(summary = "[사용자/관리자] 댓글 목록 조회", description = "특정 챕터의 모든 댓글 조회(USER, ADMIN)")
     @GetMapping("/{chapterId}")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<List<CommentResponseDTO>> getComments(
             @Parameter(description = "챕터 ID") @PathVariable Long chapterId) {
         List<CommentResponseDTO> response = commentService.getCommentsByChapter(chapterId);
         return ResponseEntity.ok(response);
     }
 
-    @Operation(summary = "댓글 수정", description = "작성자가 자신의 댓글 수정(작성자만 가능)")
+    @Operation(summary = "[사용자] 댓글 수정", description = "작성자가 자신의 댓글 수정(작성자만 가능)")
     @PatchMapping("/{commentId}")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<CommentResponseDTO> updateComment(
             @CurrentUserId Long userId,
             @Parameter(description = "수정할 댓글 ID") @PathVariable Long commentId,
@@ -51,12 +53,32 @@ public class CommentController {
         return ResponseEntity.ok(response);
     }
 
-    @Operation(summary = "댓글 삭제", description = "작성가자 자신의 댓글 삭제(soft delete)")
+    @Operation(summary = "[사용자] 댓글 삭제", description = "작성자가 자신의 댓글 삭제(soft delete)")
     @DeleteMapping("/{commentId}")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Void> deleteComment(
             @CurrentUserId Long userId,
             @Parameter(description = "삭제할 댓글 ID") @PathVariable Long commentId) {
         commentService.deleteComment(userId, commentId);
+        return ResponseEntity.noContent().build();
+    }
+
+    // --- Admin Endpoints ---
+
+    @Operation(summary = "[관리자] 댓글 전체 조회", description = "모든 댓글을 조회합니다.(관리자 전용)")
+    @GetMapping("/admin")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<CommentResponseDTO>> getAllCommentsAdmin() {
+        List<CommentResponseDTO> response = commentService.getAllCommentsAdmin();
+        return ResponseEntity.ok(response);
+    }
+
+    @Operation(summary = "[관리자] 댓글 강제 삭제", description = "관리자가 댓글을 강제로 삭제합니다.(관리자 전용)")
+    @DeleteMapping("/admin/{commentId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> deleteCommentAdmin(
+            @Parameter(description = "삭제할 댓글 ID") @PathVariable Long commentId) {
+        commentService.deleteCommentAdmin(commentId);
         return ResponseEntity.noContent().build();
     }
 
