@@ -156,14 +156,14 @@ import re
 import requests
 
 class DriveEmbeddingRequest(BaseModel):
-    drive_url: str
+    google_drive_url: str
 
 @router.post("/embed-from-drive")
 async def get_embedding_from_drive(request: DriveEmbeddingRequest):
     try:
         # 1. 구글 드라이브 링크에서 파일 ID 추출
         # 링크 형식: https://drive.google.com/file/d/FILE_ID/view?usp=sharing
-        file_id_match = re.search(r'/d/([^/]+)', request.drive_url)
+        file_id_match = re.search(r'/d/([^/]+)', request.google_drive_url)
         if not file_id_match:
             raise HTTPException(status_code=400, detail="유효하지 않은 구글 드라이브 링크입니다.")
         
@@ -231,7 +231,7 @@ async def get_embedding_from_drive(request: DriveEmbeddingRequest):
 async def get_text_from_drive(request: DriveEmbeddingRequest) -> List[str]:
     # 1. 구글 드라이브 공유 링크 -> 직속 다운로드 링크로 변환
     # 링크 예시: https://drive.google.com/file/d/1A2B3C.../view?usp=sharing
-    file_id_match = re.search(r'/d/([^/]+)', request.drive_url)
+    file_id_match = re.search(r'/d/([^/]+)', request.google_drive_url)
     if not file_id_match:
         raise HTTPException(status_code=400, detail="유효하지 않은 구글 드라이브 링크입니다.")
     

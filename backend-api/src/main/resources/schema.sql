@@ -550,6 +550,7 @@ CREATE TABLE "refresh_tokens" (
 CREATE TABLE "user_vectors" (
     "user_id" BIGINT NOT NULL,
     "vector" HALFVEC(1024) NULL,
+    "created_at" TIMESTAMP DEFAULT Now() NOT NULL,
     CONSTRAINT "PK_User_Vectors" PRIMARY KEY ("user_id")
 );
 
@@ -557,6 +558,7 @@ CREATE TABLE "user_vectors" (
 CREATE TABLE "book_vectors" (
     "book_id" BIGINT NOT NULL,
     "vector" HALFVEC(1024) NULL,
+    "created_at" TIMESTAMP DEFAULT Now() NOT NULL,
     CONSTRAINT "PK_Book_Vectors" PRIMARY KEY ("book_id")
 );
 
@@ -564,6 +566,7 @@ CREATE TABLE "book_vectors" (
 CREATE TABLE "chapter_vectors" (
     "chapter_id" BIGINT NOT NULL,
     "vector" HALFVEC(1024) NULL,
+    "created_at" TIMESTAMP DEFAULT Now() NOT NULL,
     CONSTRAINT "PK_chapter_Vectors" PRIMARY KEY ("chapter_id")
 );
 

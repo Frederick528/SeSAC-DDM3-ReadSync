@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 
@@ -37,16 +38,16 @@ public class ChapterVectorService {
                 .retrieve()
                 .bodyToMono(ChapterVectorResponseDTO.class)
                 .map(ChapterVectorResponseDTO::getEmbedding)
-                .block(); // 결과가 올 때까지 잠시 대기
+                .block(Duration.ofSeconds(300)); // 결과가 올 때까지 잠시 대기
     }
     public float[] getVectorGD(String googleDriveUrl) {
         return embeddingServerWebClient.post()
                 .uri("/api/v1/embed-from-drive")
-                .bodyValue(Map.of("googleDriveUrl", googleDriveUrl)) // {"content": "내용"} 형태로 전송
+                .bodyValue(Map.of("google_drive_url", googleDriveUrl)) // {"content": "내용"} 형태로 전송
                 .retrieve()
                 .bodyToMono(ChapterVectorResponseDTO.class)
                 .map(ChapterVectorResponseDTO::getEmbedding)
-                .block(); // 결과가 올 때까지 잠시 대기
+                .block(Duration.ofSeconds(300)); // 결과가 올 때까지 잠시 대기
     }
 
     @Async
@@ -77,6 +78,7 @@ public class ChapterVectorService {
                             .vector(vectorResponse)
                             .build());
 
+            log.info("▶▶ 5.Upsert 로직 완료");
             // 4. 최종 저장
             chapterVectorRepository.save(chapterVector);
 
