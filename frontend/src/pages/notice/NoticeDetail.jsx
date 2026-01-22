@@ -1,16 +1,16 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { communityPosts } from "../../data/community.data";
-import styles from "./Community.module.css";
+import { noticePosts } from "../../data/notice.data";
+import styles from "./Notice.module.css";
 
-export default function CommunityDetail() {
-  const { id } = useParams<{ id: string }>();
+export default function NoticeDetail() {
+  const { id } = useParams();
   const navigate = useNavigate();
 
-  const post = communityPosts.find(
+  const post = noticePosts.find(
     (p) => p.id === Number(id)
   );
 
-  if (!post) return <div>게시글이 없습니다.</div>;
+  if (!post) return <div>공지사항이 없습니다.</div>;
 
   return (
     <div className="page-wrapper">
