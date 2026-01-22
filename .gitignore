@@ -676,11 +676,12 @@ docker-compose.yml
 application-oauth.yml
 /backend-api/uploads
 
-
-# --- Docker & DB Data ---
 data/
 db/
 redis/
 postgres_data/
 
+models/
 
+
+**/docker-compose.yml

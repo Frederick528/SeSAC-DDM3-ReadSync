@@ -1,0 +1,10 @@
+{
+    "python.terminal.activateEnvInCurrentTerminal": true, 
+    "editor.formatOnSave": true,                           // 저장 시 자동 정렬
+    "python.analysis.typeCheckingMode": "basic",           // 기본적인 타입 체크
+    "python.analysis.autoImportCompletions": true,          // 자동 임포트 제안
+
+    "terminal.integrated.env.windows": {
+        "PYTHONPATH": "src"
+    }
+}

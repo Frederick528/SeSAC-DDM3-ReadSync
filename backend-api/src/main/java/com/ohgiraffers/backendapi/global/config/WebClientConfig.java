@@ -31,4 +31,12 @@ public class WebClientConfig {
                         .maxInMemorySize(10 * 1024 * 1024)) // 10MB 버퍼
                 .build();
     }
+
+    @Bean
+    public WebClient embeddingServerWebClient(WebClient.Builder builder) {
+        return builder
+                .baseUrl("http://localhost:8000") // 파이썬 임베딩 서버 주소
+                .defaultHeader("Content-Type", "application/json")
+                .build();
+    }
 }

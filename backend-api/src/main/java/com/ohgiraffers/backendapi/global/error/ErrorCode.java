@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 public enum ErrorCode {
 
+    // Payment
+    INVALID_PAYMENT_AMOUNT(HttpStatus.BAD_REQUEST, "PAY-003", "결제 금액이 일치하지 않습니다."),
     // 공통
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "C001", "서버 내부 오류가 발생했습니다."),
     INVALID_INPUT_VALUE(HttpStatus.BAD_REQUEST, "C002", "잘못된 입력값입니다."),
@@ -73,6 +75,13 @@ public enum ErrorCode {
     INVALID_PLAY_SPEED(HttpStatus.BAD_REQUEST, "R012", "재생 속도는 0.5배에서 2.0배 사이여야 합니다."),
     INVITATION_NOT_FOUND(HttpStatus.NOT_FOUND, "R013", "존재하지 않거나 삭제된 초대장입니다."),
     INVITATION_EXPIRED(HttpStatus.BAD_REQUEST, "R014", "만료된 초대장입니다."),
+
+    // 장바구니
+    CART_ITEM_NOT_FOUND(HttpStatus.NOT_FOUND, "CA001", "장바구니에서 해당 항목을 찾을 수 없습니다."),
+
+    // 결제
+    PAYMENT_METHOD_NOT_FOUND(HttpStatus.BAD_REQUEST, "PAY001", "등록된 기본 결제 수단이 없습니다. 카드를 먼저 등록해주세요."),
+    ALREADY_SUBSCRIBED(HttpStatus.BAD_REQUEST, "SUB001", "이미 구독 중인 사용자입니다."),
     ROOM_FINISHED(HttpStatus.CONFLICT, "R015", "종료된 독서룸입니다."),
 
     // 신고
@@ -89,3 +98,14 @@ public enum ErrorCode {
     private final String code;
     private final String message;
 }
+
+/*
+ * 결과: "해당 유저를 찾을 수 없습니다."
+ * throw new CustomException(ErrorCode.USER_NOT_FOUND);
+ * 
+ * Long userId = 100L;
+ * // 결과: "해당 유저를 찾을 수 없습니다. (ID: 100)"
+ * throw new CustomException(ErrorCode.USER_NOT_FOUND, "ID: " + userId);
+ * 
+ */
+
