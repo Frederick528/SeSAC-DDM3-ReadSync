@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>정기 구독 - ReadSync</title>
+    <!-- Toss Payments SDK v1 (빌링용) -->
+    <script src="https://js.tosspayments.com/v1/payment"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .nav-bar {
+            display: flex;
+            align-items: center;
+            margin-bottom: 40px;
+            gap: 20px;
+        }
+
+        .nav-bar a {
+            color: #a0a0b0;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .nav-bar a:hover {
+            color: #667eea;
+        }
+
+        .nav-bar h1 {
+            font-size: 1.8rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .section h2 {
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #a0a0b0;
+            font-size: 0.9rem;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 14px 18px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: #fff;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-full {
+            width: 100%;
+        }
+
+        /* 구독 플랜 카드 */
+        .plans-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .plan-card {
+            background: rgba(0, 0, 0, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .plan-card:hover {
+            border-color: rgba(102, 126, 234, 0.5);
+            transform: translateY(-5px);
+        }
+
+        .plan-card.selected {
+            border-color: #667eea;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
+        }
+
+        .plan-card.popular {
+            position: relative;
+        }
+
+        .plan-card.popular::before {
+            content: '인기';
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: #fff;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .plan-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .plan-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .plan-price {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .plan-period {
+            color: #6a6a7a;
+            margin-bottom: 20px;
+        }
+
+        .plan-features {
+            list-style: none;
+            text-align: left;
+        }
+
+        .plan-features li {
+            padding: 8px 0;
+            color: #a0a0b0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .plan-features li::before {
+            content: '✓';
+            color: #22c55e;
+            font-weight: bold;
+        }
+
+        /* 단계 표시 */
+        .steps {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #6a6a7a;
+        }
+
+        .step.active {
+            color: #667eea;
+        }
+
+        .step.completed {
+            color: #22c55e;
+        }
+
+        .step-number {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .step.active .step-number {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+        }
+
+        .step.completed .step-number {
+            background: #22c55e;
+            color: #fff;
+        }
+
+        .step-divider {
+            width: 40px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 0 15px;
+        }
+
+        /* 현재 구독 정보 */
+        .subscription-info {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
+            border-radius: 16px;
+            padding: 25px;
+        }
+
+        .subscription-detail {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .subscription-detail:last-child {
+            border-bottom: none;
+        }
+
+        .subscription-detail .label {
+            color: #a0a0b0;
+        }
+
+        .subscription-detail .value {
+            font-weight: 600;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .status-badge.active {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+        }
+
+        .status-badge.cancelled {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+
+        /* 로그 영역 */
+        .log-area {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            max-height: 200px;
+            overflow-y: auto;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        .log-success {
+            color: #22c55e;
+        }
+
+        .log-error {
+            color: #ef4444;
+        }
+
+        .log-info {
+            color: #a0a0b0;
+        }
+
+        /* 결과 박스 */
+        .result-box {
+            padding: 25px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+        }
+
+        .result-box.success {
+            background: rgba(34, 197, 94, 0.2);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+
+        .result-box.error {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- 네비게이션 -->
+        <div class="nav-bar">
+            <a href="index.html">← 홈으로</a>
+            <h1>📅 정기 구독</h1>
+        </div>
+
+        <!-- 단계 표시 -->
+        <div class="steps">
+            <div class="step" id="step1">
+                <div class="step-number">1</div>
+                <span>카드 등록</span>
+            </div>
+            <div class="step-divider"></div>
+            <div class="step" id="step2">
+                <div class="step-number">2</div>
+                <span>플랜 선택</span>
+            </div>
+            <div class="step-divider"></div>
+            <div class="step" id="step3">
+                <div class="step-number">3</div>
+                <span>구독 완료</span>
+            </div>
+        </div>
+
+        <!-- 카드 등록 섹션 -->
+        <div class="section" id="cardSection">
+            <h2>💳 결제 카드 등록</h2>
+            <p style="color: #a0a0b0; margin-bottom: 25px;">
+                정기 결제를 위해 먼저 카드를 등록해주세요. 등록된 카드로 매월 자동 결제됩니다.
+            </p>
+            <div id="billingStatus" class="result-box" style="display: none;"></div>
+            <button class="btn btn-primary btn-full" onclick="requestBillingAuth()">
+                🔐 카드 등록하기 (빌링키 발급)
+            </button>
+        </div>
+
+        <!-- 플랜 선택 섹션 -->
+        <div class="section" id="planSection">
+            <h2>📋 구독 플랜 선택</h2>
+            <div class="plans-grid">
+                <div class="plan-card" data-plan="basic" data-price="4900">
+                    <div class="plan-icon">📚</div>
+                    <div class="plan-name">Basic</div>
+                    <div class="plan-price">₩4,900</div>
+                    <div class="plan-period">/ 월</div>
+                    <ul class="plan-features">
+                        <li>월 5권 무료 열람</li>
+                        <li>기본 독서 통계</li>
+                        <li>광고 제거</li>
+                    </ul>
+                </div>
+
+                <div class="plan-card popular" data-plan="premium" data-price="9900">
+                    <div class="plan-icon">⭐</div>
+                    <div class="plan-name">Premium</div>
+                    <div class="plan-price">₩9,900</div>
+                    <div class="plan-period">/ 월</div>
+                    <ul class="plan-features">
+                        <li>무제한 열람</li>
+                        <li>상세 독서 통계</li>
+                        <li>오프라인 다운로드</li>
+                        <li>우선 지원</li>
+                    </ul>
+                </div>
+
+                <div class="plan-card" data-plan="family" data-price="14900">
+                    <div class="plan-icon">👨‍👩‍👧‍👦</div>
+                    <div class="plan-name">Family</div>
+                    <div class="plan-price">₩14,900</div>
+                    <div class="plan-period">/ 월</div>
+                    <ul class="plan-features">
+                        <li>5명까지 이용</li>
+                        <li>무제한 열람</li>
+                        <li>가족 독서 현황</li>
+                        <li>아동 보호 모드</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>선택한 플랜</label>
+                <input type="text" id="selectedPlan" readonly placeholder="위에서 플랜을 선택해주세요">
+            </div>
+            <div class="form-group">
+                <label>월 결제 금액</label>
+                <input type="number" id="selectedPrice" readonly>
+            </div>
+
+            <button class="btn btn-primary btn-full" onclick="subscribe()">
+                🚀 구독 시작하기
+            </button>
+        </div>
+
+        <!-- 현재 구독 정보 -->
+        <div class="section" id="subscriptionSection">
+            <h2>📊 내 구독 정보</h2>
+            <div id="subscriptionInfo" class="subscription-info">
+                <p style="text-align: center; color: #6a6a7a; padding: 30px;">
+                    구독 정보를 불러오는 중...
+                </p>
+            </div>
+            <div style="margin-top: 20px; text-align: center;">
+                <button class="btn btn-secondary" onclick="loadSubscription()">🔄 새로고침</button>
+            </div>
+        </div>
+
+        <!-- 로그 영역 -->
+        <div class="section">
+            <h2>📝 API 로그</h2>
+            <div id="logArea" class="log-area">
+                <div class="log-info">대기 중...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 전역 변수
+        const API_BASE = '/api/api/v1';
+        let selectedPlanName = '';
+        let selectedPlanPrice = 0;
+
+        // 페이지 로드 시
+        window.onload = function () {
+            setupPlanCards();
+            updateSteps(1);
+            loadSubscription();
+
+            // URL 파라미터 확인 (빌링키 리다이렉트 처리)
+            processBillingRedirect();
+        };
+
+        // 인증 헤더
+        function getAuthHeader() {
+            let token = localStorage.getItem('rs_jwt_token') || '';
+            if (token && !token.startsWith('Bearer ')) {
+                token = 'Bearer ' + token;
+            }
+            return {
+                'Authorization': token,
+                'Content-Type': 'application/json'
+            };
+        }
+
+        // 로그 출력
+        function log(message, type = 'info') {
+            const area = document.getElementById('logArea');
+            const time = new Date().toLocaleTimeString();
+            const className = type === 'error' ? 'log-error' : type === 'success' ? 'log-success' : 'log-info';
+            area.innerHTML = `<div class="${className}">[${time}] ${message}</div>` + area.innerHTML;
+        }
+
+        // 단계 업데이트
+        function updateSteps(currentStep) {
+            for (let i = 1; i <= 3; i++) {
+                const step = document.getElementById(`step${i}`);
+                step.classList.remove('active', 'completed');
+                if (i < currentStep) {
+                    step.classList.add('completed');
+                } else if (i === currentStep) {
+                    step.classList.add('active');
+                }
+            }
+        }
+
+        // 플랜 카드 설정
+        function setupPlanCards() {
+            const cards = document.querySelectorAll('.plan-card');
+            cards.forEach(card => {
+                card.addEventListener('click', () => {
+                    cards.forEach(c => c.classList.remove('selected'));
+                    card.classList.add('selected');
+
+                    selectedPlanName = card.dataset.plan;
+                    selectedPlanPrice = parseInt(card.dataset.price);
+
+                    document.getElementById('selectedPlan').value = card.querySelector('.plan-name').textContent;
+                    document.getElementById('selectedPrice').value = selectedPlanPrice;
+
+                    log(`플랜 선택: ${selectedPlanName} (₩${selectedPlanPrice.toLocaleString()}/월)`);
+                });
+            });
+        }
+
+        // 빌링키 발급 요청
+        function requestBillingAuth() {
+            // 구독 결제용 클라이언트 키 (test_ck_ 형식 - 빌링/정기결제 전용)
+            // 백엔드의 TOSS_SECRET_KEY와 매칭되는 키
+            const clientKey = 'test_ck_eqRGgYO1r54g5P1wnlY5VQnN2Eya';
+
+            log('빌링키 발급 요청 중...');
+
+            const tossPayments = TossPayments(clientKey);
+            const customerKey = 'BILLING_' + Date.now();
+
+            // 빌링 인증 요청
+            tossPayments.requestBillingAuth('카드', {
+                customerKey: customerKey,
+                successUrl: window.location.origin + window.location.pathname,
+                failUrl: window.location.origin + window.location.pathname
+            }).catch(function (error) {
+                log(`❌ 빌링 요청 실패: ${error.message}`, 'error');
+            });
+        }
+
+        // 빌링 리다이렉트 처리
+        async function processBillingRedirect() {
+            const urlParams = new URLSearchParams(window.location.search);
+
+            // 빌링키 발급 성공
+            if (urlParams.has('authKey') && urlParams.has('customerKey')) {
+                log('빌링 인증 성공! 백엔드 등록 요청 중...');
+
+                const billingData = {
+                    authKey: urlParams.get('authKey'),
+                    customerKey: urlParams.get('customerKey')
+                };
+
+                try {
+                    const response = await fetch(`${API_BASE}/payments/billing-key`, {
+                        method: 'POST',
+                        headers: getAuthHeader(),
+                        body: JSON.stringify(billingData)
+                    });
+
+                    if (response.ok) {
+                        const statusBox = document.getElementById('billingStatus');
+                        statusBox.style.display = 'block';
+                        statusBox.className = 'result-box success';
+                        statusBox.innerHTML = `
+                            <h3 style="color: #22c55e;">✅ 카드가 등록되었습니다!</h3>
+                            <p style="color: #a0a0b0;">이제 아래에서 원하는 플랜을 선택하세요.</p>
+                        `;
+
+                        localStorage.setItem('rs_billing_registered', 'true');
+                        updateSteps(2);
+                        log('✅ 빌링키 등록 완료!', 'success');
+                    } else {
+                        throw new Error('빌링키 등록 실패');
+                    }
+                } catch (error) {
+                    const statusBox = document.getElementById('billingStatus');
+                    statusBox.style.display = 'block';
+                    statusBox.className = 'result-box error';
+                    statusBox.innerHTML = `<p style="color: #ef4444;">❌ ${error.message}</p>`;
+                    log(`❌ 빌링키 등록 실패: ${error.message}`, 'error');
+                }
+
+                clearUrlParams();
+            }
+
+            // 빌링 실패
+            else if (urlParams.has('code')) {
+                const statusBox = document.getElementById('billingStatus');
+                statusBox.style.display = 'block';
+                statusBox.className = 'result-box error';
+                statusBox.innerHTML = `
+                    <p style="color: #ef4444;">❌ 카드 등록 실패</p>
+                    <p style="color: #6a6a7a;">${urlParams.get('message') || '알 수 없는 오류'}</p>
+                `;
+                log(`❌ 빌링 실패: ${urlParams.get('message')}`, 'error');
+                clearUrlParams();
+            }
+
+            // 이전에 등록했는지 확인
+            else if (localStorage.getItem('rs_billing_registered') === 'true') {
+                updateSteps(2);
+                const statusBox = document.getElementById('billingStatus');
+                statusBox.style.display = 'block';
+                statusBox.className = 'result-box success';
+                statusBox.innerHTML = `
+                    <h3 style="color: #22c55e;">✅ 카드가 등록되어 있습니다.</h3>
+                `;
+            }
+        }
+
+        // 구독 시작
+        async function subscribe() {
+            if (!selectedPlanName || !selectedPlanPrice) {
+                alert('구독할 플랜을 선택해주세요.');
+                return;
+            }
+
+            const billingRegistered = localStorage.getItem('rs_billing_registered');
+            if (billingRegistered !== 'true') {
+                alert('먼저 결제 카드를 등록해주세요.');
+                return;
+            }
+
+            log(`구독 시작 요청: ${selectedPlanName} (₩${selectedPlanPrice})`);
+
+            try {
+                const response = await fetch(`${API_BASE}/subscriptions?planName=${encodeURIComponent(selectedPlanName)}&price=${selectedPlanPrice}`, {
+                    method: 'POST',
+                    headers: getAuthHeader()
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.detail || error.message || '구독 실패');
+                }
+
+                const data = await response.json();
+                updateSteps(3);
+                log(`✅ 구독 완료: ${data.planName}`, 'success');
+                alert('🎉 구독이 완료되었습니다!');
+                loadSubscription();
+
+            } catch (error) {
+                log(`❌ 구독 실패: ${error.message}`, 'error');
+                alert(`구독 실패: ${error.message}`);
+            }
+        }
+
+        // 구독 정보 조회
+        async function loadSubscription() {
+            try {
+                log('구독 정보 조회 중...');
+                const response = await fetch(`${API_BASE}/subscriptions/me`, {
+                    headers: getAuthHeader()
+                });
+
+                // 204 No Content: 구독 정보 없음
+                if (response.status === 204) {
+                    document.getElementById('subscriptionInfo').innerHTML = `
+                        <p style="text-align: center; color: #6a6a7a; padding: 30px;">
+                            🔍 활성 구독이 없습니다.
+                        </p>
+                    `;
+                    log('구독 정보 없음 (204)', 'info');
+                    return;
+                }
+
+                if (!response.ok) {
+                    throw new Error('구독 정보 조회 실패');
+                }
+
+                const data = await response.json();
+                renderSubscription(data);
+                log('✅ 구독 정보 조회 완료', 'success');
+
+            } catch (error) {
+                document.getElementById('subscriptionInfo').innerHTML = `
+                    <p style="text-align: center; color: #6a6a7a; padding: 30px;">
+                        🔍 활성 구독이 없습니다.
+                    </p>
+                `;
+                log(`구독 정보 없음: ${error.message}`, 'info');
+            }
+        }
+
+        // 구독 정보 렌더링
+        function renderSubscription(sub) {
+            const statusClass = sub.status === 'ACTIVE' ? 'active' : 'cancelled';
+            const statusText = sub.status === 'ACTIVE' ? '이용 중' : '해지됨';
+
+            document.getElementById('subscriptionInfo').innerHTML = `
+                <div class="subscription-detail">
+                    <span class="label">플랜</span>
+                    <span class="value">${sub.planName}</span>
+                </div>
+                <div class="subscription-detail">
+                    <span class="label">월 결제금액</span>
+                    <span class="value" style="color: #667eea;">₩${sub.price.toLocaleString()}</span>
+                </div>
+                <div class="subscription-detail">
+                    <span class="label">시작일</span>
+                    <span class="value">${sub.startedAt || '-'}</span>
+                </div>
+                <div class="subscription-detail">
+                    <span class="label">다음 결제일</span>
+                    <span class="value">${sub.nextBillingDate || '-'}</span>
+                </div>
+                <div class="subscription-detail">
+                    <span class="label">상태</span>
+                    <span class="status-badge ${statusClass}">${statusText}</span>
+                </div>
+                ${sub.status === 'ACTIVE' ? `
+                    <div style="margin-top: 20px; text-align: center;">
+                        <button class="btn btn-danger" onclick="cancelSubscription(${sub.subId})">
+                            구독 해지
+                        </button>
+                    </div>
+                ` : ''}
+            `;
+        }
+
+        // 구독 해지
+        async function cancelSubscription(subId) {
+            if (!confirm('정말 구독을 해지하시겠습니까? 다음 결제일부터 청구되지 않습니다.')) {
+                return;
+            }
+
+            try {
+                log(`구독 해지 요청: ${subId}`);
+                const response = await fetch(`${API_BASE}/subscriptions/${subId}`, {
+                    method: 'DELETE',
+                    headers: getAuthHeader()
+                });
+
+                if (!response.ok) {
+                    throw new Error('해지 실패');
+                }
+
+                log('✅ 구독 해지 완료', 'success');
+                alert('구독이 해지되었습니다.');
+                loadSubscription();
+            } catch (error) {
+                log(`❌ 해지 실패: ${error.message}`, 'error');
+            }
+        }
+
+        // URL 파라미터 제거
+        function clearUrlParams() {
+            const newUrl = window.location.origin + window.location.pathname;
+            window.history.replaceState({}, '', newUrl);
+        }
+    </script>
+</body>
+
+</html>

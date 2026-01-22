@@ -60,6 +60,10 @@ dependencies {
     // AOP 기능 라이브러리
     implementation 'org.springframework.boot:spring-boot-starter-aop'
 
+    // Dotenv (환경변수 관리)
+    implementation 'io.github.cdimascio:dotenv-java:3.0.0'
+
+    implementation 'io.github.cdimascio:java-dotenv:5.2.2'
     // Redis (데이터 저장 및 Pub/Sub 메시징) - 이소현 추가
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
@@ -68,6 +72,9 @@ dependencies {
 
     // 소셜로그인
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
+    // WebFlux (WebClient for AI 서버 통신) - 김선준 추가
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
 }
 
 tasks.named('test') {
