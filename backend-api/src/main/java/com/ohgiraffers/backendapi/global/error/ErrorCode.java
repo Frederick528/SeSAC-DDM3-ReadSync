@@ -28,6 +28,7 @@ public enum ErrorCode {
     COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "C001", "해당 댓글을 찾을 수 없습니다."),
     CANNOT_REPLY_TO_DELETED(HttpStatus.NOT_FOUND, "C002", "삭제된 댓글에는 대댓글을 달 수 없습니다."),
     CANNOT_REPLY_TO_SUSPENDED(HttpStatus.NOT_ACCEPTABLE, "C003", "신고로 비노출 된 댓글에는 대댓글을 달 수 없습니다."),
+    COMMENT_SUSPENDED(HttpStatus.FORBIDDEN, "C004", "신고 누적으로 인해 제한된 댓글입니다."),
 
     // 책
     BOOK_NOT_FOUND(HttpStatus.NOT_FOUND, "B001", "해당 책을 찾을 수 없습니다."),

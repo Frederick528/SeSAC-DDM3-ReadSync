@@ -69,6 +69,15 @@ public class ReviewService {
         return reviews.map(ReviewResponseDTO::from);
     }
 
+    // [2-2] 본인 리뷰 목록 조회(페이징)
+    public Page<ReviewResponseDTO> getMyReviews(Long userId, Pageable pageable) {
+        // 삭제된 리뷰를 제외한 본인 리뷰 조회
+        Page<Review> reviews = reviewRepository.findByUser_IdAndVisibilityStatusNot(
+                userId, VisibilityStatus.DELETED, pageable);
+
+        return reviews.map(ReviewResponseDTO::from);
+    }
+
     // [3] 리뷰 수정
     @Transactional
     public void updateReview(Long reviewId, Long userId, ReviewRequestDTO request) {

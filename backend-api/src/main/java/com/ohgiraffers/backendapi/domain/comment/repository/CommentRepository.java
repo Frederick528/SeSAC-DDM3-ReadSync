@@ -11,4 +11,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     // 챕터 ID로 모든 댓글 조회 (오래된 순 정렬)
     List<Comment> findByChapter_ChapterIdOrderByCreatedAtAsc(Long ChapterId);
+
+    // 사용자 ID로 본인 댓글 조회 (최신순 정렬)
+    List<Comment> findByUser_IdOrderByCreatedAtDesc(Long userId);
 }
