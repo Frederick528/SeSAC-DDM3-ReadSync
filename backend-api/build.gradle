@@ -71,6 +71,9 @@ dependencies {
 
     // WebFlux (WebClient for AI 서버 통신) - 김선준 추가
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+    // AWS S3 (파일 스토리지) - 김선준 추가
+    implementation 'io.awspring.cloud:spring-cloud-aws-starter-s3:3.1.0'
 }
 
 tasks.named('test') {
