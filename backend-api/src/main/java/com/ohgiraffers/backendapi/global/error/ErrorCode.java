@@ -72,19 +72,12 @@ public enum ErrorCode {
     INVALID_PLAY_SPEED(HttpStatus.BAD_REQUEST, "R012", "재생 속도는 0.5배에서 2.0배 사이여야 합니다."),
     INVITATION_NOT_FOUND(HttpStatus.NOT_FOUND, "R013", "존재하지 않거나 삭제된 초대장입니다."),
     INVITATION_EXPIRED(HttpStatus.BAD_REQUEST, "R014", "만료된 초대장입니다."),
-    ROOM_FINISHED(HttpStatus.CONFLICT, "R015", "종료된 독서룸입니다.");
+    ROOM_FINISHED(HttpStatus.CONFLICT, "R015", "종료된 독서룸입니다."),
+
+    // 신고
+    REPORT_NOT_FOUND(HttpStatus.NOT_FOUND, "RPT001", "해당 신고를 찾을 수 없습니다.");
 
     private final HttpStatus status;
     private final String code;
     private final String message;
 }
-
-/*
- 결과: "해당 유저를 찾을 수 없습니다."
- throw new CustomException(ErrorCode.USER_NOT_FOUND);
-
- Long userId = 100L;
- // 결과: "해당 유저를 찾을 수 없습니다. (ID: 100)"
- throw new CustomException(ErrorCode.USER_NOT_FOUND, "ID: " + userId);
-
-* */
