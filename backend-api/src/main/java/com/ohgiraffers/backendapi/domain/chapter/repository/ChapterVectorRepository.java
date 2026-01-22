@@ -11,7 +11,7 @@ public interface ChapterVectorRepository extends JpaRepository<ChapterVector, Lo
 
     // 특정 도서(bookId)에 속한 모든 챕터의 벡터 리스트를 가져옴 (북 벡터 합성용)
     @NativeQuery(value = "SELECT cv.vector FROM chapter_vectors cv " +
-            "JOIN chapters c ON cv.chapter_id = c.id " +
+            "JOIN chapters c ON cv.chapter_id = c.chapter_id " +
             "WHERE c.book_id = :bookId")
     List<float[]> findAllVectorsByBookId(@Param("bookId") Long bookId);
 

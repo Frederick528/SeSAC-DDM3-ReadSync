@@ -5,6 +5,7 @@ import com.ohgiraffers.backendapi.domain.book.entity.Book;
 import com.ohgiraffers.backendapi.domain.book.entity.BookVector;
 import com.ohgiraffers.backendapi.domain.book.repository.BookRepository;
 import com.ohgiraffers.backendapi.domain.book.repository.BookVectorRepository;
+import com.ohgiraffers.backendapi.domain.chapter.entity.ChapterVector;
 import com.ohgiraffers.backendapi.domain.chapter.service.ChapterVectorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
