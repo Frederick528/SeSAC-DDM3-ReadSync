@@ -681,5 +681,7 @@ db/
 redis/
 postgres_data/
 
+models/
+
 
 **/docker-compose.yml
