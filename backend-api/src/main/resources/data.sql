@@ -78,7 +78,7 @@ INSERT INTO "book_vectors" ("book_id", "vector") VALUES
 
 -- [11] Chapters (챕터 정보 - Book 참조)
 INSERT INTO "chapters" ("book_id", "chapter_name", "sequence", "book_content_path") VALUES
-                                                                                        (1, '1장: 관계형 모델', 1, '/path/db_ch1'),
+                                                                                        (1, '1장: 관계형 모델', 1, 'https://drive.google.com/file/d/16LgsOHk6FwihTrLuLVH_5Cqx8Q_KyOU5/view?usp=drive_link'),
                                                                                         (1, '2장: 정규화', 2, '/path/db_ch2'),
                                                                                         (2, '1장: 자바 입문', 1, '/path/java_ch1'),
                                                                                         (2, '2장: 객체지향', 2, '/path/java_ch2'),
