@@ -1,0 +1,44 @@
+.list-page-title {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: #2f5d3a;
+}
+
+/* 게시글 카드 (메인보다 확실히 진한 연녹) */
+.list-card {
+  background-color: #b7d9a8;
+  border-radius: 16px;
+  padding: 18px 22px;
+  margin-bottom: 14px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  cursor: pointer;
+
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  transition: transform 0.15s ease,
+              box-shadow 0.15s ease,
+              background-color 0.15s ease;
+}
+
+.list-card:hover {
+  transform: translateY(-2px);
+  background-color: #a7cf96;
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.12);
+}
+
+/* 제목 */
+.list-card-title {
+  font-weight: 700;
+  font-size: 16px;
+  color: #244b34;
+}
+
+/* 작성자 / 날짜 */
+.list-card-meta {
+  font-size: 13px;
+  color: #3f6a52;
+}

@@ -33,7 +33,7 @@ public class Order extends BaseTimeEntity {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "method_id", nullable = false)
+    @JoinColumn(name = "method_id", nullable = true)
     private PaymentMethod paymentMethod;
 
     @Column(name = "order_uid", nullable = false)

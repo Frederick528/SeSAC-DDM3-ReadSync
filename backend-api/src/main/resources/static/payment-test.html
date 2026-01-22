@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toss Payment & Subscription Test</title>
+    <!-- Toss Payments SDK -->
+    <script src="https://js.tosspayments.com/v1/payment-widget"></script>
+    <script src="https://js.tosspayments.com/v1/payment"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .section {
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin-top: 15px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        pre {
+            background: #f4f4f4;
+            padding: 10px;
+            overflow-x: auto;
+        }
+
+        .success {
+            color: green;
+        }
+
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>💳 Toss 결제 & 구독 테스트</h1>
+
+    <div class="section">
+        <h2>1. 설정 (Configuration)</h2>
+        <label>JWT Token (Swagger에서 로그인 후 복사):</label>
+        <input type="text" id="jwtToken" placeholder="Bearer ~ 제외하고 토큰만 입력 (또는 Bearer 포함도 허용)">
+
+        <label>Classes Key (Toss Client Key):</label>
+        <input type="text" id="clientKey" placeholder="test_ck_...">
+        <button onclick="saveConfig()">설정 저장</button>
+    </div>
+
+    <!-- 탭 메뉴 -->
+    <div style="margin-bottom: 10px;">
+        <button onclick="showSection('cart')">장바구니 담기</button>
+        <button onclick="showSection('payment')">일반 결제 (Widget)</button>
+        <button onclick="showSection('subscription')">정기 구독</button>
+    </div>
+
+    <!-- 장바구니 섹션 -->
+    <div id="cart" class="section hidden">
+        <h2>🛒 장바구니 담기</h2>
+        <label>Book ID:</label>
+        <input type="number" id="bookId" value="1">
+        <label>Quantity:</label>
+        <input type="number" id="quantity" value="1">
+        <button onclick="addToCart()">장바구니 담기</button>
+        <button onclick="getCart()">장바구니 조회</button>
+        <pre id="cartResult"></pre>
+    </div>
+
+    <!-- 결제 섹션 -->
+    <div id="payment" class="section hidden">
+        <h2>💰 일반 결제 (Payment Widget)</h2>
+        <p>장바구니에 담긴 총액을 확인 후 결제합니다.</p>
+        <label>Order Name (주문명):</label>
+        <input type="text" id="orderName" value="테스트 서적 외 1건">
+        <label>Amount (총 금액):</label>
+        <input type="number" id="amount" value="15000">
+
+        <div id="payment-widget"></div>
+        <div id="agreement"></div>
+        <button onclick="requestPayment()">결제하기</button>
+    </div>
+
+    <!-- 구독 섹션 -->
+    <div id="subscription" class="section hidden">
+        <h2>📅 정기 구독 (Billing Auth)</h2>
+        <button onclick="requestBillingAuth()">카드 등록 (빌링키 발급)</button>
+        <hr>
+        <label>Plan Name (플랜명):</label>
+        <input type="text" id="planName" value="프리미엄 멤버십">
+        <label>Price (가격):</label>
+        <input type="number" id="subPrice" value="9900">
+        <button onclick="subscribe()">구독 신청</button>
+        <pre id="subResult"></pre>
+    </div>
+
+    <div class="section">
+        <h2>📋 로그 / 결과</h2>
+        <pre id="logArea">대기 중...</pre>
+    </div>
+
+    <script>
+        // 초기화 및 로컬 스토리지 로드
+        window.onload = function () {
+            const token = localStorage.getItem('jwtToken');
+            const key = localStorage.getItem('clientKey');
+            if (token) document.getElementById('jwtToken').value = token;
+            if (key) document.getElementById('clientKey').value = key;
+
+            // URL 파라미터 확인 (리다이렉트 처리)
+            processRedirect();
+        };
+
+        function saveConfig() {
+            const token = document.getElementById('jwtToken').value.trim();
+            const key = document.getElementById('clientKey').value.trim();
+            localStorage.setItem('jwtToken', token);
+            localStorage.setItem('clientKey', key);
+            alert('설정이 저장되었습니다.');
+        }
+
+        function getAuthHeader() {
+            let token = document.getElementById('jwtToken').value.trim();
+            if (!token.startsWith('Bearer ')) {
+                token = 'Bearer ' + token;
+            }
+            return { 'Authorization': token, 'Content-Type': 'application/json' };
+        }
+
+        function log(msg, isError = false) {
+            const area = document.getElementById('logArea');
+            area.style.color = isError ? 'red' : 'black';
+            area.innerText = typeof msg === 'object' ? JSON.stringify(msg, null, 2) : msg;
+        }
+
+        async function showSection(id) {
+            document.querySelectorAll('.section').forEach(el => {
+                if (el.id !== 'cart' && el.id !== 'payment' && el.id !== 'subscription') return; // 설정/로그 제외
+                el.classList.add('hidden');
+            });
+            document.getElementById(id).classList.remove('hidden');
+
+            if (id === 'payment') {
+                await renderWidget();
+            }
+        }
+
+        // --- 장바구니 ---
+        function addToCart() {
+            const bookId = document.getElementById('bookId').value;
+            const quantity = document.getElementById('quantity').value;
+
+            fetch('/api/api/v1/carts', {
+                method: 'POST',
+                headers: getAuthHeader(),
+                body: JSON.stringify({ bookId: parseInt(bookId), quantity: parseInt(quantity) })
+            })
+                .then(res => res.ok ? res.json() : Promise.reject(res))
+                .then(data => {
+                    log('장바구니 담기 성공: ' + JSON.stringify(data));
+                    getCart();
+                })
+                .catch(async err => log('에러: ' + (err.json ? JSON.stringify(await err.json()) : err), true));
+        }
+
+        function getCart() {
+            fetch('/api/api/v1/carts', { headers: getAuthHeader() })
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById('cartResult').innerText = JSON.stringify(data, null, 2);
+                    // 총액 계산
+                    let total = 0;
+                    data.forEach(item => total += item.totalPrice);
+                    document.getElementById('amount').value = total;
+                    log('장바구니 조회 완료. 총액: ' + total);
+                });
+        }
+
+        // --- 결제 (Widget) ---
+        let paymentWidget = null;
+        let paymentMethodsWidget = null;
+        let isWidgetReady = false;
+
+        async function renderWidget() {
+            const clientKey = document.getElementById('clientKey').value;
+            if (!clientKey) { alert('Client Key를 설정해주세요.'); return; }
+
+            // TossPaymentWidget 초기화
+            const customerKey = "customer_" + Math.random().toString(36).substring(2, 12);
+
+            try {
+                isWidgetReady = false;
+
+                if (!paymentWidget) {
+                    paymentWidget = PaymentWidget(clientKey, customerKey);
+                }
+
+                // 결제 수단 렌더링 (Promise 반환)
+                await paymentWidget.renderPaymentMethods('#payment-widget', {
+                    value: parseInt(document.getElementById('amount').value)
+                });
+
+                // 이용 약관 렌더링 (필수)
+                await paymentWidget.renderAgreement('#agreement');
+
+                isWidgetReady = true;
+                log('결제 위젯 렌더링 완료');
+            } catch (error) {
+                log('위젯 렌더링 에러: ' + JSON.stringify(error), true);
+            }
+        }
+
+        function requestPayment() {
+            if (!paymentWidget || !isWidgetReady) {
+                alert('결제 위젯이 아직 준비되지 않았습니다. 잠시만 기다려주세요.');
+                return;
+            }
+            const orderName = document.getElementById('orderName').value;
+            const amount = parseInt(document.getElementById('amount').value);
+            // orderId 생성 (UUID 대용)
+            const orderId = "ORDER_" + new Date().getTime();
+
+            paymentWidget.requestPayment({
+                orderId: orderId,
+                orderName: orderName,
+                successUrl: window.location.href, // 현재 페이지로 리다이렉트
+                failUrl: window.location.href,
+                customerEmail: "customer@example.com",
+                customerName: "홍길동"
+            }).catch(function (error) {
+                log('결제 요청 실패: ' + JSON.stringify(error), true);
+                if (error.code === 'USER_CANCEL') {
+                    // 사용자가 취소한 경우
+                }
+            });
+        }
+
+        // --- 구독 (Billing Auth) ---
+        function requestBillingAuth() {
+            const clientKey = document.getElementById('clientKey').value;
+            if (!clientKey) { alert('Client Key를 설정해주세요.'); return; }
+
+            const tossPayments = TossPayments(clientKey);
+            const customerKey = "billing_" + new Date().getTime(); // 고유 키
+
+            tossPayments.requestBillingAuth('카드', {
+                customerKey: customerKey,
+                successUrl: window.location.href,
+                failUrl: window.location.href
+            });
+        }
+
+        function subscribe() {
+            const planName = document.getElementById('planName').value;
+            const price = document.getElementById('subPrice').value;
+
+            // API 호출
+            fetch(`/api/api/v1/subscriptions?planName=${encodeURIComponent(planName)}&price=${price}`, {
+                method: 'POST',
+                headers: getAuthHeader()
+            })
+                .then(res => res.ok ? res.json() : Promise.reject(res))
+                .then(data => {
+                    log('구독 성공: ' + JSON.stringify(data));
+                    document.getElementById('subResult').innerText = JSON.stringify(data, null, 2);
+                })
+                .catch(async err => log('구독 에러: ' + (err.json ? JSON.stringify(await err.json()) : err), true));
+        }
+
+
+        // --- 리다이렉트 처리 로직 ---
+        function processRedirect() {
+            const urlParams = new URLSearchParams(window.location.search);
+            let processed = false;
+
+            // 1. 일반 결제 성공 (paymentKey, orderId, amount)
+            if (urlParams.has('paymentKey') && urlParams.has('orderId') && urlParams.has('amount')) {
+                log('결제 인증 성공! 백엔드 승인 요청 중...');
+                processed = true;
+                const body = {
+                    paymentKey: urlParams.get('paymentKey'),
+                    orderId: urlParams.get('orderId'),
+                    amount: parseInt(urlParams.get('amount'))
+                };
+
+                fetch('/api/api/v1/payments/confirm', {
+                    method: 'POST',
+                    headers: getAuthHeader(),
+                    body: JSON.stringify(body)
+                })
+                    .then(res => res.ok ? res.json() : Promise.reject(res))
+                    .then(data => {
+                        log('✅ 최종 결제 승인 완료: ' + JSON.stringify(data));
+                        alert('결제가 완료되었습니다!');
+                    })
+                    .catch(async err => {
+                        log('❌ 결제 승인 실패: ' + (err.json ? JSON.stringify(await err.json()) : err), true);
+                        alert('결제 승인 실패. 로그를 확인하세요.');
+                    });
+            }
+
+            // 2. 빌링키 발급 성공 (authKey, customerKey)
+            else if (urlParams.has('authKey') && urlParams.has('customerKey')) {
+                log('빌링 인증 성공! 백엔드 키 등록 요청 중...');
+                processed = true;
+                const body = {
+                    authKey: urlParams.get('authKey'),
+                    customerKey: urlParams.get('customerKey')
+                };
+
+                fetch('/api/api/v1/payments/billing-key', {
+                    method: 'POST',
+                    headers: getAuthHeader(),
+                    body: JSON.stringify(body)
+                })
+                    .then(res => res.ok ? log('✅ 빌링키 등록 완료! 이제 구독을 신청하세요.') : Promise.reject(res))
+                    .catch(async err => {
+                        log('❌ 빌링키 등록 실패: ' + (err.json ? JSON.stringify(await err.json()) : err), true);
+                    });
+            }
+
+            // 3. 실패 (code, message)
+            else if (urlParams.has('code')) {
+                log('❌ Toss 인증 실패: ' + urlParams.get('message'), true);
+                processed = true;
+            }
+
+            // URL 파라미터 청소 (새로고침 시 재요청 방지)
+            if (processed) {
+                const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+                window.history.replaceState({ path: newUrl }, '', newUrl);
+            }
+        }
+    </script>
+</body>
+
+</html>

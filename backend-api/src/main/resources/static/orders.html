@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주문 내역 - ReadSync</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .nav-bar {
+            display: flex;
+            align-items: center;
+            margin-bottom: 40px;
+            gap: 20px;
+        }
+
+        .nav-bar a {
+            color: #a0a0b0;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .nav-bar a:hover {
+            color: #667eea;
+        }
+
+        .nav-bar h1 {
+            font-size: 1.8rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .section h2 {
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        /* 탭 네비게이션 */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 12px 24px;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            color: #a0a0b0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-color: transparent;
+            color: #fff;
+        }
+
+        .tab-btn:hover {
+            border-color: #667eea;
+        }
+
+        /* 주문 카드 */
+        .order-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .order-card {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 16px;
+            padding: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .order-card:hover {
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .order-id {
+            font-size: 0.9rem;
+            color: #6a6a7a;
+            margin-bottom: 5px;
+        }
+
+        .order-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .order-date {
+            color: #6a6a7a;
+            font-size: 0.9rem;
+        }
+
+        .order-status {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .order-status.completed {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+        }
+
+        .order-status.pending {
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+        }
+
+        .order-status.cancelled {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+
+        .order-status.refunded {
+            background: rgba(139, 92, 246, 0.2);
+            color: #8b5cf6;
+        }
+
+        .order-items {
+            margin-bottom: 20px;
+        }
+
+        .order-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .order-item:last-child {
+            border-bottom: none;
+        }
+
+        .order-item-info {
+            flex: 1;
+        }
+
+        .order-item-title {
+            font-weight: 500;
+            margin-bottom: 3px;
+        }
+
+        .order-item-detail {
+            font-size: 0.85rem;
+            color: #6a6a7a;
+        }
+
+        .order-item-price {
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .order-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .order-total {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .order-total span {
+            color: #667eea;
+        }
+
+        .order-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* 빈 상태 */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6a6a7a;
+        }
+
+        .empty-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        /* 결제 내역 테이블 */
+        .payment-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .payment-table th,
+        .payment-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .payment-table th {
+            color: #6a6a7a;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .payment-table tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .payment-status {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .payment-status.done {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+        }
+
+        .payment-status.failed {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+
+        /* 스태츠 카드 */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 16px;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .stat-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #6a6a7a;
+            font-size: 0.9rem;
+        }
+
+        /* 로그 영역 */
+        .log-area {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            max-height: 200px;
+            overflow-y: auto;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        .log-success {
+            color: #22c55e;
+        }
+
+        .log-error {
+            color: #ef4444;
+        }
+
+        .log-info {
+            color: #a0a0b0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- 네비게이션 -->
+        <div class="nav-bar">
+            <a href="index.html">← 홈으로</a>
+            <h1>📦 주문 내역</h1>
+        </div>
+
+        <!-- 통계 카드 -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">📦</div>
+                <div class="stat-value" id="totalOrders">0</div>
+                <div class="stat-label">총 주문</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">💰</div>
+                <div class="stat-value" id="totalSpent">₩0</div>
+                <div class="stat-label">총 결제금액</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📚</div>
+                <div class="stat-value" id="totalBooks">0</div>
+                <div class="stat-label">구매한 도서</div>
+            </div>
+        </div>
+
+        <!-- 탭 네비게이션 -->
+        <div class="section">
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchTab('orders')">주문 내역</button>
+                <button class="tab-btn" onclick="switchTab('payments')">결제 내역</button>
+            </div>
+
+            <!-- 주문 내역 탭 -->
+            <div id="ordersTab">
+                <div class="order-list" id="orderList">
+                    <div class="empty-state">
+                        <div class="empty-icon">📦</div>
+                        <p>주문 내역이 없습니다.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 결제 내역 탭 -->
+            <div id="paymentsTab" style="display: none;">
+                <table class="payment-table">
+                    <thead>
+                        <tr>
+                            <th>결제일시</th>
+                            <th>주문번호</th>
+                            <th>결제수단</th>
+                            <th>금액</th>
+                            <th>상태</th>
+                            <th>영수증</th>
+                        </tr>
+                    </thead>
+                    <tbody id="paymentTableBody">
+                        <tr>
+                            <td colspan="6" style="text-align: center; color: #6a6a7a; padding: 40px;">
+                                결제 내역이 없습니다.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 로그 영역 -->
+        <div class="section">
+            <h2>📝 API 로그</h2>
+            <div id="logArea" class="log-area">
+                <div class="log-info">데이터 로딩 중...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 샘플 데이터 (실제 API 연동 전 테스트용)
+        let sampleOrders = [
+            {
+                orderId: 'ORDER_1737369600001',
+                orderName: 'ReadSync 도서 결제',
+                status: 'COMPLETED',
+                createdAt: '2026-01-20 15:30',
+                totalAmount: 45000,
+                items: [
+                    { title: 'Clean Code', price: 35000, quantity: 1 },
+                    { title: 'Design Patterns', price: 10000, quantity: 1 }
+                ]
+            },
+            {
+                orderId: 'ORDER_1737283200002',
+                orderName: '독서 노트 외 1건',
+                status: 'COMPLETED',
+                createdAt: '2026-01-19 10:00',
+                totalAmount: 22000,
+                items: [
+                    { title: '클린 아키텍처', price: 22000, quantity: 1 }
+                ]
+            }
+        ];
+
+        let samplePayments = [
+            {
+                paymentKey: 'tviva20260120_kj3n9kfj',
+                orderId: 'ORDER_1737369600001',
+                method: '카드',
+                amount: 45000,
+                status: 'DONE',
+                createdAt: '2026-01-20 15:31',
+                receiptUrl: '#'
+            },
+            {
+                paymentKey: 'tviva20260119_abc123',
+                orderId: 'ORDER_1737283200002',
+                method: '간편결제',
+                amount: 22000,
+                status: 'DONE',
+                createdAt: '2026-01-19 10:01',
+                receiptUrl: '#'
+            }
+        ];
+
+        // 페이지 로드 시
+        window.onload = function () {
+            loadOrders();
+            loadPayments();
+            updateStats();
+        };
+
+        // 인증 헤더
+        function getAuthHeader() {
+            let token = localStorage.getItem('rs_jwt_token') || '';
+            if (token && !token.startsWith('Bearer ')) {
+                token = 'Bearer ' + token;
+            }
+            return {
+                'Authorization': token,
+                'Content-Type': 'application/json'
+            };
+        }
+
+        // 로그 출력
+        function log(message, type = 'info') {
+            const area = document.getElementById('logArea');
+            const time = new Date().toLocaleTimeString();
+            const className = type === 'error' ? 'log-error' : type === 'success' ? 'log-success' : 'log-info';
+            area.innerHTML = `<div class="${className}">[${time}] ${message}</div>` + area.innerHTML;
+        }
+
+        // 탭 전환
+        function switchTab(tab) {
+            const tabs = document.querySelectorAll('.tab-btn');
+            tabs.forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+
+            document.getElementById('ordersTab').style.display = tab === 'orders' ? 'block' : 'none';
+            document.getElementById('paymentsTab').style.display = tab === 'payments' ? 'block' : 'none';
+        }
+
+        // 주문 내역 로드 (API 연동 시 사용)
+        async function loadOrders() {
+            log('주문 내역 조회 중...');
+
+            // TODO: 실제 API 연동 시 아래 주석 해제
+            /*
+            try {
+                const response = await fetch('/api/api/v1/orders/me', {
+                    headers: getAuthHeader()
+                });
+                
+                if (!response.ok) throw new Error('주문 조회 실패');
+                
+                const data = await response.json();
+                renderOrders(data);
+                log('✅ 주문 내역 조회 완료', 'success');
+            } catch (error) {
+                log(`❌ 주문 조회 실패: ${error.message}`, 'error');
+            }
+            */
+
+            // 샘플 데이터 렌더링
+            renderOrders(sampleOrders);
+            log('✅ 샘플 주문 데이터 로드 완료 (API 미연동)', 'success');
+        }
+
+        // 주문 목록 렌더링
+        function renderOrders(orders) {
+            const container = document.getElementById('orderList');
+
+            if (!orders || orders.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">📦</div>
+                        <p>주문 내역이 없습니다.</p>
+                        <a href="cart.html" class="btn btn-primary" style="display: inline-block; margin-top: 20px; text-decoration: none;">
+                            쇼핑하러 가기
+                        </a>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+            orders.forEach(order => {
+                const statusClass = order.status.toLowerCase();
+                const statusText = getStatusText(order.status);
+
+                let itemsHtml = '';
+                if (order.items) {
+                    order.items.forEach(item => {
+                        itemsHtml += `
+                            <div class="order-item">
+                                <div class="order-item-info">
+                                    <div class="order-item-title">${item.title}</div>
+                                    <div class="order-item-detail">수량: ${item.quantity}</div>
+                                </div>
+                                <div class="order-item-price">₩${item.price.toLocaleString()}</div>
+                            </div>
+                        `;
+                    });
+                }
+
+                html += `
+                    <div class="order-card">
+                        <div class="order-header">
+                            <div>
+                                <div class="order-id">#${order.orderId}</div>
+                                <div class="order-name">${order.orderName}</div>
+                                <div class="order-date">${order.createdAt}</div>
+                            </div>
+                            <span class="order-status ${statusClass}">${statusText}</span>
+                        </div>
+                        <div class="order-items">
+                            ${itemsHtml || '<p style="color: #6a6a7a;">상세 항목 정보 없음</p>'}
+                        </div>
+                        <div class="order-footer">
+                            <div class="order-total">총 결제금액 <span>₩${order.totalAmount.toLocaleString()}</span></div>
+                            <div class="order-actions">
+                                <button class="btn btn-secondary" onclick="viewOrderDetail('${order.orderId}')">상세보기</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // 결제 상태 텍스트 변환
+        function getStatusText(status) {
+            const statusMap = {
+                'COMPLETED': '결제완료',
+                'PENDING': '결제대기',
+                'CANCELLED': '취소됨',
+                'REFUNDED': '환불됨',
+                'DONE': '완료'
+            };
+            return statusMap[status] || status;
+        }
+
+        // 결제 내역 로드
+        async function loadPayments() {
+            log('결제 내역 조회 중...');
+
+            // TODO: 실제 API 연동 시 아래 주석 해제
+            /*
+            try {
+                const response = await fetch('/api/api/v1/payments/history', {
+                    headers: getAuthHeader()
+                });
+                
+                if (!response.ok) throw new Error('결제 내역 조회 실패');
+                
+                const data = await response.json();
+                renderPayments(data);
+                log('✅ 결제 내역 조회 완료', 'success');
+            } catch (error) {
+                log(`❌ 결제 조회 실패: ${error.message}`, 'error');
+            }
+            */
+
+            // 샘플 데이터 렌더링
+            renderPayments(samplePayments);
+            log('✅ 샘플 결제 데이터 로드 완료', 'success');
+        }
+
+        // 결제 목록 렌더링
+        function renderPayments(payments) {
+            const tbody = document.getElementById('paymentTableBody');
+
+            if (!payments || payments.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" style="text-align: center; color: #6a6a7a; padding: 40px;">
+                            결제 내역이 없습니다.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            let html = '';
+            payments.forEach(payment => {
+                const statusClass = payment.status.toLowerCase();
+                const statusText = payment.status === 'DONE' ? '성공' : '실패';
+
+                html += `
+                    <tr>
+                        <td>${payment.createdAt}</td>
+                        <td style="font-size: 0.85rem; color: #6a6a7a;">${payment.orderId}</td>
+                        <td>${payment.method}</td>
+                        <td style="font-weight: 600; color: #667eea;">₩${payment.amount.toLocaleString()}</td>
+                        <td><span class="payment-status ${statusClass}">${statusText}</span></td>
+                        <td>
+                            ${payment.receiptUrl ?
+                        `<a href="${payment.receiptUrl}" target="_blank" style="color: #667eea;">영수증</a>` :
+                        '-'}
+                        </td>
+                    </tr>
+                `;
+            });
+
+            tbody.innerHTML = html;
+        }
+
+        // 통계 업데이트
+        function updateStats() {
+            // 샘플 데이터 기반 통계
+            const totalOrders = sampleOrders.length;
+            const totalSpent = sampleOrders.reduce((sum, o) => sum + o.totalAmount, 0);
+            const totalBooks = sampleOrders.reduce((sum, o) =>
+                sum + (o.items ? o.items.reduce((s, i) => s + i.quantity, 0) : 0), 0);
+
+            document.getElementById('totalOrders').textContent = totalOrders;
+            document.getElementById('totalSpent').textContent = `₩${totalSpent.toLocaleString()}`;
+            document.getElementById('totalBooks').textContent = totalBooks;
+        }
+
+        // 주문 상세 보기
+        function viewOrderDetail(orderId) {
+            log(`주문 상세 조회: ${orderId}`);
+            alert(`주문번호 ${orderId}의 상세 정보입니다.\n\n(상세 페이지는 추후 구현 예정)`);
+        }
+    </script>
+</body>
+
+</html>
