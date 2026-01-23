@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/chapters")
 @RequiredArgsConstructor
 
-@Slf4j
 public class ChapterVectorController {
 
     private final ChapterVectorService chapterVectorService;
@@ -28,9 +27,7 @@ public class ChapterVectorController {
         try {
             // 이전에 만든 통합 서비스를 호출합니다.
             // S3 URL 조회 -> 파이썬 호출 -> 통합 벡터 생성 -> DB 저장을 한 번에 수행합니다.
-            log.info("▶ 1. 컨트롤러 진입 (Thread: {})", Thread.currentThread().getName());
             chapterVectorService.saveOrUpdateChapterVector(chapterId);
-            log.info("◀ 2. 컨트롤러 종료 및 응답 (Thread: {})", Thread.currentThread().getName());
 
             return ResponseEntity.accepted()
                     .body("벡터 생성 작업이 백그라운드에서 시작되었습니다. (Chapter ID: " + chapterId + ")");

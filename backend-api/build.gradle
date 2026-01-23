@@ -75,6 +75,9 @@ dependencies {
 
     // WebFlux (WebClient for AI 서버 통신) - 김선준 추가
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+    // halfvec 의존성 - 김정우 추가
+    implementation 'org.hibernate.orm:hibernate-vector:6.6.0.Final'
 }
 
 tasks.named('test') {

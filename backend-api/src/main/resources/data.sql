@@ -45,11 +45,11 @@ INSERT INTO "user_informations" ("preferred_genre", "experience", "level_id", "u
                                                                                                                  ('로맨스', 300, 1, 4, '박민수', to_char(floor(random() * 10000), 'fm0000'));
 
 -- [6] User Vectors (사용자 벡터 - User 참조)
-INSERT INTO "user_vectors" ("user_id", "vector") VALUES
-                                                     (1, array_fill(0, ARRAY[1024])::halfvec(1024)),
-                                                     (2, array_fill(0, ARRAY[1024])::halfvec(1024)),
-                                                     (3, array_fill(0, ARRAY[1024])::halfvec(1024)),
-                                                     (4, array_fill(0, ARRAY[1024])::halfvec(1024));
+INSERT INTO "user_vectors" ("user_id", "vector", "created_at") VALUES
+                                                     (1, array_fill(0, ARRAY[1024])::halfvec(1024), now()),
+                                                     (2, array_fill(0, ARRAY[1024])::halfvec(1024), now()),
+                                                     (3, array_fill(0, ARRAY[1024])::halfvec(1024), now()),
+                                                     (4, array_fill(0, ARRAY[1024])::halfvec(1024), now());
 
 -- [7] Refresh Tokens (인증 토큰 - User 참조)
 INSERT INTO "refresh_tokens" ("user_id", "token") VALUES
@@ -71,10 +71,10 @@ INSERT INTO "books" ("category_id", "title", "author", "summary", "price", "lang
                                                                                            (1, 'AI와 미래 사회', '박지능', '인공지능이 바꿀 미래', 18000, 'KOREAN');
 
 -- [10] Book Vectors (도서 벡터 - Book 참조)
-INSERT INTO "book_vectors" ("book_id", "vector") VALUES
-                                                     (1, array_fill(0, ARRAY[1024])::halfvec(1024)),
-                                                     (2, array_fill(0, ARRAY[1024])::halfvec(1024)),
-                                                     (3, array_fill(0, ARRAY[1024])::halfvec(1024));
+INSERT INTO "book_vectors" ("book_id", "vector", "created_at") VALUES
+                                                     (1, array_fill(0, ARRAY[1024])::halfvec(1024), now()),
+                                                     (2, array_fill(0, ARRAY[1024])::halfvec(1024), now()),
+                                                     (3, array_fill(0, ARRAY[1024])::halfvec(1024), now());
 
 -- [11] Chapters (챕터 정보 - Book 참조)
 INSERT INTO "chapters" ("book_id", "chapter_name", "sequence", "book_content_path", paragraphs) VALUES
@@ -85,12 +85,12 @@ INSERT INTO "chapters" ("book_id", "chapter_name", "sequence", "book_content_pat
                                                                                         (3, '1장: AI의 역사', 1, '/path/ai_ch1', -1);
 
 -- [12] Chapter Vectors (챕터 벡터 - Chapter 참조)
-INSERT INTO "chapter_vectors" ("chapter_id", "vector") VALUES
-                                                           (1, array_fill(0, ARRAY[1024])::halfvec(1024)),
-                                                           (2, array_fill(0, ARRAY[1024])::halfvec(1024)),
-                                                           (3, array_fill(0, ARRAY[1024])::halfvec(1024)),
-                                                           (4, array_fill(0, ARRAY[1024])::halfvec(1024)),
-                                                           (5, array_fill(0, ARRAY[1024])::halfvec(1024));
+INSERT INTO "chapter_vectors" ("chapter_id", "vector", "created_at") VALUES
+                                                           (1, array_fill(0, ARRAY[1024])::halfvec(1024), now()),
+                                                           (2, array_fill(0, ARRAY[1024])::halfvec(1024), now()),
+                                                           (3, array_fill(0, ARRAY[1024])::halfvec(1024), now()),
+                                                           (4, array_fill(0, ARRAY[1024])::halfvec(1024), now()),
+                                                           (5, array_fill(0, ARRAY[1024])::halfvec(1024), now());
 
 -- [13] Libraries (서재/소장 - User, Book 참조)
 INSERT INTO "libraries" ("user_id", "book_id", "type", "reading_status") VALUES

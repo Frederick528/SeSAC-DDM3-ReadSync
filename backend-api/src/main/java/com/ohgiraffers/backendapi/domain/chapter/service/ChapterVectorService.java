@@ -12,12 +12,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class ChapterVectorService {
 
     private final ChapterVectorRepository chapterVectorRepository;
@@ -37,22 +37,21 @@ public class ChapterVectorService {
                 .retrieve()
                 .bodyToMono(ChapterVectorResponseDTO.class)
                 .map(ChapterVectorResponseDTO::getEmbedding)
-                .block(); // 결과가 올 때까지 잠시 대기
+                .block(Duration.ofSeconds(1000)); // 결과가 올 때까지 잠시 대기
     }
     public float[] getVectorGD(String googleDriveUrl) {
         return embeddingServerWebClient.post()
                 .uri("/api/v1/embed-from-drive")
-                .bodyValue(Map.of("googleDriveUrl", googleDriveUrl)) // {"content": "내용"} 형태로 전송
+                .bodyValue(Map.of("google_drive_url", googleDriveUrl)) // {"content": "내용"} 형태로 전송
                 .retrieve()
                 .bodyToMono(ChapterVectorResponseDTO.class)
                 .map(ChapterVectorResponseDTO::getEmbedding)
-                .block(); // 결과가 올 때까지 잠시 대기
+                .block(Duration.ofSeconds(1000)); // 결과가 올 때까지 잠시 대기
     }
 
     @Async
     @Transactional
     public void saveOrUpdateChapterVector(Long chapterId) {
-        log.info("▶▶ 3. 비동기 벡터 생성 시작 [Thread: {}] - ChapterId: {}", Thread.currentThread().getName(), chapterId);
 
         try {
             // 1. 챕터 조회 (DB 작업)
@@ -64,7 +63,6 @@ public class ChapterVectorService {
             // (더 고도화하려면 이 부분을 트랜잭션 밖으로 빼야 하지만, 현 단계에선 이 방식도 무방합니다)
             float[] vectorResponse = getVectorGD(chapter.getBookContentPath());
 
-            log.info("▶▶ 4.파이썬 서버 응답 완료 - 벡터 데이터 수신");
 
             // 3. Upsert 로직 (DB 작업)
             ChapterVector chapterVector = chapterVectorRepository.findById(chapterId)
@@ -80,7 +78,6 @@ public class ChapterVectorService {
             // 4. 최종 저장
             chapterVectorRepository.save(chapterVector);
 
-            log.info("비동기 벡터 저장 완료 - ChapterId: {}", chapterId);
 
         } catch (Exception e) {
             log.error("비동기 작업 중 실패 - ChapterId: {}, 이유: {}", chapterId, e.getMessage());
