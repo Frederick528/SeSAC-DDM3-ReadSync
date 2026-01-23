@@ -87,7 +87,8 @@ public class JwtTokenProvider {
         Claims claims = parseClaims(accessToken);
 
         // 클레임에서 권한 정보 가져오기 (없으면 기본 USER)
-        String role = claims.get("role") != null ? claims.get("role").toString() : "ROLE_USER";
+        String roleClaim = claims.get("role") != null ? claims.get("role").toString() : "USER";
+        String role = roleClaim.startsWith("ROLE_") ? roleClaim : "ROLE_" + roleClaim;
 
         // UserDetails 객체 생성 (Spring Security의 User 객체 사용)
         UserDetails principal = new User(claims.getSubject(), "",

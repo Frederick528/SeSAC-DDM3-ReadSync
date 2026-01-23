@@ -6,6 +6,7 @@ import com.ohgiraffers.backendapi.domain.book.entity.Book;
 import com.ohgiraffers.backendapi.domain.book.repository.BookRepository;
 import com.ohgiraffers.backendapi.domain.chapter.dto.ChapterRequestDTO;
 import com.ohgiraffers.backendapi.domain.chapter.dto.ChapterResponseDTO;
+import com.ohgiraffers.backendapi.domain.chapter.dto.ChapterUrlRequestDTO;
 import com.ohgiraffers.backendapi.domain.chapter.entity.Chapter;
 import com.ohgiraffers.backendapi.domain.chapter.repository.ChapterRepository;
 import com.ohgiraffers.backendapi.global.error.CustomException;
@@ -75,8 +76,10 @@ public class ChapterService {
         }
 
         // 기본값 방어 로직
-        if (finalSequence == null) finalSequence = 1;
-        if (finalChapterName == null) finalChapterName = "Untitled Chapter";
+        if (finalSequence == null)
+            finalSequence = 1;
+        if (finalChapterName == null)
+            finalChapterName = "Untitled Chapter";
 
         // 4. 엔티티 생성 및 저장 (빌더 패턴 사용 가정)
 
@@ -94,6 +97,39 @@ public class ChapterService {
         return convertToResponseDTO(savedChapter, false);
     }
 
+    /* [1-2] 챕터 생성 (URL 기반) */
+    @Transactional
+    public ChapterResponseDTO createChapterByUrl(ChapterUrlRequestDTO requestDTO) {
+        // 1. 책 존재 여부 확인
+        Book book = bookRepository.findById(requestDTO.getBookId())
+                .orElseThrow(() -> new CustomException(ErrorCode.BOOK_NOT_FOUND));
+
+        // 2. URL 유효성 검사 (간단한 null 체크)
+        if (requestDTO.getContentUrl() == null || requestDTO.getContentUrl().isEmpty()) {
+            throw new CustomException(ErrorCode.INVALID_INPUT_VALUE, "contentUrl은 필수입니다.");
+        }
+
+        // 3. 메타데이터 기본값 설정
+        Integer finalSequence = requestDTO.getSequence() != null ? requestDTO.getSequence() : 1;
+        String finalChapterName = requestDTO.getChapterName() != null ? requestDTO.getChapterName()
+                : "Untitled Chapter";
+        Integer finalParagraphs = requestDTO.getParagraphs() != null ? requestDTO.getParagraphs() : -1;
+
+        // 4. 엔티티 생성 및 저장
+        Chapter chapter = Chapter.builder()
+                .book(book)
+                .chapterName(finalChapterName)
+                .sequence(finalSequence)
+                .bookContentPath(requestDTO.getContentUrl()) // URL을 경로로 저장
+                .paragraphs(finalParagraphs)
+                .build();
+
+        Chapter savedChapter = chapterRepository.save(chapter);
+
+        // 5. 응답 생성
+        return convertToResponseDTO(savedChapter, false);
+    }
+
     /* [2] 챕터 조회 (파일 내용을 읽어서 반환) */
 
     public ChapterResponseDTO getChapter(Long chapterId) {
@@ -103,7 +139,6 @@ public class ChapterService {
         // 내용을 포함하여 DTO 반환
         return convertToResponseDTO(chapter, true);
     }
-
 
     /* [3] 챕터 수정 (파일 변경 시 is_embedded -> false) */
     @Transactional
@@ -129,6 +164,27 @@ public class ChapterService {
         chapter.updateMetadata(requestDTO.getChapterName(), requestDTO.getSequence());
 
         // 3. 변경사항 저장 (JPA Dirty Checking으로 자동 저장되지만 명시적 save도 무관)
+        return convertToResponseDTO(chapterRepository.save(chapter), false);
+    }
+
+    /* [3-2] 챕터 수정 (URL 기반) */
+    @Transactional
+    public ChapterResponseDTO updateChapterByUrl(Long chapterId, ChapterUrlRequestDTO requestDTO) {
+        Chapter chapter = chapterRepository.findById(chapterId)
+                .orElseThrow(() -> new CustomException(ErrorCode.CHAPTER_NOT_FOUND));
+
+        // 1. URL이 수정된 경우 처리
+        if (requestDTO.getContentUrl() != null && !requestDTO.getContentUrl().isEmpty()) {
+            chapter.updateUrl(requestDTO.getContentUrl());
+        }
+
+        // 2. 메타데이터(이름, 순서) 수정
+        chapter.updateMetadata(requestDTO.getChapterName(), requestDTO.getSequence());
+
+        // 3. 문단 개수 수정
+        chapter.updateParagraphs(requestDTO.getParagraphs());
+
+        // 4. 변경사항 저장
         return convertToResponseDTO(chapterRepository.save(chapter), false);
     }
 
@@ -218,6 +274,7 @@ public class ChapterService {
                 .sequence(chapter.getSequence())
                 .bookContentPath(chapter.getBookContentPath())
                 .bookContent(content)
+                .paragraphs(chapter.getParagraphs())
                 .build();
     }
 

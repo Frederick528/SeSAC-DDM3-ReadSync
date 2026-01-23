@@ -28,9 +28,9 @@ public class ContentReportController {
 
     private final ContentReportService contentReportService;
 
-    @Operation(summary = "[사용자] 신고 생성", description = "댓글 또는 리뷰를 신고합니다.")
+    @Operation(summary = "[사용자/관리자] 신고 생성", description = "댓글 또는 리뷰를 신고합니다.")
     @PostMapping
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<Map<String, Object>> createContentReport(
             @CurrentUserId Long userId,
             @RequestBody ContentReportRequestDTO requestDTO) {

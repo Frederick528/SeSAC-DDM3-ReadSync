@@ -685,3 +685,4 @@ models/
 
 
 **/docker-compose.yml
+backend-api/.vscode/settings.json

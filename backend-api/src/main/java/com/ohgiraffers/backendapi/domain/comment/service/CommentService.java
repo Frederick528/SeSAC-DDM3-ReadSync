@@ -75,6 +75,32 @@ public class CommentService {
                 .collect(Collectors.toList());
     }
 
+    /* [2-1] 댓글 단건 조회 */
+    public CommentResponseDTO getComment(Long commentId) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new CustomException(ErrorCode.COMMENT_NOT_FOUND));
+
+        // 삭제되거나 정지된 댓글은 조회 불가
+        if (comment.getVisibilityStatus() == VisibilityStatus.DELETED) {
+            throw new CustomException(ErrorCode.COMMENT_NOT_FOUND);
+        }
+        if (comment.getVisibilityStatus() == VisibilityStatus.SUSPENDED) {
+            throw new CustomException(ErrorCode.COMMENT_SUSPENDED);
+        }
+
+        return toReponseDTO(comment);
+    }
+
+    /* [2-2] 본인 댓글 목록 조회 */
+    public List<CommentResponseDTO> getMyComments(Long userId) {
+        List<Comment> comments = commentRepository.findByUser_IdOrderByCreatedAtDesc(userId);
+
+        return comments.stream()
+                .filter(c -> c.getVisibilityStatus() != VisibilityStatus.DELETED)
+                .map(this::toReponseDTO)
+                .collect(Collectors.toList());
+    }
+
     /* [3] 댓글 수정 */
     @Transactional
     public CommentResponseDTO updateComment(Long userId, Long commentId, CommentRequestDTO commentRequestDTO) {
