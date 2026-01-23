@@ -1,0 +1,45 @@
+name: Deploy to EB (Main Only)
+
+on:
+  push:
+    branches: [ "main" ] # main에 푸시될 때만 실제 배포 진행
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'corretto'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build with Gradle
+        run: ./gradlew clean build -x test
+
+      # EB 배포 패키지 생성 (Dockerfile + jar)
+      - name: Generate deployment package
+        run: |
+          mkdir deploy
+          cp Dockerfile deploy/
+          # 빌드된 jar 파일 이름을 명확히 지정하거나 와일드카드 사용
+          cp build/libs/*.jar deploy/application.jar 
+          cd deploy && zip -r deploy.zip .
+
+      # 오직 main 브랜치일 때만 AWS Beanstalk으로 쏜다!
+      - name: Deploy to PROD Environment
+        uses: einaregilsson/beanstalk-deploy@v21
+        with:
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          application_name: readsync-server
+          environment_name: Readsync-server-env
+          version_label: prod-${{github.run_number}}
+          region: ap-northeast-2
+          deployment_package: deploy/deploy.zip
