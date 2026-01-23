@@ -1,0 +1,14 @@
+version: '3.8'
+services:
+  app:
+    # 1. 현재 폴더의 Dockerfile(자바 서버)을 빌드해서 실행해라!
+    build: .
+    # 2. 외부 80 포트로 들어오면 내부 8080(스프링)으로 연결해라!
+    ports:
+      - "80:8080"
+    # 3. 환경변수 설정 (운영 모드)
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      # (참고) 만약 Redis를 ElastiCache 안 쓰고 그냥 서버 안에 띄우고 싶으면
+      # 여기에 Redis 접속 정보를 localhost로 잡아야 하는데, 
+      # 일단은 정석대로 '앱'만 깔끔하게 띄우는 걸 추천합니다.

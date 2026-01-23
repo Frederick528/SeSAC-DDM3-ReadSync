@@ -670,7 +670,7 @@ HELP.md
 application-*.yml
 
 
-docker-compose.yml
+docker-compose.dev.yml
 
 
 application-oauth.yml
